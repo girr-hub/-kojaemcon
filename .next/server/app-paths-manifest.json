@@ -1,8 +1,26 @@
 {
+  "/(auth)/callback/route": "app/(auth)/callback/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/payments/prepare/route": "app/api/payments/prepare/route.js",
+  "/api/payments/verify/route": "app/api/payments/verify/route.js",
   "/api/events-list/route": "app/api/events-list/route.js",
+  "/api/payments/webhook/route": "app/api/payments/webhook/route.js",
+  "/(auth)/signup/page": "app/(auth)/signup/page.js",
   "/(user)/host/new/page": "app/(user)/host/new/page.js",
+  "/(user)/chat/[eventId]/page": "app/(user)/chat/[eventId]/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(user)/my/page": "app/(user)/my/page.js",
   "/(public)/about/page": "app/(public)/about/page.js",
   "/(public)/events/[slug]/page": "app/(public)/events/[slug]/page.js",
+  "/(public)/page": "app/(public)/page.js",
+  "/(public)/events/[slug]/detail/page": "app/(public)/events/[slug]/detail/page.js",
   "/(public)/events/page": "app/(public)/events/page.js",
-  "/(public)/page": "app/(public)/page.js"
+  "/admin/events/[id]/edit/page": "app/admin/events/[id]/edit/page.js",
+  "/admin/events/page": "app/admin/events/page.js",
+  "/admin/events/new/page": "app/admin/events/new/page.js",
+  "/admin/payouts/page": "app/admin/payouts/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/site-settings/page": "app/admin/site-settings/page.js",
+  "/admin/orders/page": "app/admin/orders/page.js",
+  "/admin/users/page": "app/admin/users/page.js"
 }

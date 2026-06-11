@@ -3,7 +3,7 @@ import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
   const { event_id, quantity = 1 } = await req.json()
-  const sb = supabaseServer()
+  const sb = await supabaseServer()
   const { data: { user } } = await sb.auth.getUser()
   if (!user) return NextResponse.json({ error: 'login required' }, { status: 401 })
 

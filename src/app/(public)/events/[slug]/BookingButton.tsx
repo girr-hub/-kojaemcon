@@ -1,145 +1,57 @@
-'use client';
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import * as PortOne from '@portone/browser-sdk/v2'
+import { supabase } from '@/lib/supabase/client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import * as PortOne from '@portone/browser-sdk/v2';
-import { createClient } from '@/lib/supabase/client';
-import type { Event, Profile } from '@/types/database';
-import Spinner from '@/components/ui/Spinner';
-import { useToast } from '@/components/ui/Toast';
+export default function BuyButton({ event, remaining }: { event: any; remaining: number }) {
+  const [busy, setBusy] = useState(false)
+  const r = useRouter()
 
-interface BookingButtonProps {
-  event: Event;
-  profile: Profile | null;
-  existingOrder: { id: string; status: string } | null;
-  isSoldOut: boolean;
-}
+  const buy = async () => {
+    setBusy(true)
+    const sb = supabase()
+    const { data: { user } } = await sb.auth.getUser()
+    if (!user) { r.push('/login'); setBusy(false); return }
+    if (remaining <= 0) { alert('Sold out'); setBusy(false); return }
 
-export default function BookingButton({ event, profile, existingOrder, isSoldOut }: BookingButtonProps) {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+    const prep = await fetch('/api/payments/prepare', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ event_id: event.id, quantity: 1 }),
+    }).then(r => r.json())
+    if (prep.error) { alert(prep.error); setBusy(false); return }
+    if (prep.free) { r.push('/my'); return }
 
-  // Already registered
-  if (existingOrder) {
-    return (
-      <div className="text-center">
-        <div className="badge badge-green w-full justify-center py-3 text-sm mb-3">
-          ✓ You&apos;re registered!
-        </div>
-        <button
-          onClick={() => router.push(`/chat/${event.id}`)}
-          className="btn-secondary w-full text-sm"
-        >
-          Open event chat →
-        </button>
-      </div>
-    );
-  }
+    const result = await PortOne.requestPayment({
+      storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
+      channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
+      paymentId: prep.payment_id,
+      orderName: event.title,
+      totalAmount: event.price_krw,
+      currency: 'KRW' as any as any,
+      payMethod: 'CARD',
+      customer: { email: user.email },
+      redirectUrl: `${location.origin}/my`,
+    })
 
-  if (isSoldOut) {
-    return (
-      <button disabled className="btn-primary w-full opacity-40 cursor-not-allowed">
-        Sold Out
-      </button>
-    );
-  }
+    if (result?.code) { alert(result.message); setBusy(false); return }
 
-  if (event.status !== 'published') {
-    return (
-      <button disabled className="btn-primary w-full opacity-40 cursor-not-allowed">
-        Not available
-      </button>
-    );
-  }
+    const verify = await fetch('/api/payments/verify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ payment_id: prep.payment_id }),
+    }).then(r => r.json())
 
-  async function handleBook() {
-    if (!profile) {
-      router.push(`/login?redirect=/events/${event.slug}`);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      if (event.is_free) {
-        // Free event: directly create order
-        const supabase = createClient();
-        const { error } = await supabase.from('orders').insert({
-          event_id: event.id,
-          user_id: profile.id,
-          quantity: 1,
-          amount_krw: 0,
-          status: 'free_confirmed',
-        });
-        if (error) throw error;
-        toast('You\'re in! 🎉', 'success');
-        router.refresh();
-        return;
-      }
-
-      // Paid: PortOne payment
-      const paymentId = `${event.id}-${profile.id}-${Date.now()}`;
-
-      // Prepare order on server
-      const prepRes = await fetch('/api/payments/prepare', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentId, eventId: event.id, quantity: 1 }),
-      });
-      if (!prepRes.ok) throw new Error('Failed to prepare payment');
-
-      // Launch PortOne popup
-      const response = await PortOne.requestPayment({
-        storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
-        channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
-        paymentId,
-        orderName: event.title,
-        totalAmount: event.price_krw,
-        currency: 'KRW',
-        customer: {
-          customerId: profile.id,
-          fullName: profile.display_name ?? undefined,
-          email: profile.email,
-        },
-        redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/payments/verify`,
-      });
-
-      if (response?.code) {
-        throw new Error(response.message ?? 'Payment failed');
-      }
-
-      // Verify on server
-      const verifyRes = await fetch('/api/payments/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentId, eventId: event.id }),
-      });
-
-      if (!verifyRes.ok) {
-        const err = await verifyRes.json();
-        throw new Error(err.error ?? 'Verification failed');
-      }
-
-      toast('Payment complete! 🎉', 'success');
-      router.refresh();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Something went wrong';
-      toast(msg, 'error');
-    } finally {
-      setLoading(false);
-    }
+    if (verify.ok) r.push('/my')
+    else alert('Verification failed')
+    setBusy(false)
   }
 
   return (
-    <button onClick={handleBook} disabled={loading} className="btn-primary w-full justify-center">
-      {loading ? (
-        <Spinner size={18} />
-      ) : event.is_free ? (
-        'Register for free →'
-      ) : (
-        `Buy ticket →`
-      )}
+    <button onClick={buy} disabled={busy || remaining <= 0}
+            className="w-full bg-primary text-bg py-4 sub-en uppercase font-bold tracking-wider disabled:opacity-30">
+      {remaining <= 0 ? 'Sold out' : event.is_free ? 'RSVP free' : 'Buy ticket'}
     </button>
-  );
+  )
 }

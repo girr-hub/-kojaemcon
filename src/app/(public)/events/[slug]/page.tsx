@@ -4,9 +4,10 @@ import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
 import EventMap from '@/components/EventMap'
 
-export default async function EventDetail({ params }: { params: { slug: string }}) {
+export default async function EventDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const sb = await supabaseServer()
-  const { data: e } = await sb.from('events').select('*').eq('slug', params.slug).single()
+  const { data: e } = await sb.from('events').select('*').eq('slug', slug).single()
   if (!e) return <div className="p-12 text-center">Not found</div>
   const { data: stats } = await sb.from('event_stats').select('*').eq('event_id', e.id).single()
   const { data: attendees } = await sb

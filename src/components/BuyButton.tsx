@@ -32,7 +32,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       paymentId: prep.payment_id,
       orderName: event.title,
       totalAmount: event.price_krw,
-      currency: 'KRW',
+      currency: 'KRW' as any,
       payMethod: 'CARD',
       customer: { email: user.email },
       redirectUrl: `${location.origin}/my`,

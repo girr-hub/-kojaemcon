@@ -9,9 +9,9 @@ export const supabaseServer = async () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (k) => store.get(k)?.value,
-        set: (k, v, o) => store.set({ name: k, value: v, ...o }),
-        remove: (k, o) => store.set({ name: k, value: '', ...o }),
+        get: (k: string) => store.get(k)?.value,
+        set: (k: string, v: string, o: any) => store.set({ name: k, value: v, ...o }),
+        remove: (k: string, o: any) => store.set({ name: k, value: '', ...o }),
       },
     }
   )
