@@ -1,10 +1,11 @@
 import { supabaseServer } from '@/lib/supabase/server'
 import { sanitizeHtml } from '@/lib/sanitize'
 
-export default async function DetailPage({ params }: { params: { slug: string }}) {
+export default async function DetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const sb = await supabaseServer()
+  const { slug } = await params
   const { data: e } = await sb.from('events')
-    .select('*').eq('slug', params.slug).eq('source','official').single()
+    .select('*').eq('slug', slug).eq('source','official').single()
   if (!e) return <div className="p-12">Not available</div>
 
   return (
