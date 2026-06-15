@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase/server'
 import Link from 'next/link'
+import DeleteButton from './DeleteButton'
 
 export default async function AdminEvents() {
   const sb = supabaseAdmin()
@@ -11,12 +12,10 @@ export default async function AdminEvents() {
         <Link href="/admin/events/new" className="bg-primary text-bg px-4 py-2 sub-en uppercase">+ New</Link>
       </div>
       <table className="w-full sub-en text-sm">
-        <thead className="text-ink/50 uppercase text-xs">
-          <tr className="border-b border-ink/10">
-            <th className="text-left p-2">Title</th><th>Source</th><th>Host</th>
-            <th>Status</th><th>Starts</th><th>Price</th><th></th>
-          </tr>
-        </thead>
+        <thead><tr className="border-b border-ink/10 uppercase text-xs text-ink/50">
+          <th className="text-left p-2">Title</th><th>Source</th><th>Host</th>
+          <th>Status</th><th>Starts</th><th>Price</th><th></th>
+        </tr></thead>
         <tbody>
           {data?.map((e:any)=>(
             <tr key={e.id} className="border-b border-ink/5 hover:bg-surface">
@@ -31,8 +30,9 @@ export default async function AdminEvents() {
               </td>
               <td className="text-center">{new Date(e.starts_at).toLocaleDateString()}</td>
               <td className="text-center">{e.is_free?'FREE':`₩${e.price_krw.toLocaleString()}`}</td>
-              <td className="text-right">
-                <Link href={`/admin/events/${e.id}/edit`} className="text-primary underline">edit</Link>
+              <td className="text-right flex items-center gap-3 p-2">
+                <Link href={`/admin/events/${e.id}/edit`} className="text-primary underline">Edit</Link>
+                <DeleteButton id={e.id} title={e.title}/>
               </td>
             </tr>
           ))}
