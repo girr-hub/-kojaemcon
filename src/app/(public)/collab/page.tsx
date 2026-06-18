@@ -6,8 +6,8 @@ export default function CollabPage() {
         <p className="sub-en uppercase text-primary tracking-[0.3em] text-sm mb-4">Partnership</p>
         <h1 className="headline-en text-7xl md:text-9xl leading-none mb-6">LET'S WORK<br/>TOGETHER</h1>
         <p className="sub-en text-ink/60 text-xl max-w-2xl leading-relaxed">
-          KOJAEMCON is Korea's go-to platform for the international community. 
-          We're open to all kinds of collaborations — from event hosting to brand partnerships.
+          KOJAEMCON is Korea&apos;s go-to platform for the international community. 
+          We&apos;re open to all kinds of collaborations — from event hosting to brand partnerships.
         </p>
       </section>
 
@@ -26,13 +26,13 @@ export default function CollabPage() {
               {
                 icon: '💼',
                 title: 'Sponsorship & Advertising',
-                desc: "Want to reach Korea's international community? KOJAEMCON connects your brand with foreigners living in Korea — a highly engaged, spending demographic.",
+                desc: "Want to reach Korea&apos;s international community? KOJAEMCON connects your brand with foreigners living in Korea — a highly engaged, spending demographic.",
                 items: ['Banner & logo placement', 'Sponsored event packages', 'Newsletter features', 'Social media mentions'],
               },
               {
                 icon: '📱',
                 title: 'Media & Influencer Collaboration',
-                desc: 'Are you a content creator, YouTuber, or media outlet covering life in Korea? Let's create content together and share our audiences.',
+                desc: 'Are you a content creator, YouTuber, or media outlet covering life in Korea? Let&apos;s create content together and share our audiences.',
                 items: ['Content collaboration', 'Event coverage', 'Cross-promotion', 'Interview features'],
               },
               {
