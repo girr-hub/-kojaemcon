@@ -16,8 +16,6 @@ export default async function Header() {
         <nav className="flex items-center gap-4 md:gap-6 sub-en uppercase text-sm">
           <Link href="/events" className="hover:text-primary transition">Events</Link>
           <Link href="/about" className="hover:text-primary transition hidden sm:block">About</Link>
-          <Link href="/collab" className="hover:text-primary transition hidden sm:block">Collab</Link>
-          <Link href="/collab" className="hover:text-primary transition hidden sm:block">Collab</Link>
           <Link href="/host/new" className="hover:text-primary transition hidden sm:block">Launch</Link>
           {user ? (
             <Link href="/my" className="bg-primary text-bg px-3 py-1 hover:opacity-90 transition">My</Link>
