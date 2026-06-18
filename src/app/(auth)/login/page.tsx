@@ -15,7 +15,7 @@ export default function Login() {
     const sb = supabase()
     const { error } = await sb.auth.signInWithPassword({ email, password })
     if (error) { setErr(error.message); setLoading(false); return }
-    window.location.href = '/my'
+    window.location.href = '/events'
   }
 
   const input = "w-full bg-surface border border-ink/10 text-ink px-4 py-3 focus:border-primary outline-none sub-en"
