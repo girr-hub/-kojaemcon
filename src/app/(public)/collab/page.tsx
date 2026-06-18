@@ -38,7 +38,7 @@ export default function CollabPage() {
               {
                 icon: '🤝',
                 title: 'Business Partnership',
-                desc: 'Restaurants, bars, tour companies, language schools — if your business serves the foreign community in Korea, let's build something together.',
+                desc: 'Restaurants, bars, tour companies, language schools — if your business serves the foreign community in Korea, let&apos;s build something together.',
                 items: ['Venue partnerships', 'Service promotions', 'Package deals', 'Referral programs'],
               },
             ].map(item => (
