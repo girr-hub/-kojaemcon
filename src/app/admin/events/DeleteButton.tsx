@@ -1,16 +1,22 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
 
 export default function DeleteButton({ id, title }: { id: string; title: string }) {
   const r = useRouter()
 
   const handleDelete = async () => {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return
-    const sb = supabase()
-    const { error } = await sb.from('events').delete().eq('id', id)
-    if (error) { alert(error.message); return }
-    r.refresh()
+    const res = await fetch('/api/admin/delete-event', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    if (res.ok) {
+      r.refresh()
+    } else {
+      const err = await res.json()
+      alert(err.error)
+    }
   }
 
   return (
