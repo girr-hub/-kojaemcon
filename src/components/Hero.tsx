@@ -3,62 +3,124 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 const DEFAULT = {
-  title_en: 'FIND YOUR SCENE IN KOREA',
-  title_kr: '한국에서 너의 씬을 찾아라',
-  subtitle: 'Events, tours & meetups for foreigners in Korea',
+  title_en: 'FIND YOUR',
+  title_serif: 'Jaemi',
+  title_en2: 'IN KOREA',
+  subtitle: 'Events, tours & meetups for foreigners in Korea.',
   cta: 'Explore Events',
 }
 
-export default function Hero({ data }: { 
-  data?: { title_en:string; title_kr:string; subtitle:string; cta:string } | null
+export default function Hero({ data }: {
+  data?: { title_en?: string; title_kr?: string; subtitle?: string; cta?: string } | null
 }) {
-  const d = data ?? DEFAULT
-
   return (
-    <section className="relative min-h-[88vh] overflow-hidden bg-bg">
-      <div className="absolute inset-0 opacity-[0.07]"
-           style={{
-             backgroundImage:
-               'linear-gradient(#FFD700 1px,transparent 1px),linear-gradient(90deg,#FFD700 1px,transparent 1px)',
-             backgroundSize: '64px 64px',
-           }}/>
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full blur-3xl opacity-20"
-           style={{ background:'#FFD700' }}/>
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-28 pb-20">
-        <motion.div 
-          initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-          className="headline-kr text-primary text-7xl md:text-9xl leading-none">
-          ㅋㅈㅋ
-        </motion.div>
-        <div className="sub-en text-ink/60 tracking-[0.4em] mt-2">KOJAEMCON</div>
-        <motion.h1
-          initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ delay:.1 }}
-          className="headline-en text-ink text-6xl md:text-[140px] leading-[0.95] mt-12 uppercase">
-          {d.title_en}
-        </motion.h1>
-        <motion.p
-          initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:.3 }}
-          className="sub-en text-ink/70 text-xl md:text-2xl mt-6 max-w-2xl">
-          {d.subtitle}
-        </motion.p>
-        <motion.div
-          initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay:.4 }}
-          className="mt-10 flex gap-4">
-          <Link href="/events"
-                className="group inline-flex items-center gap-3 bg-primary text-bg px-8 py-4 sub-en uppercase font-bold tracking-wider hover:translate-x-1 transition">
-            {d.cta}
-            <span className="group-hover:translate-x-1 transition">→</span>
-          </Link>
-          <Link href="/host/new"
-                className="inline-flex items-center gap-3 border border-ink/30 text-ink px-8 py-4 sub-en uppercase tracking-wider hover:border-primary hover:text-primary transition">
-            Launch your event
-          </Link>
-        </motion.div>
+    <section className="relative overflow-hidden bg-[#F8F8F6]" style={{ borderBottom: '1px solid #E8E8E4' }}>
+      {/* Ghost text background */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+        style={{ top: '50%', transform: 'translateY(-50%)' }}
+      >
+        <span style={{
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 900,
+          fontSize: 'clamp(100px, 18vw, 240px)',
+          letterSpacing: '-0.08em',
+          color: '#E8E8E4',
+          whiteSpace: 'nowrap',
+          lineHeight: 1,
+        }}>
+          KOJAEMCON
+        </span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 border-y border-ink/10 py-4 overflow-hidden">
-        <div className="flex gap-12 whitespace-nowrap animate-[marquee_30s_linear_infinite] headline-en text-ink/40 text-2xl">
-          {Array(8).fill('PARTY · TOUR · MEETUP · LANGUAGE · CULTURE · FOOD ·').map((t,i)=>
-            <span key={i}>{t}</span>)}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-28 pb-0 grid lg:grid-cols-2 gap-12 items-end">
+        {/* Left */}
+        <div className="pb-16">
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 mb-6"
+          >
+            <div style={{ width: 20, height: 1.5, background: '#FFE500', border: '0.5px solid #0A0A0A' }} />
+            <span style={{ fontFamily: 'Inter', fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A' }}>
+              Events · Tours · Meetups · Culture
+            </span>
+          </motion.div>
+
+          {/* Main headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(52px, 8vw, 88px)', letterSpacing: '-0.055em', lineHeight: 0.88, color: '#0A0A0A' }}
+          >
+            {data?.title_en?.split(' ')[0] || 'FIND YOUR'}
+            <br />
+            <em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(60px, 9vw, 100px)' }}>
+              Jaemi
+            </em>
+            <br />
+            IN KOREA
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            style={{ fontSize: 15, color: '#6B6B6B', lineHeight: 1.65, marginTop: 18, marginBottom: 24, maxWidth: 420 }}
+          >
+            {data?.subtitle || 'Events, tours & meetups for foreigners in Korea. Workers, students — your scene is right here.'}
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-wrap gap-3"
+          >
+            <Link href="/events" className="btn-primary">
+              {data?.cta || 'Explore Events'} →
+            </Link>
+            <Link href="/host/new" className="btn-outline">
+              Launch your event
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Right: Phone mockup */}
+        <div className="hidden lg:flex items-end justify-center pb-0">
+          <div style={{
+            width: 220,
+            background: '#0A0A0A',
+            borderRadius: '24px 24px 0 0',
+            border: '1.5px solid #E8E8E4',
+            padding: 14,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+            height: 280,
+          }}>
+            <div style={{ background: '#FFE500', borderRadius: 12, padding: 16, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>PARTY</span>
+              <span style={{ fontFamily: 'Inter', fontSize: 14, fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, color: '#0A0A0A' }}>Hongdae<br/>Foreigner<br/>Meetup</span>
+            </div>
+            <div style={{ background: '#1a1a1a', borderRadius: 12, padding: 16, flex: 0.7, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555' }}>TOUR</span>
+              <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 900, letterSpacing: '-0.02em', color: '#FFE500' }}>Seoul Night Walk</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Ticker */}
+      <div style={{ background: '#0A0A0A', borderTop: '1px solid #0A0A0A', padding: '10px 0', overflow: 'hidden', marginTop: 0 }}>
+        <div style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'marquee 30s linear infinite', fontFamily: 'Inter', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#FFE500' }}>
+          {Array(8).fill('PARTY · TOUR · MEETUP · LANGUAGE · CULTURE · FOOD ·').map((t, i) => (
+            <span key={i}>{t}</span>
+          ))}
         </div>
       </div>
     </section>

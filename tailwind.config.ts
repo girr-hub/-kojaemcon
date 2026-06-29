@@ -5,16 +5,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#FFD700',
-        bg: '#131313',
-        surface: '#393939',
-        ink: '#FFFFFF',
+        primary: '#FFE500',
+        bg: '#F8F8F6',
+        surface: '#FFFFFF',
+        ink: '#0A0A0A',
+        muted: '#6B6B6B',
+        border: '#E8E8E4',
       },
       fontFamily: {
-        anton: ['Anton', 'sans-serif'],
-        oswald: ['Oswald', 'sans-serif'],
-        pretendard: ['Pretendard', 'sans-serif'],
-        blackhan: ['"Black Han Sans"', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Instrument Serif', 'serif'],
       },
       keyframes: {
         marquee: {
