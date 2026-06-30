@@ -8,7 +8,7 @@ export default async function Header() {
 
   return (
     <header style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+      position: 'sticky', top: 0, left: 0, right: 0, zIndex: 50,
       background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)',
       borderBottom: '1px solid #E8E8E4',
     }}>
