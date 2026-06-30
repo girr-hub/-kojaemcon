@@ -72,6 +72,27 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
               ))}
             </div>
           </section>
+
+          {/* Refund policy - default on every event page */}
+          <section style={{ background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 24 }}>
+            <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: '#0A0A0A', marginBottom: 12 }}>
+              Refund Policy
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#3A3A3A' }}>
+                <span>7+ days before event</span><span style={{ fontWeight: 700, color: '#15803d' }}>100% refund</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#3A3A3A' }}>
+                <span>3-6 days before event</span><span style={{ fontWeight: 700, color: '#92400e' }}>50% refund</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#3A3A3A' }}>
+                <span>0-2 days before / no-show</span><span style={{ fontWeight: 700, color: '#dc2626' }}>No refund</span>
+              </div>
+            </div>
+            <Link href="/refund-policy" style={{ fontSize: 12, color: '#6B6B6B', textDecoration: 'underline' }}>
+              View full refund policy →
+            </Link>
+          </section>
         </div>
 
         {/* sidebar */}
