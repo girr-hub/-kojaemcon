@@ -37,17 +37,16 @@ function BreakdownBar({ title, data }: { title: string; data: Record<string, num
 }
 
 export default function ERPDashboardClient({
-  todayVisits, weekAvg, monthAvg, totalUsers,
+  todayVisits, dailyAvg, weeklyAvg, monthlyAvg, totalUsers,
   nationalityMap, genderMap, ageMap, referralMap, interestMap, events,
 }: {
-  todayVisits: number; weekAvg: number; monthAvg: number; totalUsers: number
+  todayVisits: number; dailyAvg: number; weeklyAvg: number; monthlyAvg: number; totalUsers: number
   nationalityMap: Record<string, number>; genderMap: Record<string, number>
   ageMap: Record<string, number>; referralMap: Record<string, number>
   interestMap: Record<string, number>; events: any[]
 }) {
   const [tab, setTab] = useState<'analytics' | 'email'>('analytics')
 
-  // Email tab state
   const [selectedEvent, setSelectedEvent] = useState('')
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
@@ -101,12 +100,24 @@ export default function ERPDashboardClient({
 
         {tab === 'analytics' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {/* Visit stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
-              <StatCard label="Today's Visits" value={todayVisits} />
-              <StatCard label="Weekly Avg / Day" value={weekAvg} sub="last 7 days" />
-              <StatCard label="Monthly Avg / Day" value={monthAvg} sub="last 30 days" />
-              <StatCard label="Total Users" value={totalUsers} />
+            {/* Visit stats - 4 distinct metrics */}
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#666', marginBottom: 10 }}>
+                Visitor Traffic
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
+                <StatCard label="Today's Visits" value={todayVisits} sub="since midnight" />
+                <StatCard label="Daily Avg" value={dailyAvg} sub="per day, last 30 days" />
+                <StatCard label="Weekly Avg" value={weeklyAvg} sub="per day, last 7 days" />
+                <StatCard label="Monthly Avg" value={monthlyAvg} sub="per day, last 30 days" />
+              </div>
+            </div>
+
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#666', marginBottom: 10 }}>
+                Users
+              </p>
+              <StatCard label="Total Registered Users" value={totalUsers} />
             </div>
 
             {/* Breakdown grids */}
