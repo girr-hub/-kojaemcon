@@ -16,6 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ['Orders','/admin/orders'],
     ['Payouts','/admin/payouts'],
     ['Site settings','/admin/site-settings'],
+    ['ERP Dashboard','/admin/erp'],
   ]
 
   return (
