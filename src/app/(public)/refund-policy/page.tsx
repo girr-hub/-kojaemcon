@@ -44,7 +44,7 @@ export default function RefundPolicyPage() {
 
         {/* No-show policy */}
         <div style={{ background: '#0A0A0A', borderRadius: 16, padding: '32px', marginBottom: 48 }}>
-          <div style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 18, letterSpacing: '-0.03em', color: '#FFE500', marginBottom: 12 }}>
+          <div style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 18, letterSpacing: '-0.03em', color: '#D4B33A', marginBottom: 12 }}>
             No-Show Policy
           </div>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.75, marginBottom: 16 }}>
@@ -57,7 +57,7 @@ export default function RefundPolicyPage() {
               'Third no-show: Permanent account ban from free events',
             ].map(item => (
               <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
-                <span style={{ color: '#FFE500', fontWeight: 800, flexShrink: 0 }}>→</span>
+                <span style={{ color: '#D4B33A', fontWeight: 800, flexShrink: 0 }}>→</span>
                 {item}
               </li>
             ))}
@@ -77,7 +77,7 @@ export default function RefundPolicyPage() {
               'Refund will be processed within 3–5 business days',
             ].map((step, i) => (
               <li key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, fontSize: 14, color: '#3A3A3A' }}>
-                <span style={{ background: '#FFE500', border: '1.5px solid #0A0A0A', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>
+                <span style={{ background: '#D4B33A', border: '1.5px solid #0A0A0A', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>
                   {i + 1}
                 </span>
                 {step}

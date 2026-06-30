@@ -236,7 +236,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                     <span className="badge badge-green">✓ {t.status === 'free_confirmed' ? 'Registered' : 'Paid'}</span>
                     <Link href={`/events/${t.events?.slug}`} style={{ fontSize: 12, color: '#6B6B6B', textDecoration: 'underline' }}>View event</Link>
-                    <Link href={`/chat/${t.events?.id}`} style={{ fontSize: 12, color: '#E8C547', background: '#0A0A0A', padding: '4px 10px', borderRadius: 100, textDecoration: 'none', fontWeight: 700 }}>
+                    <Link href={`/chat/${t.events?.id}`} style={{ fontSize: 12, color: '#D4B33A', background: '#0A0A0A', padding: '4px 10px', borderRadius: 100, textDecoration: 'none', fontWeight: 700 }}>
                       Chat →
                     </Link>
                     <button
@@ -294,7 +294,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                         key={item} type="button" onClick={() => toggleInterest(item)}
                         style={{
                           padding: '8px 14px', borderRadius: 100, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-                          background: interests.includes(item) ? '#E8C547' : '#F8F8F6',
+                          background: interests.includes(item) ? '#D4B33A' : '#F8F8F6',
                           color: '#0A0A0A',
                           border: interests.includes(item) ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4',
                           transition: 'all 0.15s',

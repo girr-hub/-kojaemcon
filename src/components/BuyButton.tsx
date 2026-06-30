@@ -87,7 +87,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
           <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
-            <div style={{ background:'#E8C547', border:'1.5px solid #0A0A0A', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>!</div>
+            <div style={{ background:'#D4B33A', border:'1.5px solid #0A0A0A', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>!</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:18, letterSpacing:'-0.03em', color:'#0A0A0A', marginBottom:10 }}>No-Show Policy</h3>
             <p style={{ fontSize:13, color:'#6B6B6B', lineHeight:1.75, marginBottom:6 }}>This is a <strong style={{color:'#0A0A0A'}}>FREE</strong> event. By joining, you commit to attending.</p>
             <p style={{ fontSize:13, fontWeight:700, color:'#dc2626', marginBottom:20 }}>No-shows are strictly not allowed.</p>

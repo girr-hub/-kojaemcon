@@ -59,7 +59,7 @@ export default function TalentPage() {
   if (done) return (
     <div style={{ minHeight: '100vh', background: '#F8F8F6', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 480 }}>
-        <div style={{ background: '#FFE500', border: '1.5px solid #0A0A0A', borderRadius: '50%', width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, margin: '0 auto 24px' }}>
+        <div style={{ background: '#D4B33A', border: '1.5px solid #0A0A0A', borderRadius: '50%', width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, margin: '0 auto 24px' }}>
           🎉
         </div>
         <h2 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 12 }}>
@@ -125,7 +125,7 @@ export default function TalentPage() {
                   style={{
                     padding: '8px 14px', borderRadius: 100, fontSize: 13, fontWeight: 600, cursor: 'pointer',
                     transition: 'all 0.15s',
-                    background: f.categories.includes(cat.id) ? '#FFE500' : '#F8F8F6',
+                    background: f.categories.includes(cat.id) ? '#D4B33A' : '#F8F8F6',
                     color: '#0A0A0A',
                     border: f.categories.includes(cat.id) ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4',
                   }}

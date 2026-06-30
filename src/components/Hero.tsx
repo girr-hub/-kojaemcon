@@ -81,13 +81,13 @@ export default function Hero({ data }: {
             border: '1.5px solid #E8E8E4', padding: 14, display: 'flex',
             flexDirection: 'column', gap: 10, height: 280,
           }}>
-            <div style={{ background: '#FFE500', borderRadius: 12, padding: 16, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ background: '#D4B33A', borderRadius: 12, padding: 16, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>PARTY</span>
               <span style={{ fontFamily: 'Inter', fontSize: 14, fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, color: '#0A0A0A' }}>Hongdae<br/>Foreigner<br/>Meetup</span>
             </div>
             <div style={{ background: '#1a1a1a', borderRadius: 12, padding: 16, flex: 0.7, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555' }}>TOUR</span>
-              <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 900, letterSpacing: '-0.02em', color: '#FFE500' }}>Seoul Night Walk</span>
+              <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 900, letterSpacing: '-0.02em', color: '#D4B33A' }}>Seoul Night Walk</span>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function Hero({ data }: {
 
       {/* Ticker */}
       <div style={{ background: '#0A0A0A', padding: '10px 0', overflow: 'hidden', marginTop: 0 }}>
-        <div style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'marquee 30s linear infinite', fontFamily: 'Inter', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#FFE500' }}>
+        <div style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'marquee 30s linear infinite', fontFamily: 'Inter', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4B33A' }}>
           {Array(8).fill('PARTY · TOUR · MEETUP · LANGUAGE · CULTURE · FOOD ·').map((t, i) => (
             <span key={i}>{t}</span>
           ))}

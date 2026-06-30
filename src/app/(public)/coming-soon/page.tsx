@@ -49,10 +49,10 @@ export default function ComingSoonPage() {
           </span>
         </div>
 
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#FFE500', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-          <div style={{ width: 20, height: 1.5, background: '#FFE500' }} />
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4B33A', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <div style={{ width: 20, height: 1.5, background: '#D4B33A' }} />
           Coming Soon
-          <div style={{ width: 20, height: 1.5, background: '#FFE500' }} />
+          <div style={{ width: 20, height: 1.5, background: '#D4B33A' }} />
         </div>
 
         <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(40px, 8vw, 72px)', letterSpacing: '-0.055em', lineHeight: 0.88, color: '#FFFFFF', marginBottom: 16 }}>
@@ -68,7 +68,7 @@ export default function ComingSoonPage() {
         </p>
 
         {done ? (
-          <div style={{ background: '#FFE500', border: '1.5px solid #0A0A0A', borderRadius: 16, padding: '24px 32px', display: 'inline-block' }}>
+          <div style={{ background: '#D4B33A', border: '1.5px solid #0A0A0A', borderRadius: 16, padding: '24px 32px', display: 'inline-block' }}>
             <p style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, color: '#0A0A0A', letterSpacing: '-0.03em', marginBottom: 6 }}>
               #{position}
             </p>
@@ -105,7 +105,7 @@ export default function ComingSoonPage() {
               type="submit"
               disabled={loading}
               style={{
-                background: '#FFE500', color: '#0A0A0A', border: '1.5px solid #0A0A0A',
+                background: '#D4B33A', color: '#0A0A0A', border: '1.5px solid #0A0A0A',
                 borderRadius: 100, padding: '14px 28px',
                 fontFamily: 'Inter', fontSize: 14, fontWeight: 800, cursor: 'pointer',
                 opacity: loading ? 0.6 : 1,
@@ -126,7 +126,7 @@ export default function ComingSoonPage() {
             { n: '30+', l: 'Nationalities' },
           ].map(s => (
             <div key={s.l}>
-              <div style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#FFE500' }}>{s.n}</div>
+              <div style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#D4B33A' }}>{s.n}</div>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{s.l}</div>
             </div>
           ))}
