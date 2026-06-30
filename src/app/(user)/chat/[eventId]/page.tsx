@@ -10,13 +10,15 @@ export default async function ChatPage({ params }: { params: Promise<{ eventId: 
 
   const admin = supabaseAdmin()
 
-  const { data: order } = await admin.from('orders')
+  const { data: orderList } = await admin.from('orders')
     .select('id, status')
     .eq('event_id', eventId)
     .eq('user_id', user.id)
     .in('status', ['paid', 'free_confirmed'])
-    .maybeSingle()
+    .order('created_at', { ascending: false })
+    .limit(1)
 
+  const order = orderList?.[0]
   if (!order) return (
     <div className="min-h-screen bg-bg flex items-center justify-center text-center px-6">
       <div>
