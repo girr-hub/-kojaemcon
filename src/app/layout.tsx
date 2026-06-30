@@ -1,5 +1,6 @@
 import './globals.css'
 import AdminButton from '@/components/AdminButton'
+import VisitTracker from '@/components/VisitTracker'
 import Header from '@/components/Header'
 
 export const metadata = { title: 'KOJAEMCON · Find your scene in Korea' }
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header/>
         <main className="pt-16">{children}</main>
         <AdminButton/>
+        <VisitTracker/>
       </body>
     </html>
   )
