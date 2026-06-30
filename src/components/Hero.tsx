@@ -30,8 +30,13 @@ export default function Hero({ data }: {
           {/* ㅋㅈㅋ logo badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
             <span style={{
-              fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(64px, 11vw, 108px)',
-              letterSpacing: '0.02em', color: '#0A0A0A',
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(72px, 12vw, 124px)',
+              letterSpacing: '-0.12em',
+              color: '#0A0A0A',
+              WebkitTextStroke: '2px #0A0A0A',
+              display: 'inline-block',
             }}>
               ㅋㅈㅋ
             </span>
