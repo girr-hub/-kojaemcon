@@ -13,10 +13,26 @@ const INTEREST_CATEGORIES = [
   { label: '🌤 Personality & Vibe', items: ['Summer person ☀️', 'Winter person ❄️', 'Morning person', 'Night owl', 'Introvert', 'Extrovert', 'Homebody', 'Adventure seeker', 'Foodie', 'Planner', 'Spontaneous'] },
 ]
 
+const CANCEL_REASONS = [
+  'Schedule conflict',
+  'Found another event',
+  'Changed my mind',
+  'Health / personal reasons',
+  'Weather concerns',
+  'Other',
+]
+
 export default function MyPageClient({ user, tickets, hosted, profile }: {
   user: any; tickets: any[]; hosted: any[]; profile: any
 }) {
   const [activeTab, setActiveTab] = useState<'profile' | 'tickets' | 'events' | 'interests'>('profile')
+  const [ticketList, setTicketList] = useState(tickets)
+
+  // Cancel modal state
+  const [cancelTarget, setCancelTarget] = useState<any>(null)
+  const [cancelReason, setCancelReason] = useState('')
+  const [customReason, setCustomReason] = useState('')
+  const [cancelling, setCancelling] = useState(false)
 
   const parseInterests = (): string[] => {
     try {
@@ -80,6 +96,30 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
     else alert('Could not save: ' + error.message)
   }
 
+  const submitCancel = async () => {
+    if (!cancelTarget) return
+    const reason = cancelReason === 'Other' ? customReason : cancelReason
+    if (!reason) { alert('Please select or enter a reason'); return }
+
+    setCancelling(true)
+    const res = await fetch('/api/orders/cancel', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ order_id: cancelTarget.id, reason }),
+    })
+    setCancelling(false)
+
+    if (res.ok) {
+      setTicketList(prev => prev.filter(t => t.id !== cancelTarget.id))
+      setCancelTarget(null)
+      setCancelReason('')
+      setCustomReason('')
+    } else {
+      const err = await res.json()
+      alert(err.error || 'Could not cancel')
+    }
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#FFFFFF' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '100px 24px 80px' }}>
@@ -95,7 +135,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
         <div style={{ display: 'flex', gap: 3, marginBottom: 32, background: '#F8F8F6', padding: 4, borderRadius: 12, border: '1.5px solid #E8E8E4', width: 'fit-content', flexWrap: 'wrap' }}>
           {[
             { id: 'profile', label: '👤 Profile' },
-            { id: 'tickets', label: `🎫 Tickets (${tickets.length})` },
+            { id: 'tickets', label: `🎫 Tickets (${ticketList.length})` },
             { id: 'events', label: `📅 My Events (${hosted.length})` },
             { id: 'interests', label: `✨ Interests (${interests.length})` },
           ].map(tab => (
@@ -117,7 +157,6 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
         {/* Profile tab */}
         {activeTab === 'profile' && (
           <div style={{ maxWidth: 480 }}>
-            {/* Avatar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 32 }}>
               <div style={{
                 width: 88, height: 88, borderRadius: '50%', overflow: 'hidden',
@@ -141,20 +180,13 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
               </div>
             </div>
 
-            {/* Display name */}
             <div style={{ marginBottom: 20 }}>
               <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>
                 Display Name
               </label>
-              <input
-                className="input-base"
-                value={displayName}
-                onChange={e => setDisplayName(e.target.value)}
-                placeholder="How others see you"
-              />
+              <input className="input-base" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder="How others see you" />
             </div>
 
-            {/* Bio */}
             <div style={{ marginBottom: 24 }}>
               <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>
                 One-line Bio
@@ -178,7 +210,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
         {/* Tickets */}
         {activeTab === 'tickets' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {tickets.length === 0 && (
+            {ticketList.length === 0 && (
               <div style={{ textAlign: 'center', padding: '64px 24px' }}>
                 <p style={{ fontSize: 40, marginBottom: 16 }}>🎫</p>
                 <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 20, color: '#0A0A0A', marginBottom: 8 }}>No tickets yet</h3>
@@ -186,7 +218,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                 <Link href="/events" className="btn-primary" style={{ textDecoration: 'none' }}>Explore events →</Link>
               </div>
             )}
-            {tickets.map((t: any) => (
+            {ticketList.map((t: any) => (
               <div key={t.id} style={{ display: 'flex', gap: 16, background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 14, overflow: 'hidden', flexWrap: 'wrap' }}>
                 {t.events?.cover_image_url && (
                   <img src={t.events.cover_image_url} style={{ width: 120, height: 120, objectFit: 'cover', flexShrink: 0 }} alt={t.events.title} />
@@ -207,6 +239,12 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                     <Link href={`/chat/${t.events?.id}`} style={{ fontSize: 12, color: '#E8C547', background: '#0A0A0A', padding: '4px 10px', borderRadius: 100, textDecoration: 'none', fontWeight: 700 }}>
                       Chat →
                     </Link>
+                    <button
+                      onClick={() => setCancelTarget(t)}
+                      style={{ fontSize: 12, color: '#dc2626', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0, fontFamily: 'Inter' }}
+                    >
+                      Cancel registration
+                    </button>
                   </div>
                 </div>
               </div>
@@ -283,6 +321,72 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
           </div>
         )}
       </div>
+
+      {/* Cancel modal */}
+      {cancelTarget && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+          <div
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)' }}
+            onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
+          />
+          <div style={{ position: 'relative', background: '#fff', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 28, maxWidth: 420, width: '100%', zIndex: 10 }}>
+            <h3 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 20, letterSpacing: '-0.03em', color: '#0A0A0A', marginBottom: 6 }}>
+              Cancel registration
+            </h3>
+            <p style={{ fontSize: 13, color: '#6B6B6B', marginBottom: 20 }}>
+              {cancelTarget.events?.title}
+            </p>
+
+            <p style={{ fontSize: 12, fontWeight: 700, color: '#0A0A0A', marginBottom: 10 }}>Why are you cancelling?</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+              {CANCEL_REASONS.map(r => (
+                <label key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#3A3A3A', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="cancel_reason"
+                    checked={cancelReason === r}
+                    onChange={() => setCancelReason(r)}
+                  />
+                  {r}
+                </label>
+              ))}
+            </div>
+
+            {cancelReason === 'Other' && (
+              <textarea
+                className="input-base"
+                placeholder="Tell us more (optional)"
+                rows={3}
+                style={{ resize: 'none', marginBottom: 16 }}
+                value={customReason}
+                onChange={e => setCustomReason(e.target.value)}
+              />
+            )}
+
+            <div style={{ background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 10, padding: '10px 14px', marginBottom: 20 }}>
+              <p style={{ fontSize: 11, color: '#92400e', lineHeight: 1.6 }}>
+                Refunds follow our policy: 100% (7+ days), 50% (3–6 days), 0% (0–2 days or no-show).
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
+                style={{ flex: 1, border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '12px', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, cursor: 'pointer', background: '#fff', color: '#0A0A0A' }}
+              >
+                Keep ticket
+              </button>
+              <button
+                onClick={submitCancel}
+                disabled={cancelling || !cancelReason}
+                style={{ flex: 1, background: '#dc2626', color: '#fff', border: '1.5px solid #dc2626', borderRadius: 100, padding: '12px', fontFamily: 'Inter', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (cancelling || !cancelReason) ? 0.5 : 1 }}
+              >
+                {cancelling ? 'Cancelling...' : 'Confirm cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
