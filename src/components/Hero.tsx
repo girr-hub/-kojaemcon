@@ -43,7 +43,6 @@ export default function Hero({ data }: {
 
           {/* Eyebrow */}
           <div className="flex items-center gap-3 mb-6">
-            <div style={{ width: 20, height: 1.5, background: '#FFE500', border: '0.5px solid #0A0A0A' }} />
             <span style={{ fontFamily: 'Inter', fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A' }}>
               Events · Tours · Meetups · Culture
             </span>
