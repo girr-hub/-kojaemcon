@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --y: #FFE500;
+  --y: #E8C547;
   --bk: #0A0A0A;
   --wh: #FFFFFF;
   --bg: #F8F8F6;
@@ -32,18 +32,15 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-dk); border-radius: 2px; }
 
-/* Typography */
 .headline-en { font-family: Inter, sans-serif; font-weight: 900; letter-spacing: -0.055em; line-height: 0.88; }
 .headline-serif { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
 .headline-kr { font-family: Inter, sans-serif; font-weight: 900; letter-spacing: -0.04em; }
 .sub-en { font-family: Inter, sans-serif; font-weight: 600; letter-spacing: -0.01em; }
 .label-en { font-family: Inter, sans-serif; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; font-size: 10px; }
 
-/* Wordmark */
 .wordmark { font-family: Inter, sans-serif; font-weight: 900; letter-spacing: -0.04em; line-height: 1; color: var(--bk); }
 .wordmark em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
 
-/* Buttons */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--bk); color: var(--wh); border: 1.5px solid var(--bk);
@@ -73,7 +70,6 @@ body {
 }
 .btn-outline:hover { border-color: var(--bk); }
 
-/* Inputs */
 .input-base {
   width: 100%; background: var(--wh); border: 1.5px solid var(--border);
   color: var(--text); border-radius: 10px; padding: 0.75rem 1rem;
@@ -83,7 +79,6 @@ body {
 .input-base:focus { border-color: var(--bk); }
 .input-base::placeholder { color: var(--text-4); }
 
-/* Keep dark inputs for admin */
 .input-dark {
   background: #1a1a1a; border: 1.5px solid #2a2a2a; color: #fff;
   border-radius: 8px; padding: 0.625rem 0.875rem; width: 100%;
@@ -92,14 +87,12 @@ body {
 .input-dark:focus { border-color: var(--y); }
 .input-dark::placeholder { color: #888; }
 
-/* Cards */
 .card-base {
   background: var(--wh); border: 1.5px solid var(--border);
   border-radius: 16px; overflow: hidden; transition: box-shadow 0.2s;
 }
 .card-base:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
 
-/* Prose */
 .prose-content { color: var(--text-2); line-height: 1.75; }
 .prose-content h1, .prose-content h2, .prose-content h3 { color: var(--bk); margin-top: 1.5em; margin-bottom: 0.5em; font-weight: 800; }
 .prose-content p { margin-bottom: 1em; }
@@ -108,7 +101,6 @@ body {
 .prose-content img { max-width: 100%; border-radius: 8px; margin: 1em 0; }
 .prose-content blockquote { border-left: 3px solid var(--y); padding-left: 1em; color: var(--text-3); font-style: italic; }
 
-/* Badge */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 100px; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .badge-yellow { background: var(--y); color: var(--bk); border: 1px solid var(--bk); }
 .badge-black { background: var(--bk); color: var(--wh); }
@@ -116,21 +108,17 @@ body {
 .badge-green { background: #dcfce7; color: #15803d; }
 .badge-red { background: #fee2e2; color: #dc2626; }
 
-/* Eyebrow */
 .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-4); display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .eyebrow::before { content: ""; width: 20px; height: 1.5px; background: var(--y); }
 
-/* Spinner */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner { border: 2px solid var(--border); border-top-color: var(--bk); border-radius: 50%; animation: spin 0.7s linear infinite; }
 
-/* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
 .animate-slide-up { animation: slideUp 0.5s ease forwards; }
 
-/* Tiptap */
 .tiptap-editor .ProseMirror { min-height: 200px; outline: none; padding: 0.75rem; }
 .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; color: var(--text-4); pointer-events: none; height: 0; }

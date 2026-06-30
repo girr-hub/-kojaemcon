@@ -8,27 +8,63 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'login required' }, { status: 401 })
 
   const admin = supabaseAdmin()
+
   const { data: event } = await admin.from('events').select('*').eq('id', event_id).single()
-  if (!event || event.status !== 'published') 
-    return NextResponse.json({ error: 'unavailable' }, { status: 400 })
+  if (!event) return NextResponse.json({ error: 'event not found' }, { status: 404 })
 
-  // 잔량 확인
-  const { data: stats } = await admin.from('event_stats').select('remaining').eq('event_id', event_id).single()
-  if ((stats?.remaining ?? 0) < quantity)
-    return NextResponse.json({ error: 'sold out' }, { status: 400 })
+  // 중복 체크
+  const { data: existing } = await admin.from('orders')
+    .select('id, status')
+    .eq('event_id', event_id)
+    .eq('user_id', user.id)
+    .in('status', ['paid', 'free_confirmed', 'pending'])
+    .maybeSingle()
 
-  const amount = event.is_free ? 0 : event.price_krw * quantity
-  const payment_id = `kjc_${event_id.slice(0,8)}_${user.id.slice(0,8)}_${Date.now()}`
+  if (existing) {
+    if (event.is_free) {
+      return NextResponse.json({ free: true, ok: true, already: true })
+    }
+    return NextResponse.json({ error: 'Already registered for this event' }, { status: 400 })
+  }
 
-  const { data: order, error } = await admin.from('orders').insert({
-    event_id, user_id: user.id, quantity, amount_krw: amount,
-    status: event.is_free ? 'free_confirmed' : 'pending',
-    payment_id, paid_at: event.is_free ? new Date().toISOString() : null,
-  }).select().single()
+  if (event.is_free) {
+    // 무료 이벤트 - 바로 confirmed 상태로 생성
+    const { error: insertErr } = await admin.from('orders').insert({
+      event_id,
+      user_id: user.id,
+      quantity,
+      amount_krw: 0,
+      status: 'free_confirmed',
+    })
+    if (insertErr) return NextResponse.json({ error: insertErr.message }, { status: 500 })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    // 채팅방 즉시 생성 + 멤버 추가 (서버에서 바로 처리)
+    let { data: room } = await admin.from('chat_rooms').select('id').eq('event_id', event_id).maybeSingle()
+    if (!room) {
+      const { data: newRoom } = await admin.from('chat_rooms').insert({ event_id }).select('id').single()
+      room = newRoom
+    }
+    if (room) {
+      await admin.from('chat_members').upsert(
+        { room_id: room.id, user_id: user.id },
+        { onConflict: 'room_id,user_id' }
+      )
+    }
 
-  return NextResponse.json({ 
-    payment_id, order_id: order.id, free: event.is_free 
+    return NextResponse.json({ free: true, ok: true })
+  }
+
+  // 유료 이벤트 - PortOne 결제 준비
+  const paymentId = `pay_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+  const { error: pendingErr } = await admin.from('orders').insert({
+    event_id,
+    user_id: user.id,
+    quantity,
+    amount_krw: event.price_krw * quantity,
+    status: 'pending',
+    payment_id: paymentId,
   })
+  if (pendingErr) return NextResponse.json({ error: pendingErr.message }, { status: 500 })
+
+  return NextResponse.json({ free: false, payment_id: paymentId })
 }
