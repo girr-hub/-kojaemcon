@@ -123,13 +123,27 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
   return (
     <div style={{ minHeight: '100vh', background: '#FFFFFF' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '100px 24px 80px' }}>
-        <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,48px)', letterSpacing: '-0.055em', color: '#0A0A0A', marginBottom: 6 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 40, flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,48px)', letterSpacing: '-0.055em', color: '#0A0A0A', marginBottom: 6 }}>
             My Page
           </h1>
           <p style={{ fontSize: 14, color: '#9A9A9A' }}>
             Welcome back, <strong style={{ color: '#0A0A0A' }}>{profile?.display_name || user.email}</strong>
           </p>
+          </div>
+          <button
+            onClick={async () => {
+              const { supabase } = await import('@/lib/supabase/client')
+              const sb = supabase()
+              await sb.auth.signOut()
+              window.location.href = '/'
+            }}
+            style={{ padding: '8px 18px', borderRadius: 100, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4' }}
+          >
+            Log out
+          </button>
         </div>
 
         <div style={{ display: 'flex', gap: 3, marginBottom: 32, background: '#F8F8F6', padding: 4, borderRadius: 12, border: '1.5px solid #E8E8E4', width: 'fit-content', flexWrap: 'wrap' }}>

@@ -31,6 +31,8 @@ export default async function Header() {
           <Link href="/collab" style={{ fontSize: 13, fontWeight: 600, color: '#6B6B6B', textDecoration: 'none' }} className="hover:text-[#0A0A0A] transition-colors">
             Collab
           </Link>
+          <Link href="/community" style={{ fontSize: 13, fontWeight: 600, color: '#6B6B6B', textDecoration: 'none' }} className="hover:text-[#0A0A0A] transition-colors hidden md:block">Community</Link>
+          <Link href="/cs" style={{ fontSize: 13, fontWeight: 600, color: '#6B6B6B', textDecoration: 'none' }} className="hover:text-[#0A0A0A] transition-colors hidden md:block">Support</Link>
           <Link href="/talent" style={{ fontSize: 13, fontWeight: 600, color: '#6B6B6B', textDecoration: 'none' }} className="hover:text-[#0A0A0A] transition-colors">
             Talent
           </Link>
