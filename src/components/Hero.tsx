@@ -2,110 +2,64 @@
 import Link from 'next/link'
 
 export default function Hero({ data }: {
-  data?: { title_en?: string; title_kr?: string; subtitle?: string; cta?: string } | null
+  data?: { title_en?: string; subtitle?: string; cta?: string } | null
 }) {
   return (
-    <section className="relative overflow-hidden bg-[#F8F8F6]" style={{ borderBottom: '1px solid #E8E8E4' }}>
-      {/* Ghost text background */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
-        style={{ top: '50%', transform: 'translateY(-50%)' }}
-      >
-        <span style={{
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 900,
-          fontSize: 'clamp(100px, 18vw, 240px)',
-          letterSpacing: '-0.08em',
-          color: '#E8E8E4',
-          whiteSpace: 'nowrap',
-          lineHeight: 1,
-        }}>
-          KOJAEMCON
-        </span>
-      </div>
+    <section style={{ background: '#12161A', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', padding: '80px 24px 0' }}>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-28 pb-0 grid lg:grid-cols-2 gap-12 items-end">
-        {/* Left */}
-        <div className="pb-16">
-          {/* ㅋㅈㅋ logo badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-            <span style={{
-              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(72px, 12vw, 124px)',
-              letterSpacing: '-0.12em',
-              color: '#0A0A0A',
-              WebkitTextStroke: '2px #0A0A0A',
-              display: 'inline-block',
-            }}>
-              ㅋㅈㅋ
-            </span>
-            <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 13, letterSpacing: '0.04em', color: '#0A0A0A' }}>
-              KOJAEMCON
-            </span>
-          </div>
-
-          {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-6">
-            <span style={{ fontFamily: 'Inter', fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A' }}>
-              Events · Tours · Meetups · Culture
-            </span>
-          </div>
-
-          {/* Main headline */}
-          <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 88px)', letterSpacing: '-0.055em', lineHeight: 0.88, color: '#0A0A0A' }}>
-            FIND YOUR
-            <br />
-            <em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(56px, 9vw, 100px)' }}>
-              Jaemi
-            </em>
-            <br />
-            IN KOREA
-          </h1>
-
-          {/* Subtitle */}
-          <p style={{ fontSize: 15, color: '#6B6B6B', lineHeight: 1.65, marginTop: 18, marginBottom: 24, maxWidth: 420 }}>
-            {data?.subtitle || 'Events, tours & meetups for foreigners in Korea. Workers, students — your scene is right here.'}
-          </p>
-
-          {/* CTA */}
-          <div className="flex flex-wrap gap-3">
-            <Link href="/events" className="btn-primary">
-              Explore Events →
-            </Link>
-            <Link href="/host/new" className="btn-outline">
-              Launch your event
-            </Link>
-          </div>
-        </div>
-
-        {/* Right: Phone mockup */}
-        <div className="hidden lg:flex items-end justify-center pb-0">
-          <div style={{
-            width: 220, background: '#0A0A0A', borderRadius: '24px 24px 0 0',
-            border: '1.5px solid #E8E8E4', padding: 14, display: 'flex',
-            flexDirection: 'column', gap: 10, height: 280,
-          }}>
-            <div style={{ background: '#D4B33A', borderRadius: 12, padding: 16, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>PARTY</span>
-              <span style={{ fontFamily: 'Inter', fontSize: 14, fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, color: '#0A0A0A' }}>Hongdae<br/>Foreigner<br/>Meetup</span>
-            </div>
-            <div style={{ background: '#1a1a1a', borderRadius: 12, padding: 16, flex: 0.7, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555' }}>TOUR</span>
-              <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 900, letterSpacing: '-0.02em', color: '#D4B33A' }}>Seoul Night Walk</span>
-            </div>
-          </div>
+      {/* Background ghost symbol */}
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden', opacity: 0.04 }}>
+        <div style={{ fontFamily: 'Righteous, sans-serif', fontSize: 'clamp(200px, 40vw, 500px)', color: '#E9C000', lineHeight: 1, whiteSpace: 'nowrap', letterSpacing: '-0.05em' }}>
+          ㅋㅈㅋ
         </div>
       </div>
 
-      {/* Ticker */}
-      <div style={{ background: '#0A0A0A', padding: '10px 0', overflow: 'hidden', marginTop: 0 }}>
-        <div style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'marquee 30s linear infinite', fontFamily: 'Inter', fontWeight: 700, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4B33A' }}>
-          {Array(8).fill('PARTY · TOUR · MEETUP · LANGUAGE · CULTURE · FOOD ·').map((t, i) => (
-            <span key={i}>{t}</span>
-          ))}
+      {/* Main content */}
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 0 }}>
+
+        {/* ㅋㅈㅋ SVG Logo Symbol */}
+        <div style={{ marginBottom: 32 }}>
+          <svg width="160" height="200" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* ㅋ top */}
+            <rect x="20" y="10" width="80" height="18" fill="#E9C000"/>
+            <rect x="20" y="10" width="18" height="50" fill="#E9C000"/>
+            <rect x="20" y="38" width="60" height="18" fill="#E9C000"/>
+            {/* ㅈ middle */}
+            <rect x="30" y="80" width="90" height="16" fill="#E9C000"/>
+            <rect x="68" y="80" width="16" height="14" fill="#E9C000"/>
+            <rect x="24" y="96" width="30" height="14" rx="2" style={{ transform: 'rotate(-15deg)', transformOrigin: '39px 103px' }} fill="#E9C000"/>
+            <polygon points="24,96 54,96 44,118 14,118" fill="#E9C000"/>
+            <polygon points="86,96 116,96 126,118 96,118" fill="#E9C000"/>
+            {/* ㅋ bottom */}
+            <rect x="20" y="136" width="80" height="16" fill="#E9C000"/>
+            <rect x="20" y="136" width="16" height="50" fill="#E9C000"/>
+            <rect x="20" y="162" width="55" height="16" fill="#E9C000"/>
+            {/* KO GEM CON text */}
+            <text x="108" y="158" fontFamily="Righteous, sans-serif" fontSize="20" fontWeight="700" fill="#E9C000">KO</text>
+            <text x="108" y="178" fontFamily="Righteous, sans-serif" fontSize="20" fontWeight="700" fill="#E9C000">GEM</text>
+            <text x="108" y="198" fontFamily="Righteous, sans-serif" fontSize="20" fontWeight="700" fill="#E9C000">CON</text>
+          </svg>
         </div>
+
+        {/* Slogan */}
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, Inter, sans-serif', fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 400, color: '#E7E7E7', lineHeight: 1.2, marginBottom: 12 }}>
+          Find your{' '}
+          <span style={{ color: '#E9C000', fontWeight: 700 }}>Gems</span>
+          {' '}in Korea
+        </h1>
+
+        <p style={{ fontSize: 'clamp(14px, 2vw, 18px)', color: '#B0B0B0', marginBottom: 36 }}>
+          Events, tours & meetups for <strong style={{ color: '#E7E7E7' }}>foreigners</strong> in Korea
+        </p>
+
+        {/* CTA Button */}
+        <Link href="/events" className="btn-primary" style={{ padding: '14px 36px', fontSize: 16, textDecoration: 'none' }}>
+          Check out Events
+        </Link>
       </div>
+
+      {/* Yellow separator bar */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 8, background: '#E9C000' }} />
     </section>
   )
 }

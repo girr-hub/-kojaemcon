@@ -1,9 +1,19 @@
 import './globals.css'
 import AdminButton from '@/components/AdminButton'
-import VisitTracker from '@/components/VisitTracker'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import VisitTracker from '@/components/VisitTracker'
 
-export const metadata = { title: 'KOJAEMCON · Find your scene in Korea' }
+export const metadata = {
+  title: 'KOGEMCON · Find your Gems in Korea',
+  description: 'Events, tours & meetups for foreigners in Korea',
+  openGraph: {
+    title: 'KOGEMCON · Find your Gems in Korea',
+    description: 'Events, tours & meetups for foreigners in Korea',
+    siteName: 'KOGEMCON',
+  },
+}
+
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -14,11 +24,16 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      </head>
       <body>
-        <Header/>
-        <main className="pt-16">{children}</main>
-        <AdminButton/>
-        <VisitTracker/>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <AdminButton />
+        <VisitTracker />
       </body>
     </html>
   )

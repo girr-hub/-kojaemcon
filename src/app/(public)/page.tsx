@@ -5,12 +5,6 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [events, setEvents] = useState<any[]>([])
-  const hero = {
-    title_en: 'FIND YOUR JAEMI IN KOREA',
-    title_kr: '한국에서 너의 씬을 찾아라',
-    subtitle: 'Events, tours & meetups for foreigners in Korea',
-    cta: 'Explore Events'
-  }
 
   useEffect(() => {
     fetch('/api/events-list').then(r => r.json()).then(d => {
@@ -20,16 +14,28 @@ export default function Home() {
 
   return (
     <>
-      <Hero data={hero} />
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        <h2 className="headline-en text-5xl md:text-7xl text-ink uppercase mb-12">Upcoming</h2>
-        {events.length === 0 ? (
-          <p className="text-ink/40 sub-en text-center py-20 text-xl">No upcoming events yet</p>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((e: any) => <EventCard key={e.id} event={e} />)}
-          </div>
-        )}
+      <Hero />
+      <section style={{ background: '#12161A', padding: '80px 24px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <h2 style={{
+            fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+            fontWeight: 700, fontSize: 'clamp(24px,4vw,40px)',
+            color: '#E7E7E7', textTransform: 'uppercase',
+            letterSpacing: '0.08em', marginBottom: 40,
+            display: 'flex', alignItems: 'center', gap: 16,
+          }}>
+            Upcoming Events
+            <div style={{ flex: 1, height: 1, background: '#2a2f35' }} />
+          </h2>
+
+          {events.length === 0 ? (
+            <p style={{ color: '#555', fontSize: 15, textAlign: 'center', padding: '40px 0' }}>No upcoming events yet</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
+              {events.map((e: any) => <EventCard key={e.id} event={e} />)}
+            </div>
+          )}
+        </div>
       </section>
     </>
   )
