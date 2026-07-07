@@ -9,7 +9,7 @@ export const metadata = {
   description: 'Events, tours & meetups for foreigners in Korea',
   openGraph: {
     title: 'KOGEMCON · Find your Gems in Korea',
-    description: 'Events, tours & meetups for foreigners in Korea',
+    description: 'Find your Gems in Korea — Events, tours & meetups for foreigners',
     siteName: 'KOGEMCON',
   },
 }
