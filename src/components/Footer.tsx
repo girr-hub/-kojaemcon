@@ -61,6 +61,12 @@ export default function Footer() {
             </p>
           </div>
           <p style={{ fontSize: 12, color: '#3a3a3a' }}>© 2026 KOGEMCON. All rights reserved.</p>
+          <div style={{ marginTop: 16, fontSize: 11, color: '#3a3a3a', lineHeight: 1.8 }}>
+            <p style={{ fontWeight: 700, color: '#555', marginBottom: 4 }}>주식회사 기르 (Girr. Inc.)</p>
+            <p>대표자: 이미현 · 전화: 010-9616-1894 · 이메일: girr.official@gmail.com</p>
+            <p>본점: 서울특별시 동작구 흑석로84 108관 201호</p>
+            <p>강남지점: 서울특별시 강남구 테헤란로 114길 20 6층</p>
+          </div>
         </div>
       </div>
     </footer>
