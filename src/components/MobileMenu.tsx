@@ -64,9 +64,9 @@ export default function MobileMenu() {
       <div
         style={{
           position: 'fixed', top: 0, right: 0, bottom: 0,
-          width: '82%', maxWidth: 340,
+          width: '100%', maxWidth: '100%',
           zIndex: 99999,
-          background: '#12161A',
+          background: '#1a1f26',
           display: 'flex', flexDirection: 'column',
           boxShadow: '-8px 0 40px rgba(0,0,0,0.4)',
           transform: open ? 'translateX(0)' : 'translateX(100%)',
@@ -116,7 +116,7 @@ export default function MobileMenu() {
               style={{
                 padding: '15px 24px',
                 fontSize: 15, fontWeight: 500,
-                color: '#B0B0B0', textDecoration: 'none',
+                color: '#E7E7E7', textDecoration: 'none',
                 borderBottom: '1px solid #1e2328',
                 display: 'block',
                 fontFamily: 'PretendardVariable, Pretendard, sans-serif',
