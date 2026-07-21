@@ -15,10 +15,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ['Users', '/admin/users'],
     ['Orders', '/admin/orders'],
     ['Payouts', '/admin/payouts'],
-    ['Site settings', '/admin/site-settings'],
-    ['ERP Dashboard', '/admin/erp'],
+    ['Magazine', '/admin/magazine'],
     ['CS Tickets', '/admin/cs'],
     ['Attendance', '/admin/attendance'],
+    ['Site settings', '/admin/site-settings'],
+    ['ERP Dashboard', '/admin/erp'],
   ]
 
   return (
