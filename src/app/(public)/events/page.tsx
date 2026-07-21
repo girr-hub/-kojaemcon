@@ -26,7 +26,6 @@ export default function EventsPage() {
       ) : events.length === 0 ? (
         <p className="text-ink/40 sub-en text-xl text-center py-20">No events found</p>
       ) : (
-        {/* 모바일: 피드형 단일 열 / 데스크탑: 2열 그리드 */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
           {events.map((e: any) => <EventFeedCard key={e.id} event={e} />)}
         </div>
