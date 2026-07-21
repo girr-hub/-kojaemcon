@@ -13,6 +13,7 @@ export default function MobileMenu() {
   const links = [
     { href: '/events', label: 'Events' },
     { href: '/community', label: 'Community' },
+    { href: '/magazine', label: 'Magazine' },
     { href: '/about', label: 'About' },
     { href: '/collab', label: 'Collab' },
     { href: '/talent', label: 'Talent' },
