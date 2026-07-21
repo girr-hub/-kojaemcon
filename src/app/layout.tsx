@@ -3,6 +3,7 @@ import AdminButton from '@/components/AdminButton'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import VisitTracker from '@/components/VisitTracker'
+import BottomTabBar from '@/components/BottomTabBar'
 
 export const metadata = {
   title: 'KOGEMCON · Find your Gems in Korea',
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
+        <BottomTabBar />
         <AdminButton />
         <VisitTracker />
       </body>
