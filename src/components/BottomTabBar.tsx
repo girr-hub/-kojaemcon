@@ -37,6 +37,16 @@ const TABS = [
     ),
   },
   {
+    href: '/magazine',
+    label: 'Magazine',
+    icon: (active: boolean) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H20V20H4V4Z" stroke={active ? '#E9C000' : '#9A9A9A'} strokeWidth="1.8" fill={active ? '#E9C000' : 'none'} fillOpacity="0.15"/>
+        <path d="M8 9H16M8 12H16M8 15H12" stroke={active ? '#E9C000' : '#9A9A9A'} strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
     href: '/my',
     label: 'My',
     icon: (active: boolean) => (
