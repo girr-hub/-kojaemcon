@@ -25,6 +25,15 @@ const TABS = [
         <rect x="14" y="13" width="3" height="3" rx="0.5" fill={active ? '#E9C000' : '#9A9A9A'}/>
       </svg>
     ),
+  },{
+    href: '/host/new',
+    label: 'Host',
+    isCenter: true,
+    icon: () => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 5V19M5 12H19" stroke="#12161A" strokeWidth="2.4" strokeLinecap="round"/>
+      </svg>
+    ),
   },
   {
     href: '/community',
@@ -46,16 +55,7 @@ const TABS = [
       </svg>
     ),
   },
-  {
-    href: '/my',
-    label: 'My',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="8" r="4" fill={active ? '#E9C000' : 'none'} stroke={active ? '#E9C000' : '#9A9A9A'} strokeWidth="1.8"/>
-        <path d="M4 20C4 17.0 7.58172 14 12 14C16.4183 14 17 14 20 17" stroke={active ? '#E9C000' : '#9A9A9A'} strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
+ 
 ]
 
 export default function BottomTabBar() {
@@ -73,8 +73,29 @@ export default function BottomTabBar() {
         paddingBottom: 'env(safe-area-inset-bottom)',
         display: 'flex',
       }}>
-        {TABS.map(tab => {
+        {TABS.map((tab: any) => {
           const active = pathname === tab.href || (tab.href !== '/' && pathname.startsWith(tab.href))
+
+          if (tab.isCenter) {
+            return (
+              <Link key={tab.href} href={tab.href} style={{
+                flex: 1, display: 'flex', alignItems: 'center',
+                justifyContent: 'center', textDecoration: 'none',
+                WebkitTapHighlightColor: 'transparent',
+              }}>
+                <span style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  background: '#E9C000',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginTop: -20,
+                  boxShadow: '0 2px 8px rgba(18,22,26,0.25)',
+                }}>
+                  {tab.icon(active)}
+                </span>
+              </Link>
+            )
+          }
+
           return (
             <Link key={tab.href} href={tab.href} style={{
               flex: 1, display: 'flex', flexDirection: 'column',

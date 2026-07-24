@@ -9,7 +9,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
   const sb = await supabaseServer()
   const { data: e } = await sb.from('events').select('*').eq('slug', slug).single()
   if (!e) return <div className="p-12 text-center">Not found</div>
-  const { data: stats } = await sb.from('event_stats').select('*').eq('event_id', e.id).single()
+  const { data: stats } = await sb.from('event_stats').select('*').eq('event_id', e.id).maybeSingle().catch(() => ({ data: null })) as any
   const { data: attendees } = await sb
     .from('orders')
     .select('user_id, profiles(display_name, nationality, avatar_url)')
@@ -17,17 +17,17 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     .in('status', ['paid','free_confirmed'])
 
   return (
-    <article className="bg-bg text-ink">
+    <article style={{ background: "#ffffff", color: "#12161A" }}>
       {/* Hero image */}
-      <div className="relative h-[60vh] bg-surface overflow-hidden">
+      <div className="relative overflow-hidden" style={{ height: "60vh", background: "#F5F5F0" }}>
         {e.cover_image_url && (
           <img src={e.cover_image_url} className="w-full h-full object-cover opacity-70"/>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent"/>
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #ffffff, rgba(255,255,255,0.4), transparent)" }}/>
         <div className="absolute bottom-0 left-0 right-0 max-w-6xl mx-auto px-6 pb-12">
-          <div className="sub-en uppercase text-primary tracking-widest">{e.category}</div>
-          <h1 className="headline-en text-5xl md:text-8xl uppercase mt-2">{e.title}</h1>
-          <p className="sub-en text-ink/70 text-xl mt-3">{e.summary}</p>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#E9C000" }}>{e.category}</div>
+          <h1 style={{ fontFamily: "PretendardVariable, Pretendard, sans-serif", fontWeight: 900, fontSize: "clamp(28px,6vw,72px)", letterSpacing: "-0.04em", color: "#12161A", marginTop: 8, lineHeight: 1.05 }}>{e.title}</h1>
+          <p style={{ fontSize: 16, color: "#6B6B6B", marginTop: 12 }}>{e.summary}</p>
         </div>
       </div>
 
