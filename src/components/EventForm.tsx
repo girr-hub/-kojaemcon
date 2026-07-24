@@ -125,6 +125,62 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
                  onChange={e=>setF({...f, capacity:Number(e.target.value)})}/></div>
       </div>
 
+      {/* 어드민 전용 상세 이미지 업로드 */}
+      {mode === 'admin' && (
+        <div style={{ borderTop: '1px solid #E8E8E4', paddingTop: 24, marginTop: 8 }}>
+          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 12 }}>
+            상세 페이지 이미지 (최대 4장 · 1125×4000px)
+          </label>
+          <div style={{ background: '#F8F8F6', border: '1.5px dashed #E8E8E4', borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <div style={{ fontSize: 11, color: '#9A9A9A', marginBottom: 10, lineHeight: 1.6 }}>
+              📐 규격: 가로 <strong>1125px</strong> × 세로 최대 <strong>4000px</strong><br/>
+              🖼 썸네일: <strong>1029×1029px</strong> (가운데 378px 안에 텍스트)<br/>
+              ⚠️ 이미지당 최대 5MB, JPG/PNG/WebP
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={async (e) => {
+                const files = Array.from(e.target.files ?? [])
+                if (!files.length) return
+                const { createBrowserClient } = await import('@supabase/ssr')
+                const sb = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+                const urls: string[] = []
+                for (const file of files.slice(0, 4)) {
+                  const path = `events/detail/${Date.now()}-${Math.random().toString(36).slice(2)}.${file.name.split('.').pop()}`
+                  const { error } = await sb.storage.from('event-images').upload(path, file, { upsert: true })
+                  if (!error) {
+                    const { data: pub } = sb.storage.from('event-images').getPublicUrl(path)
+                    urls.push(pub.publicUrl)
+                  }
+                }
+                setF((prev: any) => ({ ...prev, detail_images: [...(prev.detail_images ?? []), ...urls].slice(0, 4) }))
+                e.target.value = ''
+              }}
+              style={{ fontSize: 13 }}
+            />
+          </div>
+          {f.detail_images?.length > 0 && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+              {f.detail_images.map((url: string, i: number) => (
+                <div key={i} style={{ position: 'relative' }}>
+                  <img src={url} style={{ width: '100%', aspectRatio: '1125/2000', objectFit: 'cover', borderRadius: 8, border: '1px solid #E8E8E4' }} alt="" />
+                  <button type="button"
+                    onClick={() => setF((prev: any) => ({ ...prev, detail_images: prev.detail_images.filter((_: any, j: number) => j !== i) }))}
+                    style={{ position: 'absolute', top: 4, right: 4, background: '#dc2626', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
+                    ×
+                  </button>
+                  <div style={{ position: 'absolute', top: 4, left: 4, background: '#0A0A0A', color: '#fff', borderRadius: '50%', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700 }}>
+                    {i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="flex gap-3 pt-6 border-t border-ink/10">
         <button onClick={()=>submit(false)} className="border border-ink/30 px-6 py-3 sub-en uppercase">
           Save draft
