@@ -9,7 +9,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
   const sb = await supabaseServer()
   const { data: e } = await sb.from('events').select('*').eq('slug', slug).single()
   if (!e) return <div className="p-12 text-center">Not found</div>
-  const { data: stats } = await sb.from('event_stats').select('*').eq('event_id', e.id).maybeSingle().catch(() => ({ data: null })) as any
+  const { data: stats } = await sb.from('event_stats').select('*').eq('event_id', e.id).maybeSingle().then(r => r).catch(() => ({ data: null, error: null }))
   const { data: attendees } = await sb
     .from('orders')
     .select('user_id, profiles(display_name, nationality, avatar_url)')
