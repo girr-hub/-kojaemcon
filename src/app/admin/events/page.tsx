@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/server'
 import Link from 'next/link'
 import DeleteButton from './DeleteButton'
+import StatusDropdown from './StatusDropdown'
 
 export default async function AdminEvents() {
   const sb = supabaseAdmin()
@@ -23,10 +24,7 @@ export default async function AdminEvents() {
               <td className="text-center">{e.source}</td>
               <td className="text-center">{e.profiles?.display_name ?? '-'}</td>
               <td className="text-center">
-                <span className={`px-2 py-0.5 text-xs ${
-                  e.status==='published'?'bg-primary text-bg':
-                  e.status==='pending'?'bg-yellow-600':'bg-ink/10'
-                }`}>{e.status}</span>
+                <StatusDropdown id={e.id} initialStatus={e.status} />
               </td>
               <td className="text-center">{new Date(e.starts_at).toLocaleDateString()}</td>
               <td className="text-center">{e.is_free?'FREE':`₩${e.price_krw.toLocaleString()}`}</td>
