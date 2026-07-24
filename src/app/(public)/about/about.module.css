@@ -1,0 +1,366 @@
+/*
+  About 페이지 스타일
+  ------------------------------------------------------------------
+  색상 값은 전달주신 디자인 목업(KOGEMCON-About.png)에서 실측 픽셀로 추출했습니다.
+    - 크림 배경   #FFFBE7
+    - 옐로 배경   #FFD200
+    - 잉크(다크)  #12161A
+    - 포인트 옐로 #E9C000 (기존 인수인계 문서 기준 브랜드 포인트 컬러, 버튼 등 강조용)
+
+  헤딩 폰트: 목업의 "About / Korea Gem Contents / What We Do" 등은 굵고 둥근 형태의
+  디스플레이 서체입니다. 기존 프로젝트엔 Righteous(워드마크 전용)만 로드되어 있어서,
+  구분을 위해 --font-heading 변수로 분리해두었습니다. 같은 톤의 라운드 볼드 서체가
+  이미 있다면 그대로 연결하시고, 없다면 Baloo 2 / Fredoke 같은 라운드 볼드 구글 폰트를
+  next/font/google 로 추가해서 --font-heading에 연결해주세요.
+*/
+
+.page {
+  --cream: #fffbe7;
+  --yellow: #ffd200;
+  --accent: #e9c000;
+  --ink: #12161a;
+  --white: #ffffff;
+
+  --font-heading: "Baloo 2", "Pretendard", sans-serif;
+  --font-body: "Pretendard", sans-serif;
+
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.section {
+  padding: 64px 24px;
+}
+
+/* ---------- 인트로 (About + 로고 + 소개) ---------- */
+
+.intro {
+  composes: section;
+  background: var(--cream);
+}
+
+.introInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.logo {
+  width: 140px;
+  height: auto;
+  align-self: flex-start;
+}
+
+.greeting {
+  font-size: 16px;
+  margin: 0 0 12px;
+  opacity: 0.7;
+}
+
+.lead {
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 0 16px;
+}
+
+.lead strong {
+  font-weight: 700;
+}
+
+/* ---------- 옐로 섹션 (Korea Gem Contents + What We Do) ---------- */
+
+.yellow {
+  composes: section;
+  background: var(--yellow);
+}
+
+.yellowInner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.stackHeading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(36px, 8vw, 56px);
+  line-height: 1.05;
+  margin: 0 0 24px;
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(28px, 6vw, 40px);
+  line-height: 1.15;
+  margin: 0 0 20px;
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 0 32px;
+}
+
+/* KO / GEM / CON 원형 배지 3개 */
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 140px;
+}
+
+.badgeCircle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.badgeCircle strong {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.badgeCircle span {
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+.badgeLabel {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  margin: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(18, 22, 26, 0.3);
+  width: 1px;
+  height: 48px;
+  margin: 0 0 40px;
+}
+
+/* PARTY / TOUR / MEETUP / LANGUAGE 2x2 카드 */
+.grid2x2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid var(--ink);
+  margin-bottom: 40px;
+}
+
+.card {
+  padding: 24px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.card:nth-child(odd) {
+  border-right: none;
+}
+
+.card h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.card p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* ---------- 버튼 공통 ---------- */
+
+.btnDark,
+.btnAccent,
+.btnSubmit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btnDark:hover,
+.btnAccent:hover,
+.btnSubmit:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.btnDark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.btnAccent {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* ---------- 크림 섹션 (For Foreigners) ---------- */
+
+.cream {
+  composes: section;
+  background: var(--cream);
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.iconCard {
+  background: var(--cream);
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.iconCard svg {
+  width: 36px;
+  height: 36px;
+}
+
+.iconCard p {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* ---------- 다크 CTA 섹션 ---------- */
+
+.dark {
+  composes: section;
+  background: var(--ink);
+  color: var(--white);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headingLight {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(28px, 7vw, 44px);
+  line-height: 1.2;
+  margin: 0 0 20px;
+}
+
+.bodyLight {
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 520px;
+  opacity: 0.85;
+  margin: 0 0 32px;
+}
+
+/* ================= 데스크탑 (768px~) ================= */
+@media (min-width: 768px) {
+  .section {
+    padding: 96px 40px;
+  }
+
+  .introInner {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    width: 180px;
+  }
+
+  .lead {
+    max-width: 420px;
+  }
+
+  .grid2x2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card:nth-child(odd) {
+    border-right: 1px solid var(--ink);
+  }
+
+  .card:nth-child(1),
+  .card:nth-child(2) {
+    border-top: none;
+  }
+
+  .iconGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .badgeRow {
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .yellowInner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .stackHeading,
+  .badgeRow {
+    grid-column: 1;
+  }
+
+  .heading,
+  .body,
+  .grid2x2,
+  .divider {
+    grid-column: 2;
+  }
+}
