@@ -35,7 +35,18 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
           {/* gallery */}
-          {e.images?.length > 1 && (
+          {/* 어드민 상세 이미지 (최우선 표시) */}
+          {e.detail_images?.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {e.detail_images.map((url: string, i: number) => (
+                <img key={i} src={url} alt={`detail-${i+1}`}
+                  style={{ width: '100%', maxWidth: 1125, margin: '0 auto', display: 'block', borderRadius: 8 }} />
+              ))}
+            </div>
+          )}
+
+          {/* 일반 갤러리 이미지 */}
+          {!e.detail_images?.length && e.images?.length > 1 && (
             <div className="grid grid-cols-4 gap-2">
               {e.images.slice(1).map((u:string)=>(
                 <img key={u} src={u} className="aspect-square object-cover"/>
