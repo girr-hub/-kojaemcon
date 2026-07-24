@@ -27,6 +27,7 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     images: (initial?.images as string[]) ?? [],
     source: initial?.source ?? (mode === 'admin' ? 'official' : 'host'),
     status: initial?.status ?? 'draft',
+    detail_images: ((initial as any)?.detail_images ?? []) as string[],
   })
 
   const submit = async (publish: boolean) => {
