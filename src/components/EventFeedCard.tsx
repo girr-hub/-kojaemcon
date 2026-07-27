@@ -33,7 +33,13 @@ export default function EventFeedCard({ event }: { event: any }) {
             <div style={{ fontSize: 20, fontWeight: 900, color: '#12161A', lineHeight: 1, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{day}</div>
           </div>
 
-          {/* Price badge top-right */}
+          {/* 마감 오버레이 */}
+        {event.status === 'closed' && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+            <span style={{ background: '#dc2626', color: '#fff', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 16, padding: '8px 24px', borderRadius: 100, letterSpacing: '0.04em' }}>CLOSED</span>
+          </div>
+        )}
+        {/* Price badge top-right */}
           <div style={{
             position: 'absolute', top: 12, right: 12,
             background: event.is_free ? '#E9C000' : '#12161A',
