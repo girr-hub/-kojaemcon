@@ -25,10 +25,10 @@ export default function MobileMenu() {
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} aria-label="Open menu"
-        style={{ width: 44, height: 44, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, WebkitTapHighlightColor: 'transparent', zIndex: 51, position: 'relative' }}>
-        <span style={{ width: 22, height: 2, background: '#12161A', borderRadius: 1, display: 'block' }} />
-        <span style={{ width: 22, height: 2, background: '#12161A', borderRadius: 1, display: 'block' }} />
-        <span style={{ width: 22, height: 2, background: '#12161A', borderRadius: 1, display: 'block' }} />
+        style={{ width: 40, height: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, background: '#F5F5F0', border: '1.5px solid #E8E8E4', borderRadius: '50%', cursor: 'pointer', padding: 0, WebkitTapHighlightColor: 'transparent', zIndex: 51, position: 'relative', flexShrink: 0 }}>
+        <span style={{ width: 16, height: 1.5, background: '#12161A', borderRadius: 1, display: 'block' }} />
+        <span style={{ width: 16, height: 1.5, background: '#12161A', borderRadius: 1, display: 'block' }} />
+        <span style={{ width: 16, height: 1.5, background: '#12161A', borderRadius: 1, display: 'block' }} />
       </button>
 
       {open && (
