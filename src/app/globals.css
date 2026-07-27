@@ -174,3 +174,9 @@ body {
   margin: 0 auto !important;
   position: relative;
 }
+
+/* 어드민은 PC 풀너비 */
+body:has([data-admin]) {
+  max-width: 100% !important;
+  box-shadow: none !important;
+}

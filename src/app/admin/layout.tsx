@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   ]
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="flex min-h-screen bg-bg" data-admin="true" style={{ maxWidth: '100vw', width: '100vw', marginLeft: 'calc(-50vw + 50%)', position: 'relative' }}>
       <aside className="w-64 bg-surface p-6 sub-en" style={{ borderRight: '1px solid #E8E8E4', flexShrink: 0 }}>
         <div className="headline-kr text-primary text-3xl mb-1">ㅋㅈㅋ</div>
         <div className="text-xs uppercase tracking-widest text-ink/50 mb-8">Admin</div>

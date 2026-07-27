@@ -15,10 +15,10 @@ export default function HomePage() {
   return (
     <>
       {/* Dark hero */}
-      <section style={{ background: '#12161A', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', padding: '0 24px' }}>
+      <section style={{ background: '#F5F5E8', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', padding: '0 24px' }}>
         {/* Ghost */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
-          <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 'clamp(200px, 35vw, 480px)', color: 'rgba(233,192,0,0.05)', lineHeight: 0.85, letterSpacing: '-0.08em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 'clamp(200px, 35vw, 480px)', color: 'rgba(18,22,26,0.04)', lineHeight: 0.85, letterSpacing: '-0.08em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <span>ㅋ</span><span>ㅈ</span><span>ㅋ</span>
           </div>
         </div>
@@ -26,30 +26,30 @@ export default function HomePage() {
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 40 }}>
-            <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#E9C000', lineHeight: 0.9, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#12161A', lineHeight: 0.9, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
               <span style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>ㅋ</span>
               <span style={{ fontSize: 'clamp(44px, 7.5vw, 88px)', marginLeft: 8 }}>ㅈ</span>
               <span style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>ㅋ</span>
             </div>
-            <div style={{ width: 1, height: 90, background: 'rgba(233,192,0,0.3)' }} />
-            <div style={{ fontFamily: 'Righteous, sans-serif', fontSize: 'clamp(24px, 4.5vw, 52px)', color: '#E9C000', lineHeight: 1.05, letterSpacing: '0.02em' }}>
+            <div style={{ width: 1, height: 90, background: 'rgba(18,22,26,0.15)' }} />
+            <div style={{ fontFamily: 'Righteous, sans-serif', fontSize: 'clamp(24px, 4.5vw, 52px)', color: '#12161A', lineHeight: 1.05, letterSpacing: '0.02em' }}>
               KO<br />GEM<br />CON
             </div>
           </div>
 
-          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 'clamp(22px, 4vw, 40px)', fontWeight: 400, color: '#E7E7E7', textAlign: 'center', lineHeight: 1.3, marginBottom: 10 }}>
+          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 'clamp(22px, 4vw, 40px)', fontWeight: 400, color: '#12161A', textAlign: 'center', lineHeight: 1.3, marginBottom: 10 }}>
             Find your <span style={{ color: '#E9C000', fontWeight: 700 }}>Gems</span> in Korea
           </h1>
-          <p style={{ fontSize: 'clamp(13px, 2vw, 16px)', color: '#888', textAlign: 'center', marginBottom: 40 }}>
-            Events, tours & meetups for <strong style={{ color: '#E7E7E7' }}>foreigners</strong> in Korea
+          <p style={{ fontSize: 'clamp(13px, 2vw, 16px)', color: '#6B6B6B', textAlign: 'center', marginBottom: 40 }}>
+            Events, tours & meetups for <strong style={{ color: '#12161A' }}>foreigners</strong> in Korea
           </p>
 
-          <Link href="/events" style={{ background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 16, fontWeight: 700, padding: '14px 40px', borderRadius: 100, textDecoration: 'none', display: 'inline-block' }}>
+          <Link href="/events" style={{ background: '#12161A', color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 16, fontWeight: 700, padding: '14px 40px', borderRadius: 100, textDecoration: 'none', display: 'inline-block' }}>
             Check out Events
           </Link>
         </div>
 
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 6, background: '#E9C000' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: '#E9C000' }} />
       </section>
 
       {/* Upcoming Events - light */}
