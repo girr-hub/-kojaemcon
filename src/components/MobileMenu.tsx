@@ -55,8 +55,10 @@ export default function MobileMenu() {
             {/* Links */}
             <nav style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
               {links.map(link => (
-                <Link key={link.href} href={link.href} onClick={() => setOpen(false)}
-                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 500, color: '#E7E7E7', textDecoration: 'none', borderBottom: '1px solid #2a2f35', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                <Link key={link.href} href={link.href}
+                  onClick={() => setOpen(false)}
+                  onTouchStart={() => {}}
+                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: '#E7E7E7', textDecoration: 'none', borderBottom: '1px solid #2a2f35', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
                   {link.label}
                 </Link>
               ))}
