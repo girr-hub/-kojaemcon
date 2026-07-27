@@ -80,7 +80,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const TICKET_TYPES = [
     { id: 'solo', label: 'Solo', emoji: '🙋', desc: 'Coming alone', price: event.price_solo || event.price_krw },
     { id: 'returning', label: 'Returning', emoji: '🔄', desc: 'Visited before', price: event.price_returning || event.price_krw },
-    { id: 'with_friends', label: 'With Friends', emoji: '🧑‍🤝‍🧑', desc: 'Coming with friends', price: event.price_with_friends || event.price_krw },
+    { id: 'with_friends', label: 'With Friends', emoji: '🧑‍🤝‍🧑', desc: 'Coming with friend(s)', price: event.price_with_friends || event.price_krw },
   ]
 
   return (
@@ -126,7 +126,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
               <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
                 <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people total? (including you)</p>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                  <button type="button" onClick={() => setFriendsCount(Math.max(2, friendsCount - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
+                  <button type="button" onClick={() => setFriendsCount(Math.max(1, friendsCount - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
                   <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
                   <button type="button" onClick={() => setFriendsCount(Math.min(event.friends_max || 10, friendsCount + 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
                   <span style={{ fontSize:11, color:'#9A9A9A' }}>max {event.friends_max || 10}</span>
