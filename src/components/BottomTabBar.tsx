@@ -64,8 +64,8 @@ export default function BottomTabBar() {
 
   return (
     <>
-      <div className="md:hidden" style={{ height: 80 }} />
-      <nav className="md:hidden" style={{
+      <div className="" style={{ height: 80 }} />
+      <nav className="" style={{
         position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9000,
         background: 'rgba(255,255,255,0.97)',
         backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',

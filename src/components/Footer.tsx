@@ -6,7 +6,7 @@ export default function Footer() {
       <div style={{ height: 4, background: '#E9C000' }} />
 
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 24px 32px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 40, marginBottom: 48 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 32, marginBottom: 40 }}>
 
           {/* Logo block */}
           <div style={{ gridColumn: 'span 1' }}>

@@ -33,7 +33,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-3 gap-12">
+      <div style={{ padding: "16px 16px 80px", display: "flex", flexDirection: "column", gap: 24 }}>
         <div className="lg:col-span-2 space-y-8">
           {/* gallery */}
           {/* 어드민 상세 이미지 슬라이더 */}

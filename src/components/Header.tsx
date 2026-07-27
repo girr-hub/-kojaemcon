@@ -29,7 +29,7 @@ export default async function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-5">
+        <nav style={{ display: "none" }}>
           {[
             ['Events', '/events'],
             ['About', '/about'],
@@ -57,7 +57,7 @@ export default async function Header() {
         </nav>
 
         {/* Mobile */}
-        <div className="flex md:hidden items-center gap-2">
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {user ? (
             <Link href="/my" style={{ background: '#E9C000', color: '#12161A', padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>My</Link>
           ) : (
