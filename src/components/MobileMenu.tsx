@@ -11,15 +11,15 @@ export default function MobileMenu() {
   }, [open])
 
   const links = [
-    { href: '/events', label: 'Events' },
-    { href: '/community', label: 'Community' },
-    { href: '/magazine', label: 'Magazine' },
-    { href: '/about', label: 'About' },
-    { href: '/collab', label: 'Collab' },
-    { href: '/talent', label: 'Talent' },
-    { href: '/host/new', label: 'Host an Event' },
-    { href: '/cs', label: 'Support / CS' },
-    { href: '/refund-policy', label: 'Refund Policy' },
+    { href: '/events', label: 'Events', icon: '🎪' },
+    { href: '/community', label: 'Community', icon: '💬' },
+    { href: '/magazine', label: 'Magazine', icon: '📮' },
+    { href: '/about', label: 'About', icon: '✨' },
+    { href: '/collab', label: 'Collab', icon: '🤝' },
+    { href: '/talent', label: 'Talent', icon: '🌟' },
+    { href: '/host/new', label: 'Host an Event', icon: '🚀' },
+    { href: '/cs', label: 'Support / CS', icon: '💌' },
+    { href: '/refund-policy', label: 'Refund Policy', icon: '📋' },
   ]
 
   return (
@@ -55,11 +55,14 @@ export default function MobileMenu() {
             {/* Links */}
             <nav style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
               {links.map(link => (
-                <Link key={link.href} href={link.href}
+                <Link key={link.href} href={link.href} prefetch={true}
                   onClick={() => setOpen(false)}
                   onTouchStart={() => {}}
                   style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: '#E7E7E7', textDecoration: 'none', borderBottom: '1px solid #2a2f35', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
-                  {link.label}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <span style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{link.icon}</span>
+                    <span>{link.label}</span>
+                  </span>
                 </Link>
               ))}
             </nav>
