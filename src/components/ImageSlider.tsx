@@ -10,7 +10,7 @@ export default function ImageSlider({ images }: { images: string[] }) {
   const next = () => setCurrent(i => (i + 1) % images.length)
 
   return (
-    <div style={{ position: 'relative', width: '100%', maxWidth: 1125, margin: '0 auto', userSelect: 'none' }}>
+    <div style={{ position: 'relative', width: '100vw', marginLeft: 'calc(-50vw + 50%)', userSelect: 'none' }}>
       {/* 메인 이미지 */}
       <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 12, background: '#F5F5F0' }}>
         <img
