@@ -27,6 +27,11 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     images: (initial?.images as string[]) ?? [],
     source: initial?.source ?? (mode === 'admin' ? 'official' : 'host'),
     status: initial?.status ?? 'draft',
+    has_ticket_types: (initial as any)?.has_ticket_types ?? false,
+    price_returning: (initial as any)?.price_returning ?? 0,
+    price_solo: (initial as any)?.price_solo ?? 0,
+    price_with_friends: (initial as any)?.price_with_friends ?? 0,
+    friends_max: (initial as any)?.friends_max ?? 10,
     detail_images: ((initial as any)?.detail_images ?? []) as string[],
   })
 
@@ -46,6 +51,11 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
       host_id: user.id,
       status: publish ? 'published' : 'draft',
       price_krw: f.is_free ? 0 : Number(f.price_krw),
+      has_ticket_types: f.has_ticket_types,
+      price_solo: f.price_solo,
+      price_returning: f.price_returning,
+      price_with_friends: f.price_with_friends,
+      friends_max: f.friends_max,
     }
     // host는 official 전용 필드 못 씀
     if (mode === 'host') { payload.source = 'host'; delete payload.detail_page_html; delete payload.detail_video_url }
@@ -124,6 +134,33 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
         <div><label className={label}>Capacity</label>
           <input className={input} type="number" min={1} value={f.capacity}
                  onChange={e=>setF({...f, capacity:Number(e.target.value)})}/></div>
+
+        {/* Ticket Types */}
+        {!f.is_free && (
+          <div style={{ gridColumn:'1/-1', background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:16 }}>
+            <label style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12, fontSize:13, fontWeight:700, cursor:'pointer' }}>
+              <input type="checkbox" checked={f.has_ticket_types}
+                onChange={e => setF({...f, has_ticket_types: e.target.checked})}/>
+              Enable ticket types (Solo / Returning / With Friends)
+            </label>
+            {f.has_ticket_types && (
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                <div><label className={label}>🙋 Solo price (KRW)</label>
+                  <input className={input} type="number" value={f.price_solo}
+                    onChange={e=>setF({...f, price_solo:Number(e.target.value)})}/></div>
+                <div><label className={label}>🔄 Returning price (KRW)</label>
+                  <input className={input} type="number" value={f.price_returning}
+                    onChange={e=>setF({...f, price_returning:Number(e.target.value)})}/></div>
+                <div><label className={label}>🧑‍🤝‍🧑 With Friends price (KRW / person)</label>
+                  <input className={input} type="number" value={f.price_with_friends}
+                    onChange={e=>setF({...f, price_with_friends:Number(e.target.value)})}/></div>
+                <div><label className={label}>👥 Max friends per group</label>
+                  <input className={input} type="number" min={2} max={20} value={f.friends_max}
+                    onChange={e=>setF({...f, friends_max:Number(e.target.value)})}/></div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 어드민 전용 상세 이미지 업로드 */}
