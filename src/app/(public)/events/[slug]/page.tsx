@@ -4,6 +4,7 @@ import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
 import ImageSlider from '@/components/ImageSlider'
 import ImageSlider from '@/components/ImageSlider'
+import ImageSlider from '@/components/ImageSlider'
 import EventMap from '@/components/EventMap'
 
 export default async function EventDetail({ params }: { params: Promise<{ slug: string }> }) {
