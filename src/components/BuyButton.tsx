@@ -53,7 +53,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       body: JSON.stringify({ event_id: event.id, user_id: user.id, ticket_type: ticketType, friends_count: ticketType === 'with_friends' ? friendsCount : 1, amount: totalAmount }),
     }).then(r => r.json())
     if (prep.error) { alert(prep.error); setBusy(false); return }
-    const { PortOne } = await import('@portone/browser-sdk/v2')
+    const PortOne = await import('@portone/browser-sdk/v2')
     const result = await PortOne.requestPayment({
       storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
       channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
