@@ -1,5 +1,4 @@
 import './globals.css'
-import AdminButton from '@/components/AdminButton'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import VisitTracker from '@/components/VisitTracker'
@@ -34,7 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <BottomTabBar />
-        <AdminButton />
         <VisitTracker />
       </body>
     </html>

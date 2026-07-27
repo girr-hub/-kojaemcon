@@ -22,9 +22,9 @@ export default function AdminButton() {
     <>
       <button
         onClick={() => setShow(true)}
-        className="fixed bottom-6 right-6 w-10 h-10 bg-surface/50 rounded-full text-ink/20 hover:text-ink/60 text-xs z-40"
+        style={{ fontSize: 12, color: '#E7E7E7', background: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
       >
-        A
+        Admin
       </button>
 
       {show && (

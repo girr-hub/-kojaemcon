@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import AdminButton from '@/components/AdminButton'
 
 export default function Footer() {
   return (
@@ -67,6 +68,10 @@ export default function Footer() {
             <p>본점: 서울특별시 동작구 흑석로84 108관 201호</p>
             <p>강남지점: 서울특별시 강남구 테헤란로 114길 20 6층</p>
           </div>
+        </div>
+
+        <div style={{ marginTop: 16, textAlign: 'right' }}>
+          <AdminButton />
         </div>
       </div>
     </footer>
