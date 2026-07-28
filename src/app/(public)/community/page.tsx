@@ -46,11 +46,11 @@ export default function CommunityPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '100px 24px 80px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: '16px 16px 100px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div className="eyebrow">Community</div>
-            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,52px)', letterSpacing: '-0.055em', color: '#0A0A0A', lineHeight: 0.9 }}>Board</h1>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: '#1A1A1A', lineHeight: 1.2 }}>Board</h1>
             <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>Share tips, ask questions, connect.</p>
           </div>
           <button onClick={() => { if (!user) { window.location.href = '/login'; return } setShowForm(!showForm) }}
@@ -105,7 +105,7 @@ export default function CommunityPage() {
                   {post.is_pinned && <span style={{ fontSize: 10, fontWeight: 700, color: '#D4B33A' }}>📌 PINNED</span>}
                   <span style={{ fontSize: 10, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{post.category}</span>
                 </div>
-                <h3 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 16, color: '#0A0A0A', marginBottom: 6, letterSpacing: '-0.01em' }}>{post.title}</h3>
+                <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 16, color: '#0A0A0A', marginBottom: 6, letterSpacing: '-0.01em' }}>{post.title}</h3>
                 <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6, marginBottom: 10,
                   overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
                   {post.content}

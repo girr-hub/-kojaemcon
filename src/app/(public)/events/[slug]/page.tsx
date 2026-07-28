@@ -35,8 +35,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #ffffff, rgba(255,255,255,0.4), transparent)" }}/>
         <div className="absolute bottom-0 left-0 right-0 max-w-6xl mx-auto px-6 pb-12">
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#E9C000" }}>{e.category}</div>
-          <h1 style={{ fontFamily: "PretendardVariable, Pretendard, sans-serif", fontWeight: 900, fontSize: "clamp(28px,6vw,72px)", letterSpacing: "-0.04em", color: "#12161A", marginTop: 8, lineHeight: 1.05 }}>{e.title}</h1>
-          <p style={{ fontSize: 16, color: "#6B6B6B", marginTop: 12 }}>{e.summary}</p>
+          <h1 style={{ fontFamily: "PretendardVariable, Pretendard, sans-serif", fontWeight: 900, fontSize: "clamp(22px,5vw,40px)", letterSpacing: "-0.04em", color: "#12161A", marginTop: 8, lineHeight: 1.05 }}>{e.title}</h1>
+          <p style={{ fontSize: 14, color: "#6B6B6B", marginTop: 8 }}>{e.summary}</p>
         </div>
       </div>
 
@@ -89,8 +89,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           </section>
 
           {/* Refund policy - default on every event page */}
-          <section style={{ background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 24 }}>
-            <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: '#0A0A0A', marginBottom: 12 }}>
+          <section style={{ background: '#FFFFFF', border: '1px solid #F0F0F0', borderRadius: 14, padding: 16 }}>
+            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em', color: '#0A0A0A', marginBottom: 12 }}>
               Refund Policy
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>

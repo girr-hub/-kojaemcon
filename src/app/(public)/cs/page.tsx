@@ -31,7 +31,7 @@ export default function CSPage() {
     <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-        <h2 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 24, color: '#0A0A0A', marginBottom: 8 }}>Message received!</h2>
+        <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: '#0A0A0A', marginBottom: 8 }}>Message received!</h2>
         <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65 }}>We typically respond within 24–48 hours.</p>
       </div>
     </div>
@@ -41,7 +41,7 @@ export default function CSPage() {
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       <div style={{ maxWidth: 640, margin: '0 auto', padding: '120px 24px 80px' }}>
         <div className="eyebrow">Support</div>
-        <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,56px)', letterSpacing: '-0.055em', lineHeight: 0.9, color: '#0A0A0A', marginBottom: 12 }}>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22 /* clamp(36px,6vw,56px)', letterSpacing: '-0.055em', lineHeight: 0.9, color: '#0A0A0A', marginBottom: 12 }}>
           Contact <em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(40px,7vw,64px)' }}>Us</em>
         </h1>
         <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 40, lineHeight: 1.65 }}>

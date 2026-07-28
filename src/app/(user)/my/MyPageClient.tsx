@@ -125,7 +125,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '100px 24px 80px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 40, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,48px)', letterSpacing: '-0.055em', color: '#0A0A0A', marginBottom: 6 }}>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 'clamp(36px,6vw,48px)', letterSpacing: '-0.055em', color: '#0A0A0A', marginBottom: 6 }}>
             My Page
           </h1>
           <p style={{ fontSize: 14, color: '#9A9A9A' }}>
@@ -180,7 +180,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, color: '#C4C4C0' }}>
+                  <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, color: '#C4C4C0' }}>
                     {(displayName || user.email)[0]?.toUpperCase()}
                   </span>
                 )}
@@ -227,7 +227,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             {ticketList.length === 0 && (
               <div style={{ textAlign: 'center', padding: '64px 24px' }}>
                 <p style={{ fontSize: 40, marginBottom: 16 }}>🎫</p>
-                <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 20, color: '#0A0A0A', marginBottom: 8 }}>No tickets yet</h3>
+                <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 20, color: '#0A0A0A', marginBottom: 8 }}>No tickets yet</h3>
                 <p style={{ fontSize: 14, color: '#9A9A9A', marginBottom: 24 }}>Find an event you love and grab a spot.</p>
                 <Link href="/events" className="btn-primary" style={{ textDecoration: 'none' }}>Explore events →</Link>
               </div>
@@ -241,7 +241,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                   <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9A9A9A', marginBottom: 4 }}>
                     {t.events?.category}
                   </div>
-                  <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: '#0A0A0A', marginBottom: 6 }}>
+                  <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: '#0A0A0A', marginBottom: 6 }}>
                     {t.events?.title}
                   </h3>
                   <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 12 }}>
@@ -255,7 +255,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                     </Link>
                     <button
                       onClick={() => setCancelTarget(t)}
-                      style={{ fontSize: 12, color: '#dc2626', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0, fontFamily: 'Inter' }}
+                      style={{ fontSize: 12, color: '#dc2626', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}
                     >
                       Cancel registration
                     </button>
@@ -283,7 +283,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                     <span className={`badge ${e.status === 'published' ? 'badge-yellow' : 'badge-outline'}`} style={{ marginBottom: 8, display: 'inline-block' }}>
                       {e.status}
                     </span>
-                    <h3 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 15, color: '#0A0A0A', marginBottom: 4 }}>{e.title}</h3>
+                    <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 15, color: '#0A0A0A', marginBottom: 4 }}>{e.title}</h3>
                   </div>
                 </div>
               ))}
@@ -344,7 +344,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
           />
           <div style={{ position: 'relative', background: '#fff', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 28, maxWidth: 420, width: '100%', zIndex: 10 }}>
-            <h3 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 20, letterSpacing: '-0.03em', color: '#0A0A0A', marginBottom: 6 }}>
+            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, letterSpacing: '-0.03em', color: '#0A0A0A', marginBottom: 6 }}>
               Cancel registration
             </h3>
             <p style={{ fontSize: 13, color: '#6B6B6B', marginBottom: 20 }}>
@@ -386,14 +386,14 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             <div style={{ display: 'flex', gap: 8 }}>
               <button
                 onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
-                style={{ flex: 1, border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '12px', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, cursor: 'pointer', background: '#fff', color: '#0A0A0A' }}
+                style={{ flex: 1, border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '12px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer', background: '#fff', color: '#0A0A0A' }}
               >
                 Keep ticket
               </button>
               <button
                 onClick={submitCancel}
                 disabled={cancelling || !cancelReason}
-                style={{ flex: 1, background: '#dc2626', color: '#fff', border: '1.5px solid #dc2626', borderRadius: 100, padding: '12px', fontFamily: 'Inter', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (cancelling || !cancelReason) ? 0.5 : 1 }}
+                style={{ flex: 1, background: '#dc2626', color: '#fff', border: '1.5px solid #dc2626', borderRadius: 100, padding: '12px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (cancelling || !cancelReason) ? 0.5 : 1 }}
               >
                 {cancelling ? 'Cancelling...' : 'Confirm cancel'}
               </button>

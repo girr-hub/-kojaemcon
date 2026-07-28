@@ -220,7 +220,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         )}
 
         <button onClick={handleClick} disabled={busy}
-          style={{ width:'100%', background:'#0A0A0A', color:'#fff', border:'1.5px solid #0A0A0A', borderRadius:100, padding:'14px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
+          style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : `Buy — ₩${Number(getPrice()).toLocaleString()}`}
         </button>
 

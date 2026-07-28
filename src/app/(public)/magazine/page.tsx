@@ -17,9 +17,9 @@ export default async function MagazinePage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Header */}
-      <div style={{ background: '#12161A', padding: 'clamp(48px,8vw,80px) 24px clamp(32px,5vw,56px)', textAlign: 'center' }}>
+      <div style={{ background: '#12161A', padding: '20px 16px 16px', textAlign: 'center' }}>
         <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#E9C000', marginBottom: 12 }}>KOGEMCON</p>
-        <h1 style={{ fontFamily: 'Righteous, sans-serif', fontSize: 'clamp(32px,6vw,56px)', color: '#FFFFFF', letterSpacing: '0.02em', marginBottom: 10 }}>
+        <h1 style={{ fontFamily: 'Righteous, sans-serif', fontSize: 20, color: '#FFFFFF', letterSpacing: '0.02em', marginBottom: 10 }}>
           MAGAZINE
         </h1>
         <p style={{ fontSize: 14, color: '#888' }}>공지사항 · 뉴스레터 · 업데이트</p>

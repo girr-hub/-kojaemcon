@@ -18,8 +18,8 @@ export default function EventsPage() {
   return (
     <div className="max-w-7xl mx-auto px-0 sm:px-6 py-6 md:py-12">
       <div className="mb-6 md:mb-10">
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#E9C000', marginBottom: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Discover</p>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 'clamp(28px, 8vw, 64px)', color: '#12161A', letterSpacing: '-0.04em', lineHeight: 1 }}>ALL EVENTS</h1>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#7A6100', marginBottom: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Discover</p>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', letterSpacing: '-0.04em', lineHeight: 1.2 }}>ALL EVENTS</h1>
       </div>
       {loading ? (
         <p className="text-ink/40 sub-en text-xl text-center py-20">Loading...</p>
