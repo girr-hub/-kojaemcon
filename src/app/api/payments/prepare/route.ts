@@ -12,12 +12,12 @@ export async function POST(req: Request) {
   const { data: event } = await admin.from('events').select('*').eq('id', event_id).single()
   if (!event) return NextResponse.json({ error: 'event not found' }, { status: 404 })
 
-  // 중복 체크
+  // 중복 체크 (paid, free_confirmed만 막음 - pending은 재사용)
   const { data: existing } = await admin.from('orders')
-    .select('id, status')
+    .select('id, status, payment_id')
     .eq('event_id', event_id)
     .eq('user_id', user.id)
-    .in('status', ['paid', 'free_confirmed', 'pending'])
+    .in('status', ['paid', 'free_confirmed'])
     .maybeSingle()
 
   if (existing) {
@@ -25,6 +25,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ free: true, ok: true, already: true })
     }
     return NextResponse.json({ error: 'Already registered for this event' }, { status: 400 })
+  }
+
+  // 기존 pending 주문 재사용
+  if (!event.is_free) {
+    const { data: pendingOrder } = await admin.from('orders')
+      .select('id, payment_id, amount_krw')
+      .eq('event_id', event_id)
+      .eq('user_id', user.id)
+      .eq('status', 'pending')
+      .maybeSingle()
+    if (pendingOrder) {
+      return NextResponse.json({ free: false, payment_id: pendingOrder.payment_id })
+    }
   }
 
   if (event.is_free) {
