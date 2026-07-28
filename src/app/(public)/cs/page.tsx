@@ -41,16 +41,7 @@ export default function CSPage() {
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       <div style={{ maxWidth: 640, margin: '0 auto', padding: '120px 24px 80px' }}>
         <div className="eyebrow">Support</div>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22 /* clamp(36px,6vw,56px)', letterSpacing: '-0.055em', lineHeight: 0.9, color: '#0A0A0A', marginBottom: 12 }}>
-          Contact <em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(40px,7vw,64px)' }}>Us</em>
-        </h1>
-        <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 40, lineHeight: 1.65 }}>
-          Got a question or issue? We&apos;ll get back to you within 48 hours.
-        </p>
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div>
-              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Name *</label>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22*</label>
               <input className="input-base" required placeholder="Your name" value={f.name} onChange={e => setF({ ...f, name: e.target.value })} />
             </div>
             <div>
