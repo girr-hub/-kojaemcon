@@ -180,3 +180,34 @@ body:has([data-admin]) {
   max-width: 100% !important;
   box-shadow: none !important;
 }
+
+/* ── 버튼 탭 애니메이션 강화 ── */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@keyframes tapPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+.btn-primary:active,
+.btn-dark:active,
+.btn-outline:active,
+.btn-yellow:active {
+  animation: tapPulse 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* 카드 탭 */
+.card-base:active {
+  transform: scale(0.97) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* 링크 탭 */
+a:active {
+  opacity: 0.7;
+  transform: scale(0.97);
+}
