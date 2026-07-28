@@ -1,11 +1,27 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
+// PC: SDK가 form을 submit하면 여기로 POST 요청이 들어옴
 export async function POST(req: Request) {
-  const { transactionId, orderNumber, amount } = await req.json()
+  const formData = await req.formData()
+  const transactionId = formData.get('transactionId') as string
+  const orderNumber = formData.get('orderNumber') as string
+  const amount = formData.get('amount') as string
+
+  const result = await approvePayment(transactionId, orderNumber, amount)
+
+  if (result.ok) {
+    // 성공 시 성공 페이지로 리다이렉트
+    return NextResponse.redirect(new URL(`/payment-success?order=${orderNumber}`, req.url))
+  } else {
+    return NextResponse.redirect(new URL(`/payment-fail?error=${encodeURIComponent(result.error || '결제 실패')}`, req.url))
+  }
+}
+
+async function approvePayment(transactionId: string, orderNumber: string, amount: string) {
   const admin = supabaseAdmin()
 
-  // 1. 인증 토큰 발행
+  // 1. 토큰 발행
   const tokenRes = await fetch('https://standard.payup.co.kr/auth/v1/accessToken', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -16,12 +32,12 @@ export async function POST(req: Request) {
   }).then(r => r.json())
 
   if (tokenRes.status !== 'SUCCESS') {
-    return NextResponse.json({ error: '토큰 발행 실패: ' + tokenRes.message }, { status: 400 })
+    return { ok: false, error: '토큰 발행 실패: ' + tokenRes.message }
   }
 
   const accessToken = tokenRes.data.accessToken
 
-  // 2. 결제 승인 요청
+  // 2. 결제 승인
   const payRes = await fetch('https://standard.payup.co.kr/api/v1/payment', {
     method: 'POST',
     headers: {
@@ -36,26 +52,21 @@ export async function POST(req: Request) {
     }),
   }).then(r => r.json())
 
-  if (payRes.status !== 'SUCCESS') {
-    return NextResponse.json({ error: '결제 승인 실패: ' + payRes.message }, { status: 400 })
+  if (payRes.status !== 'SUCCESS' || payRes.data?.responseCode !== '0000') {
+    return { ok: false, error: '결제 승인 실패: ' + (payRes.data?.responseMsg || payRes.message) }
   }
 
-  // 3. DB 주문 업데이트
+  // 3. DB 업데이트
   const { data: order } = await admin.from('orders')
     .select('*')
     .eq('payment_id', orderNumber)
     .single()
 
-  if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-
-  // 금액 검증
-  if (Number(amount) !== order.amount_krw) {
-    return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
-  }
+  if (!order) return { ok: false, error: 'Order not found' }
 
   await admin.from('orders').update({
     status: 'paid',
-    payment_id: transactionId,
+    payment_id: payRes.data.transactionId,
   }).eq('payment_id', orderNumber)
 
   // 4. 채팅방 생성 + 멤버 추가
@@ -71,5 +82,7 @@ export async function POST(req: Request) {
     )
   }
 
-  return NextResponse.json({ ok: true })
+  return { ok: true }
 }
+
+export { approvePayment }

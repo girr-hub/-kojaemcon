@@ -4,58 +4,38 @@ import { supabase } from '@/lib/supabase/client'
 
 type TicketType = 'solo' | 'returning' | 'with_friends'
 
-declare global {
-  interface Window {
-    goPayupPay: (data: any) => void
-    payupPaymentSubmit: (form: any) => void
-    payupPaymentClose: (form: any) => void
-  }
-}
-
 export default function BuyButton({ event, remaining }: { event: any; remaining: number }) {
   const [busy, setBusy] = useState(false)
   const [showNoshow, setShowNoshow] = useState(false)
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [friendsCount, setFriendsCount] = useState(1)
-  const [currentOrderNum, setCurrentOrderNum] = useState('')
-  const [currentAmount, setCurrentAmount] = useState(0)
 
-  // 페이업 운영 SDK 로드
+  // 페이업 SDK 로드 (운영)
   useEffect(() => {
     if (event.is_free) return
-    if (document.querySelector('script[data-payup]')) return
-    const script = document.createElement('script')
-    script.src = 'https://standard.payup.co.kr/assets/js/payup_standard-1.0.js'
-    script.setAttribute('data-payup', 'true')
-    script.async = true
-    document.head.appendChild(script)
+    if (document.getElementById('payup-sdk')) return
+    const s = document.createElement('script')
+    s.id = 'payup-sdk'
+    s.src = 'https://standard.payup.co.kr/assets/js/payup_standard-1.0.js'
+    document.head.appendChild(s)
   }, [event.is_free])
 
-  // 페이업 콜백 함수 등록 (PC: form submit, Mobile: returnUrl)
+  // PC 콜백: 인증 완료 시 자동 호출됨
   useEffect(() => {
-    // PC 결제 인증 완료 콜백
-    window.payupPaymentSubmit = async (payForm: any) => {
-      const transactionId = payForm.querySelector('[name="transactionId"]')?.value
-      const orderNumber = payForm.querySelector('[name="orderNumber"]')?.value || currentOrderNum
-      const amount = payForm.querySelector('[name="amount"]')?.value || String(currentAmount)
-
-      // 서버에서 결제 승인
-      const result = await fetch('/api/payments/payup-confirm', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ transactionId, orderNumber, amount }),
-      }).then(r => r.json())
-
-      setBusy(false)
-      if (result.ok) setJoined(true)
-      else alert('결제 승인 실패: ' + result.error)
+    (window as any).payupPaymentSubmit = (payForm: string) => {
+      // SDK가 만든 form을 승인 URL로 submit
+      const form = document.getElementById(payForm) as HTMLFormElement
+      if (form) {
+        form.action = '/api/payments/payup-confirm'
+        form.method = 'POST'
+        form.submit()
+      }
     }
-
-    window.payupPaymentClose = () => {
+    ;(window as any).payupPaymentClose = () => {
       setBusy(false)
     }
-  }, [currentOrderNum, currentAmount])
+  }, [])
 
   const getPrice = () => {
     if (event.is_free) return 0
@@ -106,36 +86,37 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
-    const orderNumber = prep.payment_id
-    setCurrentOrderNum(orderNumber)
-    setCurrentAmount(totalAmount)
-
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
-    // SDK 로드 대기
-    let attempts = 0
-    while (!window.goPayupPay && attempts < 30) {
-      await new Promise(r => setTimeout(r, 100))
-      attempts++
-    }
-    if (!window.goPayupPay) { alert('결제 모듈 로드 실패. 새로고침 후 다시 시도해주세요.'); setBusy(false); return }
-
     const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
 
-    const payData: any = {
+    // SDK 로드 대기
+    let t = 0
+    while (!(window as any).goPayupPay && t < 50) {
+      await new Promise(r => setTimeout(r, 100))
+      t++
+    }
+    if (!(window as any).goPayupPay) {
+      alert('결제 모듈을 불러올 수 없어요. 새로고침 후 다시 시도해주세요.')
+      setBusy(false)
+      return
+    }
+
+    const data: any = {
       merchantId: 'girr0711',
       itemName: `${event.title} (${ticketLabel})`,
       amount: String(totalAmount),
       userName: user.email ?? 'Guest',
-      orderNumber,
+      orderNumber: prep.payment_id,
     }
 
-    // 모바일은 returnUrl 필수
     if (isMobile) {
-      payData.returnUrl = `${window.location.origin}/api/payments/payup-return`
+      data.returnUrl = `${window.location.origin}/api/payments/payup-return`
     }
 
-    window.goPayupPay(payData)
+    ;(window as any).goPayupPay(data)
+    // PC는 payupPaymentSubmit 콜백에서 처리
+    // 모바일은 returnUrl로 리다이렉트됨
+    if (!isMobile) setBusy(false)
   }
 
   if (remaining <= 0) return (
@@ -205,8 +186,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                   <span style={{ fontSize:20 }}>{t.emoji}</span>
                   <div style={{ textAlign:'left' }}>
-                    <p style={{ fontFamily:'Inter', fontWeight:700, fontSize:13, color: ticketType === t.id ? '#fff' : '#0A0A0A' }}>{t.label}</p>
-                    <p style={{ fontSize:11, color: ticketType === t.id ? 'rgba(255,255,255,0.6)' : '#9A9A9A' }}>{t.desc}</p>
+                    <p style={{ fontFamily:'Inter', fontWeight:700, fontSize:13, color: ticketType === t.id ? '#fff' : '#0A0A0A', margin:0 }}>{t.label}</p>
+                    <p style={{ fontSize:11, color: ticketType === t.id ? 'rgba(255,255,255,0.6)' : '#9A9A9A', margin:0 }}>{t.desc}</p>
                   </div>
                 </div>
                 <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:14, color: ticketType === t.id ? '#E9C000' : '#0A0A0A' }}>
@@ -237,7 +218,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
         {!event.is_free && (
           <div style={{ background:'#F8F8F6', border:'1px solid #E8E8E4', borderRadius:10, padding:'10px 14px' }}>
-            <p style={{ fontSize:11, color:'#6B6B6B', lineHeight:1.6 }}>
+            <p style={{ fontSize:11, color:'#6B6B6B', lineHeight:1.6, margin:0 }}>
               💳 <strong>Korean-issued cards only</strong> (credit & debit)<br/>
               For international cards, <a href="/cs" style={{ color:'#0A0A0A', fontWeight:700 }}>contact CS →</a>
             </p>
