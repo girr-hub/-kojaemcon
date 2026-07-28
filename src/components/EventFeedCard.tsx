@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 export default function EventFeedCard({ event }: { event: any }) {
+  const isClosed = event.status === 'closed'
   const date = new Date(event.starts_at)
   const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase()
   const day = date.getDate()
@@ -34,7 +35,7 @@ export default function EventFeedCard({ event }: { event: any }) {
           </div>
 
           {/* 마감 오버레이 */}
-        {event.status === 'closed' && (
+        {isClosed && (
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
             <span style={{ background: '#dc2626', color: '#fff', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 16, padding: '8px 24px', borderRadius: 100, letterSpacing: '0.04em' }}>CLOSED</span>
           </div>
