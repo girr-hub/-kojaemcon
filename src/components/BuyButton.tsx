@@ -21,7 +21,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   useEffect(() => {
     if (event.is_free) return
     const script = document.createElement('script')
-    script.src = 'https://cdn.payup.co.kr/payup.js'
+    script.src = 'https://pgweb.payup.co.kr/payup/js/payup.js'
     script.async = true
     document.head.appendChild(script)
     return () => { document.head.removeChild(script) }
@@ -79,6 +79,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
     // 페이업 SDK 호출
+    // SDK 로드 대기 (최대 3초)
+    let attempts = 0
+    while (!window.PAYUP && attempts < 30) {
+      await new Promise(r => setTimeout(r, 100))
+      attempts++
+    }
     if (!window.PAYUP) { alert('Payment SDK not loaded. Please try again.'); setBusy(false); return }
 
     const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
