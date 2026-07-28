@@ -47,7 +47,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
   const handleClick = async () => {
     const sb = supabase()
-    const { data: { user } } = await sb.auth.getUser()
+    const { data: { session } } = await sb.auth.getSession()
+    const user = session?.user
     if (!user) { window.location.href = '/login'; return }
     if (remaining <= 0) { alert('Sold out'); return }
     if (event.is_free) { setShowNoshow(true); return }
@@ -57,7 +58,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const confirmJoin = async () => {
     setBusy(true)
     const sb = supabase()
-    const { data: { user } } = await sb.auth.getUser()
+    const { data: { session } } = await sb.auth.getSession()
+    const user = session?.user
     if (!user) return
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST', headers: { 'content-type': 'application/json' },
