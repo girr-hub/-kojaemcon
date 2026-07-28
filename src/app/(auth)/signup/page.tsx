@@ -158,8 +158,8 @@ export default function SignupPage() {
                   <input style={inputStyle} type="date" required value={f.birth_date} onChange={e => setF({ ...f, birth_date: e.target.value })} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Gender</label>
-                  <select style={inputStyle} value={f.gender} onChange={e => setF({ ...f, gender: e.target.value })}>
+                  <label style={labelStyle}>Gender *</label>
+                  <select style={inputStyle} required value={f.gender} onChange={e => setF({ ...f, gender: e.target.value })}>
                     <option value="undisclosed">Prefer not to say</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -169,8 +169,8 @@ export default function SignupPage() {
                 </div>
               </div>
               <div>
-                <label style={labelStyle}>How did you hear about us? *</label>
-                <select style={inputStyle} required value={f.referral_source} onChange={e => setF({ ...f, referral_source: e.target.value })}>
+                <label style={labelStyle}>How did you hear about us? <span style={{color:'#C4C4C0',fontWeight:400}}>(optional)</span></label>
+                <select style={inputStyle} value={f.referral_source} onChange={e => setF({ ...f, referral_source: e.target.value })}>
                   <option value="">Select one</option>
                   {REFERRALS.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
@@ -181,8 +181,8 @@ export default function SignupPage() {
 
             <button
               onClick={() => {
-                if (!f.display_name || !f.email || !f.password || !f.nationality || !f.birth_date || !f.referral_source) {
-                  setErr('Please fill in all required fields')
+                if (!f.display_name || !f.email || !f.password || !f.nationality || !f.birth_date || !f.gender || f.gender === '') {
+                  setErr('Please fill in all required fields (Name, Email, Password, Nationality, Date of birth, Gender)')
                   return
                 }
                 setErr('')
