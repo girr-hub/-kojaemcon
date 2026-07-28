@@ -6,6 +6,7 @@ type TicketType = 'solo' | 'returning' | 'with_friends'
 
 export default function BuyButton({ event, remaining }: { event: any; remaining: number }) {
   const [busy, setBusy] = useState(false)
+  const [joined, setJoined] = useState(false)
   const [showNoshow, setShowNoshow] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [friendsCount, setFriendsCount] = useState(2)
@@ -39,7 +40,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (prep.error) { alert(prep.error); setBusy(false); return }
     setShowNoshow(false)
     setBusy(false)
-    window.location.href = `/chat/${event.id}`
+    setJoined(true)
   }
 
   const handlePaid = async () => {
@@ -67,7 +68,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       body: JSON.stringify({ payment_id: prep.payment_id }),
     }).then(r => r.json())
     setBusy(false)
-    if (verify.ok) window.location.href = `/chat/${event.id}`
+    if (verify.ok) setJoined(true)
     else alert('Payment verification failed')
   }
 
@@ -85,6 +86,32 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
   return (
     <>
+      {joined && (
+        <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+          <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} />
+          <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:20, padding:32, maxWidth:360, width:'100%', zIndex:10, textAlign:'center' }}>
+            <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
+            <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>
+              You&apos;re in!
+            </h3>
+            <p style={{ fontSize:14, color:'#6B6B6B', lineHeight:1.7, marginBottom:24 }}>
+              Successfully joined <strong>{event.title}</strong>.<br/>
+              Check the group chat for updates!
+            </p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+              <a href={`/chat/${event.id}`}
+                style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none', textAlign:'center' }}>
+                Go to Chat →
+              </a>
+              <button onClick={() => setJoined(false)}
+                style={{ background:'#F8F8F6', color:'#6B6B6B', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
+                Stay on this page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showNoshow && (
         <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
