@@ -36,7 +36,7 @@ export default function CommunityPage() {
 
   const submitPost = async () => {
     if (!form.title.trim() || !form.content.trim()) { alert('Fill in title and content'); return }
-    if (!user) { alert('Please log in first'); return }
+    if (!user) { window.location.href = '/login'; return }
     setPosting(true)
     const { error } = await supabase().from('posts').insert({ author_id: user.id, ...form })
     setPosting(false)
@@ -53,7 +53,7 @@ export default function CommunityPage() {
             <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(36px,6vw,52px)', letterSpacing: '-0.055em', color: '#0A0A0A', lineHeight: 0.9 }}>Board</h1>
             <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>Share tips, ask questions, connect.</p>
           </div>
-          <button onClick={() => { if (!user) { alert('Please log in'); return } setShowForm(!showForm) }}
+          <button onClick={() => { if (!user) { window.location.href = '/login'; return } setShowForm(!showForm) }}
             className="btn-primary" style={{ padding: '10px 22px' }}>
             {showForm ? '✕ Cancel' : '+ Write'}
           </button>
