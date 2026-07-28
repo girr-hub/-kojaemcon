@@ -1,89 +1,65 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import EventCard from '@/components/EventCard'
+import EventFeedCard from '@/components/EventFeedCard'
 
 export default function HomePage() {
   const [events, setEvents] = useState<any[]>([])
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    fetch('/api/events-list').then(r => r.json()).then(d => {
-      if (Array.isArray(d)) setEvents(d)
-    })
+    fetch('/api/events-list').then(r => r.json()).then(d => { if (Array.isArray(d)) setEvents(d); setLoading(false) })
   }, [])
 
   return (
-    <>
-      {/* Dark hero */}
-      <section style={{ background: '#F5F5E8', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', padding: '0 24px' }}>
-        {/* Ghost */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
-          <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 'clamp(200px, 35vw, 480px)', color: 'rgba(18,22,26,0.04)', lineHeight: 0.85, letterSpacing: '-0.08em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <span>ㅋ</span><span>ㅈ</span><span>ㅋ</span>
+    <div style={{ background: '#FFFFFF', minHeight: '100vh' }}>
+      {/* 상단 헤더 섹션 */}
+      <div style={{ background: '#FFFFFF', padding: '16px 16px 12px', borderBottom: '1px solid #F0F0F0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <p style={{ fontSize: 19, fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 2 }}>Find your Gems 💎</p>
+            <p style={{ fontSize: 13, color: '#9A9A9A' }}>Events for foreigners in Korea</p>
           </div>
+          <Link href="/events" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#1A1A1A', fontSize: 12, fontWeight: 800, padding: '8px 16px', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 6px rgba(233,192,0,0.3)' }}>See all</Link>
         </div>
+        {/* 카테고리 */}
+        <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' as any }}>
+          {[{e:'🎉',l:'Party'},{e:'🗺',l:'Tour'},{e:'🤝',l:'Meetup'},{e:'🗣',l:'Language'},{e:'🍻',l:'Social'},{e:'🎨',l:'Culture'}].map(c => (
+            <Link key={c.l} href={`/events?category=${c.l.toLowerCase()}`} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, textDecoration: 'none' }}>
+              <div style={{ width: 50, height: 50, borderRadius: 14, background: '#F7F7F7', border: '1px solid #F0F0F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{c.e}</div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#3D3D3D' }}>{c.l}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 40 }}>
-            <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#12161A', lineHeight: 0.9, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>ㅋ</span>
-              <span style={{ fontSize: 'clamp(44px, 7.5vw, 88px)', marginLeft: 8 }}>ㅈ</span>
-              <span style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>ㅋ</span>
-            </div>
-            <div style={{ width: 1, height: 90, background: 'rgba(18,22,26,0.15)' }} />
-            <div style={{ fontFamily: 'Righteous, sans-serif', fontSize: 'clamp(24px, 4.5vw, 52px)', color: '#12161A', lineHeight: 1.05, letterSpacing: '0.02em' }}>
-              KO<br />GEM<br />CON
-            </div>
+      {/* 이벤트 피드 */}
+      <div style={{ background: '#FFFFFF' }}>
+        <div style={{ padding: '16px 16px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, color: '#1A1A1A', letterSpacing: '-0.03em' }}>Upcoming 🔥</h2>
+          <Link href="/events" style={{ fontSize: 13, color: '#9A9A9A' }}>More</Link>
+        </div>
+        {loading ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#9A9A9A', fontSize: 14 }}>Loading...</div>
+        ) : events.length === 0 ? (
+          <div style={{ padding: '48px 16px', textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>🎪</div>
+            <p style={{ fontSize: 15, color: '#9A9A9A' }}>No events yet</p>
           </div>
+        ) : (
+          <div>{events.slice(0, 5).map(e => <EventFeedCard key={e.id} event={e} />)}</div>
+        )}
+      </div>
 
-          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 'clamp(22px, 4vw, 40px)', fontWeight: 400, color: '#12161A', textAlign: 'center', lineHeight: 1.3, marginBottom: 10 }}>
-            Find your <span style={{ color: '#E9C000', fontWeight: 700 }}>Gems</span> in Korea
-          </h1>
-          <p style={{ fontSize: 'clamp(13px, 2vw, 16px)', color: '#6B6B6B', textAlign: 'center', marginBottom: 40 }}>
-            Events, tours & meetups for <strong style={{ color: '#12161A' }}>foreigners</strong> in Korea
-          </p>
-
-          <Link href="/events" style={{ background: '#12161A', color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 16, fontWeight: 700, padding: '14px 40px', borderRadius: 100, textDecoration: 'none', display: 'inline-block' }}>
-            Check out Events
-          </Link>
+      {/* 호스팅 배너 */}
+      <div style={{ padding: '16px', background: '#FFFFFF', borderTop: '1px solid #F0F0F0', marginTop: 8 }}>
+        <div style={{ background: 'linear-gradient(135deg, #FFFBEA 0%, #FFF9D6 100%)', borderRadius: 16, padding: '18px 16px', border: '1px solid #F5E87C', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A', marginBottom: 3, letterSpacing: '-0.02em' }}>Host an event!</p>
+            <p style={{ fontSize: 12, color: '#6B6B6B' }}>Reach foreigners in Korea 🌍</p>
+          </div>
+          <Link href="/host/new" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#1A1A1A', fontSize: 13, fontWeight: 800, padding: '9px 16px', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 8px rgba(233,192,0,0.3)', flexShrink: 0 }}>Start</Link>
         </div>
-
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)' }} />
-      </section>
-
-      {/* Upcoming Events - light */}
-      <section style={{ background: '#FFFFFF', padding: '80px 24px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 3vw, 28px)', color: '#12161A', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 20 }}>
-            Upcoming Events
-            <div style={{ flex: 1, height: 1, background: '#E8E8E4' }} />
-          </h2>
-
-          {events.length === 0 ? (
-            <p style={{ color: '#9A9A9A', fontSize: 15, textAlign: 'center', padding: '40px 0' }}>No upcoming events yet</p>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
-              {events.map((e: any) => <EventCard key={e.id} event={e} />)}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', padding: '64px 24px' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 40px)', color: '#12161A', marginBottom: 12 }}>
-            Got something going on?
-          </h2>
-          <p style={{ fontSize: 16, color: 'rgba(18,22,26,0.7)', marginBottom: 28 }}>
-            Running events for the international community in Korea? List your event on KOGEMCON.
-          </p>
-          <Link href="/host/new" style={{ background: '#12161A', color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 15, fontWeight: 700, padding: '14px 36px', borderRadius: 100, textDecoration: 'none', display: 'inline-block' }}>
-            Launch your event →
-          </Link>
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   )
 }

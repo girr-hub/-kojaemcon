@@ -3,111 +3,47 @@ import Link from 'next/link'
 export default function EventFeedCard({ event }: { event: any }) {
   const isClosed = event.status === 'closed'
   const date = new Date(event.starts_at)
-  const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+  const month = date.toLocaleString('en-US', { month: 'short' })
   const day = date.getDate()
   const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-      <article style={{
-        background: '#FFFFFF',
-        borderBottom: '1px solid #F0F0EC',
-        overflow: 'hidden',
-      }}>
-        {/* Cover image — 1:1 ratio */}
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1', background: '#F5F5F0', overflow: 'hidden' }}>
+      <article style={{ background: '#FFFFFF', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start', borderBottom: '1px solid #F5F5F5', opacity: isClosed ? 0.65 : 1 }}>
+        <div style={{ width: 96, height: 96, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#F7F7F7', position: 'relative' }}>
           {event.cover_image_url ? (
-            <img src={event.cover_image_url} alt={event.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, opacity: 0.15 }}>🎪</div>
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, opacity: 0.25 }}>🎪</div>
           )}
-
-          {/* Date badge top-left */}
-          <div style={{
-            position: 'absolute', top: 12, left: 12,
-            background: '#FFFFFF', borderRadius: 10,
-            padding: '6px 10px', textAlign: 'center',
-            minWidth: 44, boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-          }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: '#E9C000', letterSpacing: '0.1em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{month}</div>
-            <div style={{ fontSize: 20, fontWeight: 900, color: '#12161A', lineHeight: 1, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{day}</div>
-          </div>
-
-          {/* 마감 오버레이 */}
-        {isClosed && (
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-            <span style={{ background: '#dc2626', color: '#fff', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 16, padding: '8px 24px', borderRadius: 100, letterSpacing: '0.04em' }}>CLOSED</span>
-          </div>
-        )}
-        {/* Price badge top-right */}
-          <div style={{
-            position: 'absolute', top: 12, right: 12,
-            background: event.is_free ? '#E9C000' : '#12161A',
-            color: event.is_free ? '#12161A' : '#FFFFFF',
-            borderRadius: 100, padding: '4px 10px',
-            fontSize: 11, fontWeight: 700,
-            fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-          }}>
-            {event.is_free ? 'FREE' : `₩${Number(event.price_krw).toLocaleString()}`}
-          </div>
-
-          {/* Category bottom overlay */}
-          {event.category && (
-            <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)',
-              padding: '20px 14px 10px',
-            }}>
-              <span style={{
-                fontSize: 9, fontWeight: 700, letterSpacing: '0.16em',
-                textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)',
-                fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-              }}>
-                {event.category}
-              </span>
+          {isClosed && (
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: '#fff', letterSpacing: '0.1em' }}>CLOSED</span>
             </div>
           )}
         </div>
-
-        {/* Info below image */}
-        <div style={{ padding: '14px 16px 16px' }}>
-          <h3 style={{
-            fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-            fontWeight: 700, fontSize: 16,
-            letterSpacing: '-0.02em', lineHeight: 1.3,
-            color: '#12161A', marginBottom: 6,
-          }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {event.category && (
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#FFFBEA', padding: '2px 7px', borderRadius: 6, display: 'inline-block', marginBottom: 5 }}>
+              {event.category}
+            </span>
+          )}
+          <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 15, letterSpacing: '-0.03em', lineHeight: 1.35, color: '#1A1A1A', marginBottom: 6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
             {event.title}
           </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6B6B6B', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-              <span>🕐</span>
-              <span>{time}</span>
-            </div>
-            {event.venue_name && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6B6B6B', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                <span>📍</span>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.venue_name}</span>
-              </div>
-            )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
+            <span style={{ fontSize: 12, color: '#6B6B6B' }}>📅 {month} {day} · {time}</span>
+            {event.venue_name && <span style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📍 {event.venue_name}</span>}
           </div>
-
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{
-              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-              fontSize: 15, fontWeight: 800, color: '#E9C000',
-            }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: event.is_free ? '#00C471' : '#1A1A1A', letterSpacing: '-0.03em' }}>
               {event.is_free ? 'Free' : `₩${Number(event.price_krw).toLocaleString()}`}
             </span>
-            <span style={{
-              fontSize: 12, fontWeight: 600, color: '#FFFFFF',
-              background: '#12161A', padding: '6px 14px', borderRadius: 100,
-              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-            }}>
-              View →
-            </span>
+            {!isClosed && (
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', padding: '4px 10px', borderRadius: 7, boxShadow: '0 1px 4px rgba(233,192,0,0.3)' }}>
+                Join →
+              </span>
+            )}
           </div>
         </div>
       </article>
