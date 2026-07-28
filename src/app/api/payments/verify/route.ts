@@ -2,43 +2,47 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
-  const { payment_id } = await req.json()
+  const { payment_id, payup_result } = await req.json()
   const admin = supabaseAdmin()
 
-  const { data: order } = await admin.from('orders').select('*, events(*)')
-    .eq('payment_id', payment_id).single()
-  if (!order) return NextResponse.json({ error: 'order not found' }, { status: 404 })
+  // 주문 조회
+  const { data: order } = await admin.from('orders')
+    .select('*')
+    .eq('payment_id', payment_id)
+    .single()
 
-  // 포트원에 결제 조회
-  const res = await fetch(`https://api.portone.io/payments/${encodeURIComponent(payment_id)}`, {
-    headers: { Authorization: `PortOne ${process.env.PORTONE_API_SECRET}` },
-  })
-  const pay = await res.json()
-  if (!res.ok) return NextResponse.json({ error: pay }, { status: 500 })
+  if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
 
-  const paidOk = pay.status === 'PAID' && pay.amount?.total === order.amount_krw
-  if (!paidOk) {
-    await admin.from('orders').update({ status: 'failed' }).eq('id', order.id)
-    return NextResponse.json({ ok: false })
+  // 페이업 결제 검증
+  // resultCode '0000' = 성공
+  if (!payup_result || payup_result.resultCode !== '0000') {
+    return NextResponse.json({ error: 'Payment not successful' }, { status: 400 })
   }
 
-  await admin.from('orders').update({ 
-    status: 'paid', paid_at: new Date().toISOString() 
-  }).eq('id', order.id)
+  // 금액 검증
+  const paidAmount = Number(payup_result.amount || payup_result.payAmt || 0)
+  if (paidAmount !== order.amount_krw) {
+    await admin.from('orders').update({ status: 'failed' }).eq('payment_id', payment_id)
+    return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
+  }
 
-  // 호스트 정산 레코드 생성 (host 이벤트만)
-  if (order.events.source === 'host' && order.events.host_id) {
-    const gross = order.amount_krw
-    const fee = Math.round(gross * 0.04)
-    await admin.from('payouts').insert({
-      event_id: order.event_id,
-      host_id: order.events.host_id,
-      gross_krw: gross,
-      fee_rate: 0.04,
-      fee_krw: fee,
-      net_krw: gross - fee,
-      status: 'pending',
-    })
+  // 결제 완료 처리
+  await admin.from('orders').update({
+    status: 'paid',
+    payment_id: payup_result.tid || payment_id,
+  }).eq('payment_id', payment_id)
+
+  // 채팅방 생성 + 멤버 추가
+  let { data: room } = await admin.from('chat_rooms').select('id').eq('event_id', order.event_id).maybeSingle()
+  if (!room) {
+    const { data: newRoom } = await admin.from('chat_rooms').insert({ event_id: order.event_id }).select('id').single()
+    room = newRoom
+  }
+  if (room) {
+    await admin.from('chat_members').upsert(
+      { room_id: room.id, user_id: order.user_id },
+      { onConflict: 'room_id,user_id' }
+    )
   }
 
   return NextResponse.json({ ok: true })

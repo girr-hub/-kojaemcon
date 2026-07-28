@@ -1,15 +1,31 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 type TicketType = 'solo' | 'returning' | 'with_friends'
 
+declare global {
+  interface Window {
+    PAYUP: any
+  }
+}
+
 export default function BuyButton({ event, remaining }: { event: any; remaining: number }) {
   const [busy, setBusy] = useState(false)
-  const [joined, setJoined] = useState(false)
   const [showNoshow, setShowNoshow] = useState(false)
+  const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
-  const [friendsCount, setFriendsCount] = useState(2)
+  const [friendsCount, setFriendsCount] = useState(1)
+
+  // 페이업 SDK 로드
+  useEffect(() => {
+    if (event.is_free) return
+    const script = document.createElement('script')
+    script.src = 'https://cdn.payup.co.kr/payup.js'
+    script.async = true
+    document.head.appendChild(script)
+    return () => { document.head.removeChild(script) }
+  }, [event.is_free])
 
   const getPrice = () => {
     if (event.is_free) return 0
@@ -35,7 +51,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (!user) return
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ event_id: event.id, user_id: user.id }),
+      body: JSON.stringify({ event_id: event.id }),
     }).then(r => r.json())
     if (prep.error) { alert(prep.error); setBusy(false); return }
     setShowNoshow(false)
@@ -48,28 +64,50 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     const sb = supabase()
     const { data: { user } } = await sb.auth.getUser()
     if (!user) return
+
     const totalAmount = getPrice()
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ event_id: event.id, user_id: user.id, ticket_type: ticketType, friends_count: ticketType === 'with_friends' ? friendsCount : 1, amount: totalAmount }),
+      body: JSON.stringify({
+        event_id: event.id,
+        ticket_type: ticketType,
+        friends_count: ticketType === 'with_friends' ? friendsCount : 1,
+        amount: totalAmount,
+      }),
     }).then(r => r.json())
+
     if (prep.error) { alert(prep.error); setBusy(false); return }
-    const PortOne = await import('@portone/browser-sdk/v2')
-    const result = await PortOne.requestPayment({
-      storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
-      channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
-      paymentId: prep.payment_id,
-      orderName: event.title,
-      totalAmount, currency: 'KRW' as any, payMethod: 'CARD' as any,
+
+    // 페이업 SDK 호출
+    if (!window.PAYUP) { alert('Payment SDK not loaded. Please try again.'); setBusy(false); return }
+
+    const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
+
+    window.PAYUP.request({
+      mid: 'girr0711',
+      orderNo: prep.payment_id,
+      amount: totalAmount,
+      itemName: `${event.title} (${ticketLabel})`,
+      buyerName: user.email ?? '',
+      buyerEmail: user.email ?? '',
+      returnUrl: `${window.location.origin}/api/payments/payup-return`,
+      // 결제 성공 콜백
+      callback: async (result: any) => {
+        if (result.resultCode === '0000') {
+          // 결제 검증
+          const verify = await fetch('/api/payments/verify', {
+            method: 'POST', headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ payment_id: prep.payment_id, payup_result: result }),
+          }).then(r => r.json())
+          setBusy(false)
+          if (verify.ok) setJoined(true)
+          else alert('Payment verification failed: ' + verify.error)
+        } else {
+          setBusy(false)
+          alert('Payment failed: ' + result.resultMsg)
+        }
+      }
     })
-    if (result?.code) { alert(result.message); setBusy(false); return }
-    const verify = await fetch('/api/payments/verify', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ payment_id: prep.payment_id }),
-    }).then(r => r.json())
-    setBusy(false)
-    if (verify.ok) setJoined(true)
-    else alert('Payment verification failed')
   }
 
   if (remaining <= 0) return (
@@ -86,25 +124,22 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
   return (
     <>
+      {/* 조인 완료 팝업 */}
       {joined && (
-        <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+        <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} />
           <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:20, padding:32, maxWidth:360, width:'100%', zIndex:10, textAlign:'center' }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
-            <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>
-              You&apos;re in!
-            </h3>
+            <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>You&apos;re in!</h3>
             <p style={{ fontSize:14, color:'#6B6B6B', lineHeight:1.7, marginBottom:24 }}>
               Successfully joined <strong>{event.title}</strong>.<br/>
               Check the group chat for updates!
             </p>
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-              <a href={`/chat/${event.id}`}
-                style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none', textAlign:'center' }}>
+              <a href={`/chat/${event.id}`} style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none', textAlign:'center' }}>
                 Go to Chat →
               </a>
-              <button onClick={() => setJoined(false)}
-                style={{ background:'#F8F8F6', color:'#6B6B6B', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
+              <button onClick={() => setJoined(false)} style={{ background:'#F8F8F6', color:'#6B6B6B', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
                 Stay on this page
               </button>
             </div>
@@ -112,8 +147,9 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         </div>
       )}
 
+      {/* 노쇼 경고 모달 */}
       {showNoshow && (
-        <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+        <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
           <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
             <div style={{ background:'#E9C000', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
@@ -132,6 +168,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       )}
 
       <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+        {/* 티켓 타입 선택 */}
         {!event.is_free && event.has_ticket_types && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             {TICKET_TYPES.map(t => (
@@ -149,9 +186,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 </span>
               </button>
             ))}
+
             {ticketType === 'with_friends' && (
               <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people total? (including you)</p>
+                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>
+                  How many people? (1 = just you with a friend&apos;s discount)
+                </p>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                   <button type="button" onClick={() => setFriendsCount(Math.max(1, friendsCount - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
                   <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
@@ -166,11 +206,13 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
+        {/* 결제 버튼 */}
         <button onClick={handleClick} disabled={busy}
           style={{ width:'100%', background:'#0A0A0A', color:'#fff', border:'1.5px solid #0A0A0A', borderRadius:100, padding:'14px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : `Buy — ₩${Number(getPrice()).toLocaleString()}`}
         </button>
 
+        {/* 한국 카드 안내 */}
         {!event.is_free && (
           <div style={{ background:'#F8F8F6', border:'1px solid #E8E8E4', borderRadius:10, padding:'10px 14px' }}>
             <p style={{ fontSize:11, color:'#6B6B6B', lineHeight:1.6 }}>
