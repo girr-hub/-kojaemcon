@@ -49,7 +49,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: '#E9C000' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)' }} />
       </section>
 
       {/* Upcoming Events - light */}
@@ -71,7 +71,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Banner */}
-      <section style={{ background: '#E9C000', padding: '64px 24px' }}>
+      <section style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', padding: '64px 24px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 40px)', color: '#12161A', marginBottom: 12 }}>
             Got something going on?

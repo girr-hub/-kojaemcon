@@ -85,7 +85,7 @@ export default function BottomTabBar() {
               }}>
                 <span style={{
                   width: 44, height: 44, borderRadius: '50%',
-                  background: '#E9C000',
+                  background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   marginTop: -20,
                   boxShadow: '0 2px 8px rgba(18,22,26,0.25)',

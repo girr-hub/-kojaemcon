@@ -46,11 +46,11 @@ export default async function Header() {
             </Link>
           ))}
           {user ? (
-            <Link href="/my" style={{ background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '9px 22px', borderRadius: 100, textDecoration: 'none' }}>
+            <Link href="/my" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '9px 22px', borderRadius: 100, textDecoration: 'none' }}>
               My
             </Link>
           ) : (
-            <Link href="/login" style={{ background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '9px 22px', borderRadius: 100, textDecoration: 'none' }}>
+            <Link href="/login" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '9px 22px', borderRadius: 100, textDecoration: 'none' }}>
               Log In
             </Link>
           )}
@@ -59,9 +59,9 @@ export default async function Header() {
         {/* Mobile */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {user ? (
-            <Link href="/my" style={{ background: '#E9C000', color: '#12161A', padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>My</Link>
+            <Link href="/my" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>My</Link>
           ) : (
-            <Link href="/login" style={{ background: '#E9C000', color: '#12161A', padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>Log In</Link>
+            <Link href="/login" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>Log In</Link>
           )}
           <MobileMenu />
         </div>

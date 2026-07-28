@@ -69,7 +69,7 @@ export default function MobileMenu() {
             {/* CTA */}
             <div style={{ padding: '20px', borderTop: '1px solid #2a2f35', flexShrink: 0, paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
               <Link href="/host/new" onClick={() => setOpen(false)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
                 Host an Event →
               </Link>
             </div>
