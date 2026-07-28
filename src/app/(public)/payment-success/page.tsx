@@ -1,9 +1,10 @@
 'use client'
+import { Suspense } from 'react'
 import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function PaymentSuccess() {
+function PaymentSuccessInner() {
   const params = useSearchParams()
   const order = params.get('order')
 
@@ -27,5 +28,13 @@ export default function PaymentSuccess() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading...</div>}>
+      <PaymentSuccessInner />
+    </Suspense>
   )
 }
