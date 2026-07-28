@@ -86,6 +86,9 @@ export default function SignupPage() {
     }).eq('id', userId)
 
     setLoading(false)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'CompleteRegistration')
+    }
     window.location.href = '/events'
   }
 

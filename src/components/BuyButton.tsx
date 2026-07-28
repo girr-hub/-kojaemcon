@@ -88,6 +88,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
+    // Meta Pixel - InitiateCheckout
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        value: totalAmount, currency: 'KRW', content_name: event.title
+      })
+    }
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
     const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
 

@@ -1,5 +1,16 @@
 'use client'
-import { Suspense } from 'react'
+import { useEffect } from 'react'
+// fbq Purchase 이벤트는 컴포넌트 마운트 시 실행
+function TrackPurchase() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Purchase', { currency: 'KRW' })
+    }
+  }, [])
+  return null
+}
+
+export default function PaymentSuccessimport { Suspense } from 'react'
 import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -9,7 +20,7 @@ function PaymentSuccessInner() {
   const order = params.get('order')
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <><TrackPurchase /><div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 360 }}>
         <div style={{ fontSize: 64, marginBottom: 20 }}>🎉</div>
         <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, color: '#0A0A0A', marginBottom: 10 }}>
@@ -28,10 +39,11 @@ function PaymentSuccessInner() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
-export default function PaymentSuccess() {
+() {
   return (
     <Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading...</div>}>
       <PaymentSuccessInner />
