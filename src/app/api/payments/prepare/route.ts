@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
-  const { event_id, quantity = 1 } = await req.json()
+  const { event_id, quantity = 1, ticket_type, friends_count = 1, amount } = await req.json()
   const sb = await supabaseServer()
   const { data: { user } } = await sb.auth.getUser()
   if (!user) return NextResponse.json({ error: 'login required' }, { status: 401 })
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     event_id,
     user_id: user.id,
     quantity,
-    amount_krw: event.price_krw * quantity,
+    amount_krw: amount ?? (event.price_krw * quantity),
     status: 'pending',
     payment_id: paymentId,
   })

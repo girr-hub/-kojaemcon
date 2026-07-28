@@ -12,6 +12,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
   if (!e) return <div className="p-12 text-center">Not found</div>
   let stats: any = null
   try { const r = await sb.from('event_stats').select('*').eq('event_id', e.id).maybeSingle(); stats = r.data } catch {}
+
+  // remaining 직접 계산 (paid + free_confirmed 주문 수)
+  const { count: soldCount } = await sb.from('orders')
+    .select('*', { count: 'exact', head: true })
+    .eq('event_id', e.id)
+    .in('status', ['paid', 'free_confirmed'])
+  const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
   const { data: attendees } = await sb
     .from('orders')
     .select('user_id, profiles(display_name, nationality, avatar_url)')
@@ -122,11 +129,11 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             </div>
             <div className="mt-2 flex justify-between sub-en text-sm">
               <span className="text-ink/50">Remaining</span>
-              <span>{stats?.remaining ?? e.capacity} / {e.capacity}</span>
+              <span>{remaining} / {e.capacity} spots left</span>
             </div>
 
             <div className="mt-4">
-              <BuyButton event={e} remaining={stats?.remaining ?? e.capacity}/>
+              <BuyButton event={e} remaining={remaining}/>
             </div>
           </div>
         </aside>

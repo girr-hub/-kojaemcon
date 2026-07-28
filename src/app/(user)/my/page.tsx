@@ -12,7 +12,7 @@ export default async function MyPage() {
   const { data: tickets } = await sb.from('orders')
     .select('*, events(*)')
     .eq('user_id', user.id)
-    .in('status', ['paid', 'free_confirmed'])
+    .in('status', ['paid', 'free_confirmed', 'cancelled'])
     .order('created_at', { ascending: false })
 
   const { data: hosted } = await sb.from('events')
