@@ -39,9 +39,9 @@ export default function CSPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '120px 24px 80px' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 16px 100px' }}>
         <div className="eyebrow">Support</div>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22*</label>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22 }}>Contact Us</h1>
               <input className="input-base" required placeholder="Your name" value={f.name} onChange={e => setF({ ...f, name: e.target.value })} />
             </div>
             <div>
