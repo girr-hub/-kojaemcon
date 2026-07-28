@@ -6,7 +6,9 @@ type TicketType = 'solo' | 'returning' | 'with_friends'
 
 declare global {
   interface Window {
-    PAYUP: any
+    goPayupPay: (data: any) => void
+    payupPaymentSubmit: (form: any) => void
+    payupPaymentClose: (form: any) => void
   }
 }
 
@@ -16,16 +18,44 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [friendsCount, setFriendsCount] = useState(1)
+  const [currentOrderNum, setCurrentOrderNum] = useState('')
+  const [currentAmount, setCurrentAmount] = useState(0)
 
-  // 페이업 SDK 로드
+  // 페이업 운영 SDK 로드
   useEffect(() => {
     if (event.is_free) return
+    if (document.querySelector('script[data-payup]')) return
     const script = document.createElement('script')
-    script.src = 'https://pgweb.payup.co.kr/payup/js/payup.js'
+    script.src = 'https://standard.payup.co.kr/assets/js/payup_standard-1.0.js'
+    script.setAttribute('data-payup', 'true')
     script.async = true
     document.head.appendChild(script)
-    return () => { document.head.removeChild(script) }
   }, [event.is_free])
+
+  // 페이업 콜백 함수 등록 (PC: form submit, Mobile: returnUrl)
+  useEffect(() => {
+    // PC 결제 인증 완료 콜백
+    window.payupPaymentSubmit = async (payForm: any) => {
+      const transactionId = payForm.querySelector('[name="transactionId"]')?.value
+      const orderNumber = payForm.querySelector('[name="orderNumber"]')?.value || currentOrderNum
+      const amount = payForm.querySelector('[name="amount"]')?.value || String(currentAmount)
+
+      // 서버에서 결제 승인
+      const result = await fetch('/api/payments/payup-confirm', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ transactionId, orderNumber, amount }),
+      }).then(r => r.json())
+
+      setBusy(false)
+      if (result.ok) setJoined(true)
+      else alert('결제 승인 실패: ' + result.error)
+    }
+
+    window.payupPaymentClose = () => {
+      setBusy(false)
+    }
+  }, [currentOrderNum, currentAmount])
 
   const getPrice = () => {
     if (event.is_free) return 0
@@ -41,7 +71,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (!user) { window.location.href = '/login'; return }
     if (remaining <= 0) { alert('Sold out'); return }
     if (event.is_free) { setShowNoshow(true); return }
-    await handlePaid()
+    await handlePaid(user)
   }
 
   const confirmJoin = async () => {
@@ -59,13 +89,11 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     setJoined(true)
   }
 
-  const handlePaid = async () => {
+  const handlePaid = async (user: any) => {
     setBusy(true)
-    const sb = supabase()
-    const { data: { user } } = await sb.auth.getUser()
-    if (!user) return
-
     const totalAmount = getPrice()
+
+    // 주문 생성
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -78,42 +106,36 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
-    // 페이업 SDK 호출
-    // SDK 로드 대기 (최대 3초)
+    const orderNumber = prep.payment_id
+    setCurrentOrderNum(orderNumber)
+    setCurrentAmount(totalAmount)
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+    // SDK 로드 대기
     let attempts = 0
-    while (!window.PAYUP && attempts < 30) {
+    while (!window.goPayupPay && attempts < 30) {
       await new Promise(r => setTimeout(r, 100))
       attempts++
     }
-    if (!window.PAYUP) { alert('Payment SDK not loaded. Please try again.'); setBusy(false); return }
+    if (!window.goPayupPay) { alert('결제 모듈 로드 실패. 새로고침 후 다시 시도해주세요.'); setBusy(false); return }
 
     const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
 
-    window.PAYUP.request({
-      mid: 'girr0711',
-      orderNo: prep.payment_id,
-      amount: totalAmount,
+    const payData: any = {
+      merchantId: 'girr0711',
       itemName: `${event.title} (${ticketLabel})`,
-      buyerName: user.email ?? '',
-      buyerEmail: user.email ?? '',
-      returnUrl: `${window.location.origin}/api/payments/payup-return`,
-      // 결제 성공 콜백
-      callback: async (result: any) => {
-        if (result.resultCode === '0000') {
-          // 결제 검증
-          const verify = await fetch('/api/payments/verify', {
-            method: 'POST', headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ payment_id: prep.payment_id, payup_result: result }),
-          }).then(r => r.json())
-          setBusy(false)
-          if (verify.ok) setJoined(true)
-          else alert('Payment verification failed: ' + verify.error)
-        } else {
-          setBusy(false)
-          alert('Payment failed: ' + result.resultMsg)
-        }
-      }
-    })
+      amount: String(totalAmount),
+      userName: user.email ?? 'Guest',
+      orderNumber,
+    }
+
+    // 모바일은 returnUrl 필수
+    if (isMobile) {
+      payData.returnUrl = `${window.location.origin}/api/payments/payup-return`
+    }
+
+    window.goPayupPay(payData)
   }
 
   if (remaining <= 0) return (
@@ -134,7 +156,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       {joined && (
         <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} />
-          <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:20, padding:32, maxWidth:360, width:'100%', zIndex:10, textAlign:'center' }}>
+          <div style={{ position:'relative', background:'#fff', borderRadius:20, padding:32, maxWidth:360, width:'100%', zIndex:10, textAlign:'center' }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>You&apos;re in!</h3>
             <p style={{ fontSize:14, color:'#6B6B6B', lineHeight:1.7, marginBottom:24 }}>
@@ -142,7 +164,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
               Check the group chat for updates!
             </p>
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-              <a href={`/chat/${event.id}`} style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none', textAlign:'center' }}>
+              <a href={`/chat/${event.id}`} style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none' }}>
                 Go to Chat →
               </a>
               <button onClick={() => setJoined(false)} style={{ background:'#F8F8F6', color:'#6B6B6B', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
@@ -153,15 +175,15 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         </div>
       )}
 
-      {/* 노쇼 경고 모달 */}
+      {/* 노쇼 경고 */}
       {showNoshow && (
         <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
-          <div style={{ position:'relative', background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
+          <div style={{ position:'relative', background:'#fff', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
             <div style={{ background:'#E9C000', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:800, fontSize:18, color:'#0A0A0A', marginBottom:8 }}>No-show Policy</h3>
             <p style={{ fontSize:13, color:'#6B6B6B', lineHeight:1.7, marginBottom:20 }}>
-              This is a free event. Please only register if you plan to attend. Repeated no-shows may affect your account.
+              This is a free event. Please only register if you plan to attend.
             </p>
             <div style={{ display:'flex', gap:8 }}>
               <button onClick={() => setShowNoshow(false)} style={{ flex:1, border:'1.5px solid #E8E8E4', borderRadius:100, padding:'11px', fontFamily:'Inter', fontWeight:600, fontSize:13, cursor:'pointer', background:'#fff', color:'#0A0A0A' }}>Cancel</button>
@@ -174,7 +196,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       )}
 
       <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-        {/* 티켓 타입 선택 */}
+        {/* 티켓 타입 */}
         {!event.is_free && event.has_ticket_types && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             {TICKET_TYPES.map(t => (
@@ -192,17 +214,13 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 </span>
               </button>
             ))}
-
             {ticketType === 'with_friends' && (
               <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>
-                  How many people? (1 = just you with a friend&apos;s discount)
-                </p>
+                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people?</p>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                   <button type="button" onClick={() => setFriendsCount(Math.max(1, friendsCount - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
                   <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
                   <button type="button" onClick={() => setFriendsCount(Math.min(event.friends_max || 10, friendsCount + 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
-                  <span style={{ fontSize:11, color:'#9A9A9A' }}>max {event.friends_max || 10}</span>
                 </div>
                 <p style={{ fontSize:13, fontWeight:800, color:'#0A0A0A', marginTop:8 }}>
                   Total: ₩{(Number(event.price_with_friends || event.price_krw) * friendsCount).toLocaleString()}
@@ -212,18 +230,16 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
-        {/* 결제 버튼 */}
         <button onClick={handleClick} disabled={busy}
           style={{ width:'100%', background:'#0A0A0A', color:'#fff', border:'1.5px solid #0A0A0A', borderRadius:100, padding:'14px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : `Buy — ₩${Number(getPrice()).toLocaleString()}`}
         </button>
 
-        {/* 한국 카드 안내 */}
         {!event.is_free && (
           <div style={{ background:'#F8F8F6', border:'1px solid #E8E8E4', borderRadius:10, padding:'10px 14px' }}>
             <p style={{ fontSize:11, color:'#6B6B6B', lineHeight:1.6 }}>
-              💳 <strong>Korean-issued cards only</strong> (credit & debit card)<br/>
-              For international cards, please <a href="/cs" style={{ color:'#0A0A0A', fontWeight:700 }}>contact CS →</a>
+              💳 <strong>Korean-issued cards only</strong> (credit & debit)<br/>
+              For international cards, <a href="/cs" style={{ color:'#0A0A0A', fontWeight:700 }}>contact CS →</a>
             </p>
           </div>
         )}
