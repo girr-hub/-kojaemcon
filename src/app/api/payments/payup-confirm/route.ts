@@ -26,8 +26,8 @@ async function approvePayment(transactionId: string, orderNumber: string, amount
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      merchantId: process.env.PAYUP_MID,
-      apiKey: process.env.PAYUP_SECRET_KEY,
+      merchantId: 'girr0711',
+      apiKey: 'bba4fc3b5b7744d0a73dd9d4e94f4cc2',
     }),
   }).then(r => r.json())
 
@@ -46,7 +46,7 @@ async function approvePayment(transactionId: string, orderNumber: string, amount
     },
     body: JSON.stringify({
       transactionId,
-      merchatId: process.env.PAYUP_MID,
+      merchatId: 'girr0711',
       orderNumber,
       amount,
     }),
