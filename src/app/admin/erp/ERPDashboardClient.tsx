@@ -143,6 +143,7 @@ export default function ERPDashboardClient({
   nationalityMap: Record<string, number>; genderMap: Record<string, number>
   ageMap: Record<string, number>; referralMap: Record<string, number>
   interestMap: Record<string, number>; events: any[]
+  allOrders?: any[]
 }) {
   const [tab, setTab] = useState<'analytics' | 'events' | 'email' | 'survey'>('analytics')
 
