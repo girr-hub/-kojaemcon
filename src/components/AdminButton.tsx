@@ -9,7 +9,7 @@ export default function AdminButton() {
   const r = useRouter()
 
   const check = () => {
-    if (pin === '1234') {
+    if (pin === '2450') {
       r.push('/admin')
     } else {
       setErr(true)
