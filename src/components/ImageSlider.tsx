@@ -98,7 +98,7 @@ export default function ImageSlider({ images }: { images: string[] }) {
 
       {/* 썸네일 스트립 */}
       {images.length > 1 && (
-        <div style={{ display: 'flex', gap: 8, marginTop: 12, overflowX: 'auto', paddingBottom: 4 }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 12, overflowX: 'auto', paddingBottom: 4, paddingLeft: 16, paddingRight: 16 }}>
           {images.map((url, i) => (
             <button
               key={i}
