@@ -136,7 +136,7 @@ function VisitChart({ data }: { data: { date: string; count: number }[] }) {
 
 export default function ERPDashboardClient({
   todayVisits, dailyAvg, weeklyAvg, monthlyAvg, totalUsers,
-  dailyVisits, nationalityMap, genderMap, ageMap, referralMap, interestMap, events,
+  dailyVisits, nationalityMap, genderMap, ageMap, referralMap, interestMap, events, allOrders = [],
 }: {
   todayVisits: number; dailyAvg: number; weeklyAvg: number; monthlyAvg: number; totalUsers: number
   dailyVisits: { date: string; count: number }[]
@@ -144,7 +144,45 @@ export default function ERPDashboardClient({
   ageMap: Record<string, number>; referralMap: Record<string, number>
   interestMap: Record<string, number>; events: any[]
 }) {
-  const [tab, setTab] = useState<'analytics' | 'email' | 'survey'>('analytics')
+  const [tab, setTab] = useState<'analytics' | 'events' | 'email' | 'survey'>('analytics')
+
+  const exportCSV = (data: any[], filename: string) => {
+    if (!data.length) return
+    const headers = Object.keys(data[0])
+    const rows = data.map(row => headers.map(h => {
+      const v = row[h]; if (v === null || v === undefined) return ''
+      const s = String(v).replace(/"/g, '""')
+      return s.includes(',') || s.includes('\n') ? '"' + s + '"' : s
+    }).join(','))
+    const csv = [headers.join(','), ...rows].join('\n')
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob); const a = document.createElement('a')
+    a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url)
+  }
+
+  const exportOrders = () => exportCSV(allOrders.map(o => ({
+    이벤트: o.events?.title || '', 이름: o.profiles?.display_name || '',
+    실명: o.profiles?.real_name || '', 이메일: o.profiles?.email || '',
+    국적: o.profiles?.nationality || '', 금액: o.amount_krw,
+    상태: o.status, 날짜: new Date(o.created_at).toLocaleDateString('ko-KR'),
+  })), 'kogemcon_orders_' + new Date().toISOString().slice(0,10) + '.csv')
+
+  const exportUsers = () => exportCSV(
+    Object.entries(nationalityMap).map(([nationality, count]) => ({ nationality, count })),
+    'kogemcon_users_' + new Date().toISOString().slice(0,10) + '.csv'
+  )
+
+  // 이벤트별 통계
+  const eventStats = allOrders.reduce((acc: any, o: any) => {
+    const id = o.events?.id; const title = o.events?.title
+    if (!id) return acc
+    if (!acc[id]) acc[id] = { title, total: 0, paid: 0, free: 0, cancelled: 0, revenue: 0 }
+    acc[id].total++
+    if (o.status === 'paid') { acc[id].paid++; acc[id].revenue += o.amount_krw || 0 }
+    else if (o.status === 'free_confirmed') acc[id].free++
+    else if (o.status === 'cancelled') acc[id].cancelled++
+    return acc
+  }, {})
   const [selectedEvent, setSelectedEvent] = useState('')
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
@@ -174,6 +212,7 @@ export default function ERPDashboardClient({
 
   const TABS = [
     { id: 'analytics', label: '📊 Analytics' },
+    { id: 'events', label: '🎪 Events' },
     { id: 'email', label: '📧 Email' },
     { id: 'survey', label: '⭐ Survey' },
   ]
@@ -194,6 +233,41 @@ export default function ERPDashboardClient({
             </button>
           ))}
         </div>
+
+        {/* CSV 추출 버튼 */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+          <button onClick={exportOrders} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#D4B33A', color: '#0A0A0A', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            📥 주문 전체 CSV
+          </button>
+          <button onClick={exportUsers} style={{ padding: '8px 16px', borderRadius: 8, border: '1.5px solid #2a2a2a', background: 'transparent', color: '#ccc', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            👥 유저 통계 CSV
+          </button>
+        </div>
+
+        {tab === 'events' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {Object.values(eventStats).sort((a: any, b: any) => b.total - a.total).map((ev: any, i: number) => (
+              <div key={i} style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 14, padding: '16px 20px' }}>
+                <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 12 }}>{ev.title}</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                  {[
+                    { label: '총 참가', value: ev.total, color: '#fff' },
+                    { label: '유료', value: ev.paid, color: '#4ade80' },
+                    { label: '무료', value: ev.free, color: '#60a5fa' },
+                    { label: '취소', value: ev.cancelled, color: '#f87171' },
+                    { label: '매출', value: '₩' + ev.revenue.toLocaleString(), color: '#D4B33A' },
+                  ].map(s => (
+                    <div key={s.label} style={{ background: '#0d0d0d', borderRadius: 10, padding: '10px', textAlign: 'center' }}>
+                      <div style={{ fontSize: 16, fontWeight: 900, color: s.color, fontFamily: 'Inter' }}>{s.value}</div>
+                      <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {Object.keys(eventStats).length === 0 && <p style={{ color: '#666', fontSize: 14 }}>주문 데이터가 없어요</p>}
+          </div>
+        )}
 
         {tab === 'analytics' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>

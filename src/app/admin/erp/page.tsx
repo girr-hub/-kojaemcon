@@ -1,6 +1,8 @@
 import { supabaseAdmin } from '@/lib/supabase/server'
 import ERPDashboardClient from './ERPDashboardClient'
 
+export const revalidate = 0 // 항상 최신 데이터
+
 export default async function ERPPage() {
   const admin = supabaseAdmin()
 
@@ -77,9 +79,14 @@ export default async function ERPPage() {
   })
 
   const { data: events } = await admin.from('events')
-    .select('id, title, starts_at, status')
+    .select('id, title, starts_at, status, capacity, is_free, price_krw')
     .order('starts_at', { ascending: false })
     .limit(50)
+
+  // 이벤트별 주문 현황
+  const { data: allOrders } = await admin.from('orders')
+    .select('*, events(id, title), profiles(display_name, email, real_name, nationality)')
+    .order('created_at', { ascending: false })
 
   return (
     <ERPDashboardClient
@@ -95,6 +102,7 @@ export default async function ERPPage() {
       referralMap={referralMap}
       interestMap={interestMap}
       events={events ?? []}
+      allOrders={allOrders ?? []}
     />
   )
 }
