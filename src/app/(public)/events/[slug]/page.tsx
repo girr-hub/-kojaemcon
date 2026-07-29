@@ -44,18 +44,10 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
         <div className="lg:col-span-2 space-y-8">
           {/* gallery */}
           {/* 어드민 상세 이미지 슬라이더 */}
-          {e.detail_images?.length > 0 && (
-            <ImageSlider images={e.detail_images} />
-          )}
-
-          {/* 일반 갤러리 이미지 */}
-          {!e.detail_images?.length && e.images?.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {e.images.slice(1).map((u:string)=>(
-                <img key={u} src={u} className="aspect-square object-cover"/>
-              ))}
-            </div>
-          )}
+          {(() => {
+            const all = [...(e.detail_images ?? []), ...(e.images ?? [])].filter(Boolean)
+            return all.length > 0 ? <ImageSlider images={all} /> : null
+          })()}
 
           <div className="prose prose-invert max-w-none"
                dangerouslySetInnerHTML={{ __html: sanitizeHtml(e.description_html || '') }}/>
