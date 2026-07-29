@@ -3,9 +3,9 @@ import Link from 'next/link'
 export default function EventFeedCard({ event }: { event: any }) {
   const isClosed = event.status === 'closed'
   const date = new Date(event.starts_at)
-  const month = date.toLocaleString('en-US', { month: 'short', timeZone: 'Asia/Seoul' })
-  const day = Number(date.toLocaleString('en-US', { day: 'numeric', timeZone: 'Asia/Seoul' }))
-  const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Seoul' })
+  const month = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' })
+  const day = Number(date.toLocaleString('en-US', { day: 'numeric', timeZone: 'UTC' }))
+  const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' })
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
