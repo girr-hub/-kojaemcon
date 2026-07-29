@@ -36,9 +36,9 @@ export default function MobileMenu() {
           {/* Backdrop */}
           <div onClick={() => setOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)' }} />
           {/* Panel */}
-          <div style={{ position: 'absolute', top: 0, right: 0, width: '85vw', maxWidth: 340, height: '100%', background: '#1a1f26', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '85vw', maxWidth: 300, height: '100%', background: '#FFFFFF', borderTopRightRadius: 28, borderBottomRightRadius: 28, boxShadow: '4px 0 40px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderBottom: '1px solid #2a2f35', flexShrink: 0, paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderBottom: '1px solid #F5F5F5', flexShrink: 0, paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#E9C000', display: 'flex', flexDirection: 'column', lineHeight: 0.88 }}>
                   <span style={{ fontSize: 13 }}>ㅋ</span>
@@ -58,7 +58,7 @@ export default function MobileMenu() {
                 <Link key={link.href} href={link.href} prefetch={true}
                   onClick={() => setOpen(false)}
                   onTouchStart={() => {}}
-                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: '#E7E7E7', textDecoration: 'none', borderBottom: '1px solid #2a2f35', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
+                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: '#1A1A1A', textDecoration: 'none', borderBottom: '1px solid #F5F5F5', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <span style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{link.icon}</span>
                     <span>{link.label}</span>
@@ -67,9 +67,9 @@ export default function MobileMenu() {
               ))}
             </nav>
             {/* CTA */}
-            <div style={{ padding: '20px', borderTop: '1px solid #2a2f35', flexShrink: 0, paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid #F0F0F0', flexShrink: 0, paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
               <Link href="/host/new" onClick={() => setOpen(false)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
                 Host an Event →
               </Link>
             </div>

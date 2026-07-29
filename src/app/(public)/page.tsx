@@ -19,7 +19,7 @@ export default function HomePage() {
             <p style={{ fontSize: 19, fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 2 }}>Find your Gems 💎</p>
             <p style={{ fontSize: 13, color: '#9A9A9A' }}>Events for foreigners in Korea</p>
           </div>
-          <Link href="/events" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#1A1A1A', fontSize: 12, fontWeight: 800, padding: '8px 16px', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 6px rgba(233,192,0,0.3)' }}>See all</Link>
+          <Link href="/events" style={{ background: '#E9C000', color: '#1A1A1A', fontSize: 12, fontWeight: 800, padding: '8px 16px', borderRadius: 10, textDecoration: 'none',  }}>See all</Link>
         </div>
         {/* 카테고리 */}
         <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' as any }}>
@@ -57,7 +57,7 @@ export default function HomePage() {
             <p style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A', marginBottom: 3, letterSpacing: '-0.02em' }}>Host an event!</p>
             <p style={{ fontSize: 12, color: '#6B6B6B' }}>Reach foreigners in Korea 🌍</p>
           </div>
-          <Link href="/host/new" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#1A1A1A', fontSize: 13, fontWeight: 800, padding: '9px 16px', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 8px rgba(233,192,0,0.3)', flexShrink: 0 }}>Start</Link>
+          <Link href="/host/new" style={{ background: '#E9C000', color: '#1A1A1A', fontSize: 13, fontWeight: 800, padding: '9px 16px', borderRadius: 10, textDecoration: 'none',  flexShrink: 0 }}>Start</Link>
         </div>
       </div>
     </div>

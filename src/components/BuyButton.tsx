@@ -10,6 +10,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [friendsCount, setFriendsCount] = useState(1)
+  const [ticketQty, setTicketQty] = useState(1)
 
   // 페이업 SDK 로드 (운영)
   useEffect(() => {
@@ -137,7 +138,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     { id: 'solo', label: 'Solo', emoji: '🙋', desc: 'Coming alone', price: event.price_solo || event.price_krw },
     { id: 'returning', label: 'Returning', emoji: '🔄', desc: 'Visited before', price: event.price_returning || event.price_krw },
     { id: 'with_friends', label: 'With Friends', emoji: '🧑‍🤝‍🧑', desc: 'Coming with friend(s)', price: event.price_with_friends || event.price_krw },
-  ]
+  ].sort((a, b) => b.price - a.price)
 
   return (
     <>
@@ -169,7 +170,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
           <div style={{ position:'relative', background:'#fff', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
-            <div style={{ background:'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
+            <div style={{ background:'#E9C000', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:800, fontSize:18, color:'#0A0A0A', marginBottom:8 }}>No-show Policy</h3>
             <p style={{ fontSize:13, color:'#6B6B6B', lineHeight:1.7, marginBottom:20 }}>
               This is a free event. Please only register if you plan to attend.

@@ -18,7 +18,7 @@ const INTEREST_CATEGORIES = [
 export default function SignupPage() {
   const [step, setStep] = useState(1) // 1: basic, 2: profile, 3: interests
   const [f, setF] = useState({
-    display_name: '', email: '', password: '', nationality: '',
+    display_name: '', real_name: '', email: '', password: '', nationality: '',
     birth_date: '', gender: 'undisclosed', referral_source: '',
   })
   const [interests, setInterests] = useState<string[]>([])
@@ -77,6 +77,7 @@ export default function SignupPage() {
     const birthYear = f.birth_date ? new Date(f.birth_date).getFullYear() : null
     await sb.from('profiles').update({
       display_name: f.display_name,
+      real_name: f.real_name,
       nationality: f.nationality,
       birth_year: birthYear,
       gender: f.gender,
@@ -139,6 +140,8 @@ export default function SignupPage() {
               <div>
                 <label style={labelStyle}>Display name *</label>
                 <input style={inputStyle} placeholder="How others see you" required value={f.display_name} onChange={e => setF({ ...f, display_name: e.target.value })} />
+                <label style={{...labelStyle, marginTop: 12}}>Real name <span style={{color:'#9A9A9A',fontWeight:400}}>(optional)</span></label>
+                <input style={inputStyle} placeholder="Your legal name" value={(f as any).real_name || ''} onChange={e => setF({ ...f, real_name: e.target.value } as any)} />
               </div>
               <div>
                 <label style={labelStyle}>Email *</label>

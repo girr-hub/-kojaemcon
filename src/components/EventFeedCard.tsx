@@ -3,9 +3,9 @@ import Link from 'next/link'
 export default function EventFeedCard({ event }: { event: any }) {
   const isClosed = event.status === 'closed'
   const date = new Date(event.starts_at)
-  const month = date.toLocaleString('en-US', { month: 'short' })
-  const day = date.getDate()
-  const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  const month = date.toLocaleString('en-US', { month: 'short', timeZone: 'Asia/Seoul' })
+  const day = Number(date.toLocaleString('en-US', { day: 'numeric', timeZone: 'Asia/Seoul' }))
+  const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Seoul' })
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
@@ -40,7 +40,7 @@ export default function EventFeedCard({ event }: { event: any }) {
               {event.is_free ? 'Free' : `₩${Number(event.price_krw).toLocaleString()}`}
             </span>
             {!isClosed && (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', padding: '4px 10px', borderRadius: 7, boxShadow: '0 1px 4px rgba(233,192,0,0.3)' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#E9C000', padding: '4px 10px', borderRadius: 7,  }}>
                 Join →
               </span>
             )}

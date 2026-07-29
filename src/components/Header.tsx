@@ -25,11 +25,11 @@ export default function Header() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {user ? (
-            <Link href="/my" style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#1A1A1A', textDecoration: 'none', boxShadow: '0 2px 6px rgba(233,192,0,0.35)' }}>
+            <Link href="/my" style={{ width: 32, height: 32, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#1A1A1A', textDecoration: 'none',  }}>
               {user.email?.[0].toUpperCase() ?? 'M'}
             </Link>
           ) : (
-            <Link href="/login" style={{ background: 'linear-gradient(135deg, #E9C000 0%, #FFE44D 100%)', color: '#1A1A1A', padding: '7px 16px', borderRadius: 10, fontSize: 13, fontWeight: 800, textDecoration: 'none', boxShadow: '0 2px 6px rgba(233,192,0,0.3)' }}>Log In</Link>
+            <Link href="/login" style={{ background: '#E9C000', color: '#1A1A1A', padding: '7px 16px', borderRadius: 10, fontSize: 13, fontWeight: 800, textDecoration: 'none',  }}>Log In</Link>
           )}
           <MobileMenu />
         </div>

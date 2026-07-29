@@ -12,7 +12,7 @@
   --white: #FFFFFF;
   --gold: #E9C000;
   --gold-light: #FFFBEA;
-  --gold-grad: linear-gradient(135deg, #E9C000 0%, #FFE44D 100%);
+  --gold-grad: #E9C000;
   --text: #1A1A1A;
   --text-2: #3D3D3D;
   --text-3: #6B6B6B;
@@ -60,17 +60,17 @@ img { max-width: 100%; display: block; }
 /* ── Buttons ── */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  background: linear-gradient(135deg, #E9C000 0%, #FFE44D 100%);
+  background: #E9C000;
   color: #1A1A1A;
   font-family: 'PretendardVariable', Pretendard, sans-serif;
   font-size: 15px; font-weight: 800;
   padding: 14px 24px; border-radius: var(--radius);
   border: none;
-  box-shadow: 0 2px 8px rgba(233,192,0,0.35);
+  
   transition: all 0.15s ease;
   letter-spacing: -0.02em;
 }
-.btn-primary:hover { filter: brightness(1.05); box-shadow: 0 4px 16px rgba(233,192,0,0.4); }
+.btn-primary:hover { filter: brightness(1.05);  }
 .btn-primary:active { transform: scale(0.96); opacity: 0.9; }
 
 .btn-dark {

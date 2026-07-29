@@ -167,7 +167,7 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
       {mode === 'admin' && (
         <div style={{ borderTop: '1px solid #E8E8E4', paddingTop: 24, marginTop: 8 }}>
           <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 12 }}>
-            상세 페이지 이미지 (최대 4장 · 1125×4000px)
+            상세 페이지 이미지 (최대 5장 · 1125×4000px)
           </label>
           <div style={{ background: '#F8F8F6', border: '1.5px dashed #E8E8E4', borderRadius: 12, padding: 16, marginBottom: 12 }}>
             <div style={{ fontSize: 11, color: '#9A9A9A', marginBottom: 10, lineHeight: 1.6 }}>
@@ -193,7 +193,7 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
                     urls.push(pub.publicUrl)
                   }
                 }
-                setF((prev: any) => ({ ...prev, detail_images: [...(prev.detail_images ?? []), ...urls].slice(0, 4) }))
+                setF((prev: any) => ({ ...prev, detail_images: [...(prev.detail_images ?? []), ...urls].slice(0, 5) }))
                 e.target.value = ''
               }}
               style={{ fontSize: 13 }}
