@@ -72,9 +72,9 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 12, letterSpacing: '-0.03em' }}>Who&apos;s coming ({attendees?.length ?? 0})</h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {attendees?.map((a:any)=>(
-                <div key={a.user_id} style={{ background: '#F7F7F7', padding: '6px 12px', borderRadius: 100, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 py-2 sub-en text-sm flex items-center gap-2">
-                  {a.profiles?.avatar_url && <img src={a.profiles.avatar_url} className="w-6 h-6 rounded-full"/>}
-                  {a.profiles?.display_name} · {a.profiles?.nationality}
+                <div key={a.user_id} style={{ background: '#F7F7F7', padding: '6px 12px', borderRadius: 100, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {a.profiles?.avatar_url && <img src={a.profiles.avatar_url} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} alt="" />}
+                  <span>{a.profiles?.display_name} · {a.profiles?.nationality}</span>
                 </div>
               ))}
             </div>
