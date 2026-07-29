@@ -36,12 +36,24 @@ export default function EventFeedCard({ event }: { event: any }) {
             {event.venue_name && <span style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📍 {event.venue_name}</span>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: 14, fontWeight: 800, color: event.is_free ? '#00C471' : '#1A1A1A', letterSpacing: '-0.03em' }}>
-              {event.is_free ? 'Free' : `₩${Number(event.price_krw).toLocaleString()}`}
-            </span>
-            {!isClosed && (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#E9C000', padding: '4px 10px', borderRadius: 7,  }}>
+            <div>
+              <span style={{ fontSize: 14, fontWeight: 800, color: event.is_free ? '#00C471' : '#1A1A1A', letterSpacing: '-0.03em' }}>
+                {event.is_free ? 'Free' : `₩${Number(event.price_krw).toLocaleString()}`}
+              </span>
+              {event.capacity > 0 && (
+                <div style={{ fontSize: 11, fontWeight: 600, color: event.remaining <= 5 && event.remaining > 0 ? '#dc2626' : '#9A9A9A', marginTop: 2 }}>
+                  {event.remaining <= 0 ? '🔴 Sold out' : `${event.sold ?? 0}/${event.capacity} joined`}
+                </div>
+              )}
+            </div>
+            {!isClosed && (event.remaining > 0 || !event.capacity) && (
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '5px 10px', borderRadius: 7 }}>
                 Join →
+              </span>
+            )}
+            {!isClosed && event.capacity > 0 && event.remaining <= 0 && (
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', background: '#F0F0F0', padding: '5px 10px', borderRadius: 7 }}>
+                Sold out
               </span>
             )}
           </div>
