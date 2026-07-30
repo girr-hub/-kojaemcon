@@ -1,4 +1,4 @@
-import { supabaseServer } from '@/lib/supabase/server'
+import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 import { sanitizeHtml } from '@/lib/sanitize'
 import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
@@ -19,7 +19,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     .eq('event_id', e.id)
     .in('status', ['paid', 'free_confirmed'])
   const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
-  const { data: attendees } = await sb
+  const admin = supabaseAdmin()
+  const { data: attendees } = await admin
     .from('orders')
     .select('user_id, profiles(display_name, nationality, avatar_url)')
     .eq('event_id', e.id)
