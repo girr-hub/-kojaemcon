@@ -19,7 +19,7 @@ export default function MobileMenu() {
     { href: '/talent', label: 'Talent', icon: '🌟' },
     { href: '/host/new', label: 'Host an Event', icon: '🚀' },
     { href: '/cs', label: 'Support / CS', icon: '💌' },
-    { href: '/refund-policy', label: 'Refund Policy', icon: '📋' },
+
   ]
 
   return (
