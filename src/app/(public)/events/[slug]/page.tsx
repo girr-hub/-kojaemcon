@@ -69,15 +69,32 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
 
           {/* attendees */}
           <section>
-            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 12, letterSpacing: '-0.03em' }}>Who&apos;s coming ({attendees?.length ?? 0})</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {attendees?.map((a:any)=>(
-                <div key={a.user_id} style={{ background: '#F7F7F7', padding: '6px 12px', borderRadius: 100, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  {a.profiles?.avatar_url && <img src={a.profiles.avatar_url} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} alt="" />}
-                  <span>{a.profiles?.display_name} · {a.profiles?.nationality}</span>
-                </div>
-              ))}
-            </div>
+            <h3 style={{ fontFamily:'PretendardVariable,Pretendard,sans-serif', fontWeight:800, fontSize:18, color:'#1A1A1A', marginBottom:12, letterSpacing:'-0.03em' }}>
+              Who&apos;s coming ({(attendees ?? []).length})
+            </h3>
+            {(attendees ?? []).length === 0 ? (
+              <p style={{ fontSize:13, color:'#9A9A9A' }}>No one yet — be the first!</p>
+            ) : (
+              <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+                {(attendees ?? []).map((a:any) => {
+                  const name = a?.profiles?.display_name || 'Guest'
+                  const nat = a?.profiles?.nationality || ''
+                  const avatar = a?.profiles?.avatar_url || null
+                  return (
+                    <div key={a?.user_id || name} style={{ background:'#F7F7F7', padding:'6px 12px', borderRadius:100, fontSize:13, display:'flex', alignItems:'center', gap:6, border:'1px solid #EBEBEB' }}>
+                      {avatar ? (
+                        <img src={avatar} style={{ width:22, height:22, borderRadius:'50%', objectFit:'cover', flexShrink:0 }} alt="" onError={e=>{(e.target as HTMLImageElement).style.display='none'}} />
+                      ) : (
+                        <div style={{ width:22, height:22, borderRadius:'50%', background:'#E9C000', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:800, flexShrink:0 }}>
+                          {name[0]?.toUpperCase()||'?'}
+                        </div>
+                      )}
+                      <span>{name}{nat ? ` · ${nat}` : ''}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </section>
 
           {/* Refund policy - default on every event page */}
@@ -133,3 +150,4 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     </article>
   )
 }
+ 
