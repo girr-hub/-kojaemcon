@@ -19,12 +19,26 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     .eq('event_id', e.id)
     .in('status', ['paid', 'free_confirmed'])
   const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
-  const admin = supabaseAdmin()
-  const { data: attendees } = await admin
-    .from('orders')
-    .select('user_id, profiles(display_name, nationality, avatar_url)')
-    .eq('event_id', e.id)
-    .in('status', ['paid','free_confirmed'])
+  let attendees: any[] = []
+  try {
+    const admin = supabaseAdmin()
+    const { data: att } = await admin
+      .from('orders')
+      .select('user_id, profiles(display_name, nationality, avatar_url)')
+      .eq('event_id', e.id)
+      .in('status', ['paid','free_confirmed'])
+    attendees = att ?? []
+  } catch (err) {
+    // fallback: supabaseServer로 시도
+    try {
+      const { data: att } = await sb
+        .from('orders')
+        .select('user_id, profiles(display_name, nationality, avatar_url)')
+        .eq('event_id', e.id)
+        .in('status', ['paid','free_confirmed'])
+      attendees = att ?? []
+    } catch {}
+  }
 
   return (
     <article style={{ background: "#ffffff", color: "#12161A" }}>
@@ -71,13 +85,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           {/* attendees */}
           <section>
             <h3 style={{ fontFamily:'PretendardVariable,Pretendard,sans-serif', fontWeight:800, fontSize:18, color:'#1A1A1A', marginBottom:12, letterSpacing:'-0.03em' }}>
-              Who&apos;s coming ({(attendees ?? []).length})
+              Who&apos;s coming ({attendees.length})
             </h3>
-            {(attendees ?? []).length === 0 ? (
+            {attendees.length === 0 ? (
               <p style={{ fontSize:13, color:'#9A9A9A' }}>No one yet — be the first!</p>
             ) : (
               <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
-                {(attendees ?? []).map((a:any) => {
+                {attendees.map((a:any) => {
                   const name = a?.profiles?.display_name || 'Guest'
                   const nat = a?.profiles?.nationality || ''
                   const avatar = a?.profiles?.avatar_url || null
