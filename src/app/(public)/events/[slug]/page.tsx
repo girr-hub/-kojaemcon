@@ -15,14 +15,12 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       </div>
     )
 
-    // remaining
     const { count: soldCount } = await sb.from('orders')
       .select('*', { count: 'exact', head: true })
       .eq('event_id', e.id)
       .in('status', ['paid', 'free_confirmed'])
     const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
 
-    // attendees
     let attendees: any[] = []
     try {
       const admin = supabaseAdmin()
@@ -43,10 +41,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       } catch {}
     }
 
-    // 이미지 합치기
     const allImages = [...(e.detail_images ?? []), ...(e.images ?? [])].filter(Boolean)
-
-    // 날짜 포맷
     const startDate = e.starts_at ? new Date(e.starts_at) : null
     const dateStr = startDate ? startDate.toLocaleString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric',
@@ -56,7 +51,6 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     return (
       <div style={{ background: '#FFFFFF', minHeight: '100vh', paddingBottom: 100 }}>
 
-        {/* 커버 이미지 */}
         {allImages.length > 0 ? (
           <ImageSlider images={allImages} />
         ) : e.cover_image_url ? (
@@ -67,10 +61,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🎪</div>
         )}
 
-        {/* 이벤트 정보 */}
         <div style={{ padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-          {/* 제목 + 카테고리 */}
           <div>
             {e.category && (
               <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#FFFBEA', padding: '3px 8px', borderRadius: 6, display: 'inline-block', marginBottom: 8 }}>
@@ -83,7 +75,6 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             {e.summary && <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.6 }}>{e.summary}</p>}
           </div>
 
-          {/* 날짜/장소/가격 */}
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
             {dateStr && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -115,10 +106,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          {/* 결제 버튼 */}
           <BuyButton event={e} remaining={remaining} />
 
-          {/* 설명 */}
           {e.description_html && (
             <div>
               <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 12, letterSpacing: '-0.03em' }}>About</h2>
@@ -127,19 +116,17 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
-          {/* 환불 정책 */}
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16 }}>
             <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 8 }}>Refund Policy</h3>
             <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6 }}>
-              Cancel 24+ hours before → full refund. Under 24 hours → no refund.
-              For questions, <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>contact CS →</Link>
+              Cancel 24+ hours before the event for a full refund. Under 24 hours — no refund.
+              Questions? <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>Contact CS →</Link>
             </p>
           </div>
 
-          {/* Who's coming */}
           <div>
             <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 12, letterSpacing: '-0.03em' }}>
-              Who's coming ({attendees.length})
+              Who&apos;s coming ({attendees.length})
             </h2>
             {attendees.length === 0 ? (
               <p style={{ fontSize: 13, color: '#9A9A9A' }}>No one yet — be the first!</p>
@@ -149,8 +136,9 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
                   const name = a?.profiles?.display_name || 'Guest'
                   const nat = a?.profiles?.nationality || ''
                   const avatar = a?.profiles?.avatar_url || null
+                  const key = a?.user_id || name
                   return (
-                    <div key={a?.user_id || name} style={{ background: '#F7F7F7', padding: '6px 12px', borderRadius: 100, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, border: '1px solid #EBEBEB' }}>
+                    <div key={key} style={{ background: '#F7F7F7', padding: '6px 12px', borderRadius: 100, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, border: '1px solid #EBEBEB' }}>
                       {avatar ? (
                         <img src={avatar} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} alt="" />
                       ) : (
@@ -158,9 +146,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
                           {(name[0] || '?').toUpperCase()}
                         </div>
                       )}
-                      <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                        {name}{nat ? \` · \${nat}\` : ''}
-                      </span>
+                      <span>{name}{nat ? ' · ' + nat : ''}</span>
                     </div>
                   )
                 })}
