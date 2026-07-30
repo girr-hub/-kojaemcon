@@ -22,9 +22,9 @@ export default function EventsPage() {
         <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', letterSpacing: '-0.04em', lineHeight: 1.2 }}>ALL EVENTS</h1>
       </div>
       {loading ? (
-        <p className="text-ink/40 sub-en text-xl text-center py-20">Loading...</p>
+        <p >Loading...</p>
       ) : events.length === 0 ? (
-        <p className="text-ink/40 sub-en text-xl text-center py-20">No events found</p>
+        <p >No events found</p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
           {events.map((e: any) => <EventFeedCard key={e.id} event={e} />)}

@@ -21,25 +21,25 @@ export default function Login() {
   const input = "w-full bg-surface border border-ink/10 text-ink px-4 py-3 focus:border-primary outline-none sub-en"
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center px-6">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-4">
-        <h1 className="headline-en text-5xl text-ink uppercase mb-8">Log In</h1>
+    <div style={{ minHeight:'100vh', background:'#fff', display:'flex', alignItems:'center', justifyContent:'center', padding:'24px' }}>
+      <form onSubmit={submit} style={{ width:'100%', maxWidth:380, display:'flex', flexDirection:'column', gap:16 }}>
+        <h1 style={{ fontFamily:"PretendardVariable,Pretendard,sans-serif", fontWeight:900, fontSize:22, letterSpacing:"-0.04em" }}>Log In</h1>
         <div>
-          <label className="sub-en text-xs text-ink/50 uppercase tracking-wider mb-1 block">Email</label>
+          <label >Email</label>
           <input className={input} type="email" placeholder="your@email.com" required
                  onChange={e=>setEmail(e.target.value)}/>
         </div>
         <div>
-          <label className="sub-en text-xs text-ink/50 uppercase tracking-wider mb-1 block">Password</label>
+          <label >Password</label>
           <input className={input} type="password" placeholder="••••••••" required
                  onChange={e=>setPassword(e.target.value)}/>
         </div>
-        {err && <div className="text-red-400 sub-en text-sm">{err}</div>}
+        {err && <div >{err}</div>}
         <button type="submit" disabled={loading}
-                className="w-full bg-primary text-bg py-4 sub-en uppercase font-bold tracking-wider hover:opacity-90 transition disabled:opacity-50">
+                className="btn-primary" style={{ width:'100%', justifyContent:'center', padding:'14px' }}>
           {loading ? 'Logging in...' : 'Log in'}
         </button>
-        <p className="text-center text-ink/40 sub-en text-sm">
+        <p >
           No account?{' '}
           <a href="/signup" className="text-primary hover:underline">Sign up</a>
         </p>

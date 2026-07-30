@@ -35,7 +35,7 @@ export default function CommunityPage() {
   }
 
   const submitPost = async () => {
-    if (!form.title.trim() || !form.content.trim()) { alert('Fill in title and content'); return }
+    if (!form.title.trim() || !form.content.trim()) { console.error('Fill in title and content'); return }
     if (!user) { window.location.href = '/login'; return }
     setPosting(true)
     const { error } = await supabase().from('posts').insert({ author_id: user.id, ...form })

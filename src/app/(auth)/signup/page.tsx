@@ -109,7 +109,7 @@ export default function SignupPage() {
       <div style={{ width: '100%', maxWidth: 480 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: '#0A0A0A' }}>
+          <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: '#0A0A0A' }}>
             Ko<em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 28 }}>jaem</em>con
           </span>
         </div>
@@ -120,7 +120,7 @@ export default function SignupPage() {
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'Inter', fontWeight: 700, fontSize: 12,
+                fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 12,
                 background: step >= s ? '#0A0A0A' : '#F8F8F6',
                 color: step >= s ? '#fff' : '#9A9A9A',
                 border: step >= s ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4',
@@ -133,7 +133,7 @@ export default function SignupPage() {
         {/* STEP 1: Basic info */}
         {step === 1 && (
           <div>
-            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Create account</h1>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Create account</h1>
             <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 28 }}>Step 1 of 3 — Basic info</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -194,7 +194,7 @@ export default function SignupPage() {
                 setErr('')
                 setStep(2)
               }}
-              style={{ width: '100%', background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '14px', fontFamily: 'Inter', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 24 }}
+              style={{ width: '100%', background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 24 }}
             >
               Next →
             </button>
@@ -208,7 +208,7 @@ export default function SignupPage() {
         {/* STEP 2: Profile photo */}
         {step === 2 && (
           <div>
-            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Profile photo</h1>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Profile photo</h1>
             <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 32 }}>Step 2 of 3 — Optional but recommended</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginBottom: 32 }}>
@@ -238,8 +238,8 @@ export default function SignupPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setStep(1)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
-              <button onClick={() => setStep(3)} style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+              <button onClick={() => setStep(1)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
+              <button onClick={() => setStep(3)} style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
                 {avatarPreview ? 'Next →' : 'Skip for now →'}
               </button>
             </div>
@@ -249,7 +249,7 @@ export default function SignupPage() {
         {/* STEP 3: Interests */}
         {step === 3 && (
           <div>
-            <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Your interests</h1>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Your interests</h1>
             <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 28 }}>Step 3 of 3 — Select all that apply. Helps us recommend events for you.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 28, maxHeight: 400, overflowY: 'auto', paddingRight: 4 }}>
@@ -279,9 +279,9 @@ export default function SignupPage() {
             {err && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>{err}</p>}
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setStep(2)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
+              <button onClick={() => setStep(2)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
               <button onClick={submit} disabled={loading || uploading}
-                style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (loading || uploading) ? 0.6 : 1 }}>
+                style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (loading || uploading) ? 0.6 : 1 }}>
                 {loading ? 'Creating account...' : uploading ? 'Uploading photo...' : interests.length > 0 ? 'Create account →' : 'Skip & create account →'}
               </button>
             </div>

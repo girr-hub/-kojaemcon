@@ -49,12 +49,12 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             return all.length > 0 ? <ImageSlider images={all} /> : null
           })()}
 
-          <div className="prose prose-invert max-w-none"
+          <div className="proseert max-w-none"
                dangerouslySetInnerHTML={{ __html: sanitizeHtml(e.description_html || '') }}/>
 
           {e.source === 'official' && e.detail_page_html && (
             <Link href={`/events/${e.slug}/detail`}
-                  className="block border border-primary text-primary px-6 py-4 text-center sub-en uppercase hover:bg-primary hover:text-bg transition">
+                  >
               View KOJAEMCON Presents Full Page →
             </Link>
           )}
@@ -104,23 +104,23 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
 
         {/* sidebar */}
         <aside className="space-y-4">
-          <div className="bg-surface p-6 sticky top-6">
-            <div className="sub-en uppercase text-xs text-ink/50">When</div>
+          <div style={{ background:'#F7F7F7', padding:16, borderRadius:14, position:'sticky', top:80 }}>
+            <div >When</div>
             <div className="text-lg mt-1">{new Date(e.starts_at).toLocaleString('en-US')}</div>
-            <div className="sub-en uppercase text-xs text-ink/50 mt-4">Where</div>
+            <div >Where</div>
             <div className="text-lg mt-1">{e.venue_name}</div>
-            <div className="text-sm text-ink/60">{e.venue_address}</div>
+            <div >{e.venue_address}</div>
 
             <div className="my-6 border-t border-ink/10"/>
 
             <div className="flex justify-between items-baseline">
-              <span className="sub-en uppercase text-xs text-ink/50">Price</span>
-              <span className="headline-en text-3xl text-primary">
+              <span >Price</span>
+              <span style={{ fontFamily:"PretendardVariable,Pretendard,sans-serif", fontWeight:900, fontSize:22, letterSpacing:"-0.04em" }}>
                 {e.is_free ? 'FREE' : `₩${e.price_krw.toLocaleString()}`}
               </span>
             </div>
-            <div className="mt-2 flex justify-between sub-en text-sm">
-              <span className="text-ink/50">Remaining</span>
+            <div >
+              <span >Remaining</span>
               <span>{remaining} / {e.capacity} spots left</span>
             </div>
 

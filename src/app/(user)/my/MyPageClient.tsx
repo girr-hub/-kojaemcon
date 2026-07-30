@@ -99,7 +99,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
   const submitCancel = async () => {
     if (!cancelTarget) return
     const reason = cancelReason === 'Other' ? customReason : cancelReason
-    if (!reason) { alert('Please select or enter a reason'); return }
+    if (!reason) { console.error('Please select or enter a reason'); return }
 
     setCancelling(true)
     const res = await fetch('/api/orders/cancel', {

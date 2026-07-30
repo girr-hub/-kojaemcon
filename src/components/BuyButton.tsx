@@ -51,7 +51,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     const { data: { session } } = await sb.auth.getSession()
     const user = session?.user
     if (!user) { window.location.href = '/login'; return }
-    if (remaining <= 0) { alert('Sold out'); return }
+    if (remaining <= 0) { console.error('Sold out'); return }
     if (event.is_free) { setShowNoshow(true); return }
     await handlePaid(user)
   }
@@ -105,7 +105,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       t++
     }
     if (!(window as any).goPayupPay) {
-      alert('결제 모듈을 불러올 수 없어요. 새로고침 후 다시 시도해주세요.')
+      console.error('결제 모듈을 불러올 수 없어요. 새로고침 후 다시 시도해주세요.')
       setBusy(false)
       return
     }
