@@ -88,6 +88,11 @@ export default async function ERPPage() {
     .select('*, events(id, title), profiles(display_name, email, real_name, nationality)')
     .order('created_at', { ascending: false })
 
+  const { data: csTickets } = await admin.from('cs_tickets')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100)
+
   return (
     <ERPDashboardClient
       todayVisits={todayVisits ?? 0}
@@ -103,6 +108,7 @@ export default async function ERPPage() {
       interestMap={interestMap}
       events={events ?? []}
       allOrders={allOrders ?? []}
+      csTickets={csTickets ?? []}
     />
   )
 }

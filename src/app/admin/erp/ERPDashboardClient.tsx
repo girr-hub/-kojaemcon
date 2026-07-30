@@ -136,7 +136,7 @@ function VisitChart({ data }: { data: { date: string; count: number }[] }) {
 
 export default function ERPDashboardClient({
   todayVisits, dailyAvg, weeklyAvg, monthlyAvg, totalUsers,
-  dailyVisits, nationalityMap, genderMap, ageMap, referralMap, interestMap, events, allOrders = [],
+  dailyVisits, nationalityMap, genderMap, ageMap, referralMap, interestMap, events, allOrders = [], csTickets = [],
 }: {
   todayVisits: number; dailyAvg: number; weeklyAvg: number; monthlyAvg: number; totalUsers: number
   dailyVisits: { date: string; count: number }[]
@@ -144,8 +144,9 @@ export default function ERPDashboardClient({
   ageMap: Record<string, number>; referralMap: Record<string, number>
   interestMap: Record<string, number>; events: any[]
   allOrders?: any[]
+  csTickets?: any[]
 }) {
-  const [tab, setTab] = useState<'analytics' | 'events' | 'email' | 'survey'>('analytics')
+  const [tab, setTab] = useState<'analytics' | 'events' | 'cs' | 'email' | 'survey'>('analytics')
 
   const exportCSV = (data: any[], filename: string) => {
     if (!data.length) return
@@ -214,6 +215,7 @@ export default function ERPDashboardClient({
   const TABS = [
     { id: 'analytics', label: '📊 Analytics' },
     { id: 'events', label: '🎪 Events' },
+    { id: 'cs', label: '💌 CS' },
     { id: 'email', label: '📧 Email' },
     { id: 'survey', label: '⭐ Survey' },
   ]
@@ -267,6 +269,56 @@ export default function ERPDashboardClient({
               </div>
             ))}
             {Object.keys(eventStats).length === 0 && <p style={{ color: '#666', fontSize: 14 }}>주문 데이터가 없어요</p>}
+          </div>
+        )}
+
+        {tab === 'cs' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {['all','open','in_progress','resolved'].map(s => (
+                  <button key={s} onClick={() => {}}
+                    style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: '#2a2a2a', color: '#ccc', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                    {s === 'all' ? '전체' : s === 'open' ? '🔴 미답변' : s === 'in_progress' ? '🟡 처리중' : '✅ 완료'} {csTickets.filter((t: any) => s === 'all' || t.status === s).length}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => {
+                const rows = csTickets.map((t: any) => ({
+                  이름: t.name, 이메일: t.email, 카테고리: t.category,
+                  제목: t.subject, 내용: t.message, 상태: t.status,
+                  날짜: new Date(t.created_at).toLocaleDateString('ko-KR'),
+                }))
+                exportCSV(rows, 'kogemcon_cs_' + new Date().toISOString().slice(0,10) + '.csv')
+              }} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#D4B33A', color: '#0A0A0A', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+                📥 CSV 추출
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {csTickets.map((t: any) => (
+                <div key={t.id} style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 12, padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <div>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, marginRight: 8,
+                        background: t.status === 'open' ? '#fca5a5' : t.status === 'resolved' ? '#86efac' : '#fde68a',
+                        color: '#0A0A0A' }}>{t.status}</span>
+                      <span style={{ fontSize: 11, color: '#888' }}>{t.category}</span>
+                    </div>
+                    <span style={{ fontSize: 11, color: '#666' }}>{new Date(t.created_at).toLocaleDateString('ko-KR')}</span>
+                  </div>
+                  <p style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 4 }}>{t.subject}</p>
+                  <p style={{ fontSize: 12, color: '#999', marginBottom: 6 }}>{t.name} · {t.email}</p>
+                  <p style={{ fontSize: 13, color: '#ccc', lineHeight: 1.6 }}>{t.message}</p>
+                  {t.admin_reply && (
+                    <div style={{ marginTop: 10, padding: '10px 12px', background: '#0d0d0d', borderRadius: 8, borderLeft: '3px solid #D4B33A' }}>
+                      <p style={{ fontSize: 11, color: '#D4B33A', fontWeight: 700, marginBottom: 4 }}>Admin Reply</p>
+                      <p style={{ fontSize: 13, color: '#ccc' }}>{t.admin_reply}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {csTickets.length === 0 && <p style={{ color: '#666', fontSize: 14 }}>문의가 없어요</p>}
+            </div>
           </div>
         )}
 
