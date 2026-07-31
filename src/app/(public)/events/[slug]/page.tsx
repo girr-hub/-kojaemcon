@@ -52,11 +52,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       <div style={{ background: '#FFFFFF', minHeight: '100vh', paddingBottom: 100 }}>
 
         {allImages.length > 0 ? (
-          <ImageSlider images={allImages} />
-        ) : e.cover_image_url ? (
-          <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden' }}>
-            <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {allImages.map((img: string, i: number) => (
+              <img key={i} src={img} alt={`image-${i+1}`} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
+            ))}
           </div>
+        ) : e.cover_image_url ? (
+          <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
         ) : (
           <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🎪</div>
         )}
