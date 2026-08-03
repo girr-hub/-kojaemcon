@@ -12,7 +12,11 @@ export async function POST(req: Request) {
 
   if (result.ok) {
     // 성공 시 성공 페이지로 리다이렉트
-    return NextResponse.redirect(new URL(`/payment-success?order=${orderNumber}`, req.url))
+    // 이벤트 정보 가져오기
+  const { data: orderData } = await admin.from('orders').select('amount_krw, events(title)').eq('payment_id', orderNumber).maybeSingle()
+  const amount = orderData?.amount_krw || 0
+  const eventTitle = encodeURIComponent((orderData?.events as any)?.title || '')
+  return NextResponse.redirect(new URL(`/payment-success?order=${orderNumber}&amount=${amount}&event=${eventTitle}`, req.url))
   } else {
     return NextResponse.redirect(new URL(`/payment-fail?error=${encodeURIComponent(result.error || '결제 실패')}`, req.url))
   }
