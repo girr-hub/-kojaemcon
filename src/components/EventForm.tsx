@@ -31,6 +31,9 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     price_returning: (initial as any)?.price_returning ?? 0,
     price_solo: (initial as any)?.price_solo ?? 0,
     price_with_friends: (initial as any)?.price_with_friends ?? 0,
+    desc_solo: (initial as any)?.desc_solo ?? '',
+    desc_returning: (initial as any)?.desc_returning ?? '',
+    desc_with_friends: (initial as any)?.desc_with_friends ?? '',
     friends_max: (initial as any)?.friends_max ?? 10,
     detail_images: ((initial as any)?.detail_images ?? []) as string[],
   })
@@ -55,6 +58,9 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
       price_solo: f.price_solo,
       price_returning: f.price_returning,
       price_with_friends: f.price_with_friends,
+      desc_solo: f.desc_solo,
+      desc_returning: f.desc_returning,
+      desc_with_friends: f.desc_with_friends,
       friends_max: f.friends_max,
     }
     // host는 official 전용 필드 못 씀
@@ -147,13 +153,19 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
                 <div><label className={label}>🙋 Solo price (KRW)</label>
                   <input className={input} type="number" value={f.price_solo}
-                    onChange={e=>setF({...f, price_solo:Number(e.target.value)})}/></div>
+                    onChange={e=>setF({...f, price_solo:Number(e.target.value)})}/>
+                  <input className={input} style={{marginTop:6}} placeholder="Solo ticket description (e.g. For first-timers)" value={f.desc_solo}
+                    onChange={e=>setF({...f, desc_solo:e.target.value})}/></div>
                 <div><label className={label}>🔄 Returning price (KRW)</label>
                   <input className={input} type="number" value={f.price_returning}
-                    onChange={e=>setF({...f, price_returning:Number(e.target.value)})}/></div>
+                    onChange={e=>setF({...f, price_returning:Number(e.target.value)})}/>
+                  <input className={input} style={{marginTop:6}} placeholder="Returning ticket description (e.g. You've been here before!)" value={f.desc_returning}
+                    onChange={e=>setF({...f, desc_returning:e.target.value})}/></div>
                 <div><label className={label}>🧑‍🤝‍🧑 With Friends price (KRW / person)</label>
                   <input className={input} type="number" value={f.price_with_friends}
-                    onChange={e=>setF({...f, price_with_friends:Number(e.target.value)})}/></div>
+                    onChange={e=>setF({...f, price_with_friends:Number(e.target.value)})}/>
+                  <input className={input} style={{marginTop:6}} placeholder="With Friends description (e.g. Bring a buddy, save more!)" value={f.desc_with_friends}
+                    onChange={e=>setF({...f, desc_with_friends:e.target.value})}/></div>
                 <div><label className={label}>👥 Max friends per group</label>
                   <input className={input} type="number" min={2} max={20} value={f.friends_max}
                     onChange={e=>setF({...f, friends_max:Number(e.target.value)})}/></div>
