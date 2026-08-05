@@ -34,6 +34,18 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     desc_solo: (initial as any)?.desc_solo ?? '',
     desc_returning: (initial as any)?.desc_returning ?? '',
     desc_with_friends: (initial as any)?.desc_with_friends ?? '',
+    solo_option1_name: (initial as any)?.solo_option1_name ?? '',
+    solo_option1_price: (initial as any)?.solo_option1_price ?? 0,
+    solo_option2_name: (initial as any)?.solo_option2_name ?? '',
+    solo_option2_price: (initial as any)?.solo_option2_price ?? 0,
+    returning_option1_name: (initial as any)?.returning_option1_name ?? '',
+    returning_option1_price: (initial as any)?.returning_option1_price ?? 0,
+    returning_option2_name: (initial as any)?.returning_option2_name ?? '',
+    returning_option2_price: (initial as any)?.returning_option2_price ?? 0,
+    friends_option1_name: (initial as any)?.friends_option1_name ?? '',
+    friends_option1_price: (initial as any)?.friends_option1_price ?? 0,
+    friends_option2_name: (initial as any)?.friends_option2_name ?? '',
+    friends_option2_price: (initial as any)?.friends_option2_price ?? 0,
     friends_max: (initial as any)?.friends_max ?? 10,
     detail_images: ((initial as any)?.detail_images ?? []) as string[],
   })
@@ -61,6 +73,18 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
       desc_solo: f.desc_solo,
       desc_returning: f.desc_returning,
       desc_with_friends: f.desc_with_friends,
+      solo_option1_name: f.solo_option1_name,
+      solo_option1_price: f.solo_option1_price,
+      solo_option2_name: f.solo_option2_name,
+      solo_option2_price: f.solo_option2_price,
+      returning_option1_name: f.returning_option1_name,
+      returning_option1_price: f.returning_option1_price,
+      returning_option2_name: f.returning_option2_name,
+      returning_option2_price: f.returning_option2_price,
+      friends_option1_name: f.friends_option1_name,
+      friends_option1_price: f.friends_option1_price,
+      friends_option2_name: f.friends_option2_name,
+      friends_option2_price: f.friends_option2_price,
       friends_max: f.friends_max,
     }
     // host는 official 전용 필드 못 씀
@@ -155,17 +179,50 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
                   <input className={input} type="number" value={f.price_solo}
                     onChange={e=>setF({...f, price_solo:Number(e.target.value)})}/>
                   <input className={input} style={{marginTop:6}} placeholder="Solo ticket description (e.g. For first-timers)" value={f.desc_solo}
-                    onChange={e=>setF({...f, desc_solo:e.target.value})}/></div>
+                    onChange={e=>setF({...f, desc_solo:e.target.value})}/>
+                  <div style={{marginTop:8, padding:'10px 12px', background:'#F7F7F7', borderRadius:8}}>
+                    <p style={{fontSize:11, fontWeight:700, color:'#9A9A9A', marginBottom:6}}>SOLO OPTIONS (optional)</p>
+                    <div style={{display:'flex', gap:8, marginBottom:6}}>
+                      <input className={input} placeholder="Option 1 name (e.g. Early Bird)" value={f.solo_option1_name} onChange={e=>setF({...f, solo_option1_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.solo_option1_price} onChange={e=>setF({...f, solo_option1_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                    <div style={{display:'flex', gap:8}}>
+                      <input className={input} placeholder="Option 2 name (e.g. Regular)" value={f.solo_option2_name} onChange={e=>setF({...f, solo_option2_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.solo_option2_price} onChange={e=>setF({...f, solo_option2_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                  </div></div>
                 <div><label className={label}>🔄 Returning price (KRW)</label>
                   <input className={input} type="number" value={f.price_returning}
                     onChange={e=>setF({...f, price_returning:Number(e.target.value)})}/>
                   <input className={input} style={{marginTop:6}} placeholder="Returning ticket description (e.g. You've been here before!)" value={f.desc_returning}
-                    onChange={e=>setF({...f, desc_returning:e.target.value})}/></div>
+                    onChange={e=>setF({...f, desc_returning:e.target.value})}/>
+                  <div style={{marginTop:8, padding:'10px 12px', background:'#F7F7F7', borderRadius:8}}>
+                    <p style={{fontSize:11, fontWeight:700, color:'#9A9A9A', marginBottom:6}}>RETURNING OPTIONS (optional)</p>
+                    <div style={{display:'flex', gap:8, marginBottom:6}}>
+                      <input className={input} placeholder="Option 1 name" value={f.returning_option1_name} onChange={e=>setF({...f, returning_option1_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.returning_option1_price} onChange={e=>setF({...f, returning_option1_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                    <div style={{display:'flex', gap:8}}>
+                      <input className={input} placeholder="Option 2 name" value={f.returning_option2_name} onChange={e=>setF({...f, returning_option2_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.returning_option2_price} onChange={e=>setF({...f, returning_option2_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                  </div></div>
                 <div><label className={label}>🧑‍🤝‍🧑 With Friends price (KRW / person)</label>
                   <input className={input} type="number" value={f.price_with_friends}
                     onChange={e=>setF({...f, price_with_friends:Number(e.target.value)})}/>
                   <input className={input} style={{marginTop:6}} placeholder="With Friends description (e.g. Bring a buddy, save more!)" value={f.desc_with_friends}
-                    onChange={e=>setF({...f, desc_with_friends:e.target.value})}/></div>
+                    onChange={e=>setF({...f, desc_with_friends:e.target.value})}/>
+                  <div style={{marginTop:8, padding:'10px 12px', background:'#F7F7F7', borderRadius:8}}>
+                    <p style={{fontSize:11, fontWeight:700, color:'#9A9A9A', marginBottom:6}}>WITH FRIENDS OPTIONS (optional)</p>
+                    <div style={{display:'flex', gap:8, marginBottom:6}}>
+                      <input className={input} placeholder="Option 1 name" value={f.friends_option1_name} onChange={e=>setF({...f, friends_option1_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.friends_option1_price} onChange={e=>setF({...f, friends_option1_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                    <div style={{display:'flex', gap:8}}>
+                      <input className={input} placeholder="Option 2 name" value={f.friends_option2_name} onChange={e=>setF({...f, friends_option2_name:e.target.value})} style={{flex:2}}/>
+                      <input className={input} type="number" placeholder="Price" value={f.friends_option2_price} onChange={e=>setF({...f, friends_option2_price:Number(e.target.value)})} style={{flex:1}}/>
+                    </div>
+                  </div></div>
                 <div><label className={label}>👥 Max friends per group</label>
                   <input className={input} type="number" min={2} max={20} value={f.friends_max}
                     onChange={e=>setF({...f, friends_max:Number(e.target.value)})}/></div>
