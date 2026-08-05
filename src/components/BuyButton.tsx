@@ -12,6 +12,32 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [friendsCount, setFriendsCount] = useState(1)
   const [ticketQty, setTicketQty] = useState(1)
   const [subOption, setSubOption] = useState<string>('')
+  const [subOptionPrice, setSubOptionPrice] = useState<number>(0)
+  const [discountCode, setDiscountCode] = useState('')
+  const [discountApplied, setDiscountApplied] = useState(false)
+  const [discountError, setDiscountError] = useState('')
+
+  const VALID_CODES: Record<string, number> = {
+    'KOGEMCON10': 10,
+    'WELCOME10': 10,
+    'FRIEND10': 10,
+  }
+
+  const applyDiscount = () => {
+    const code = discountCode.trim().toUpperCase()
+    if (VALID_CODES[code]) {
+      setDiscountApplied(true)
+      setDiscountError('')
+    } else {
+      setDiscountApplied(false)
+      setDiscountError('Invalid code')
+    }
+  }
+
+  const getDiscountRate = () => {
+    const code = discountCode.trim().toUpperCase()
+    return discountApplied ? (VALID_CODES[code] || 0) : 0
+  }
 
   // 페이업 SDK 로드 (운영)
   useEffect(() => {
@@ -39,12 +65,19 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     }
   }, [])
 
-  const getPrice = () => {
+  const getBasePrice = () => {
     if (event.is_free) return 0
+    if (subOptionPrice > 0) return subOptionPrice
     if (!event.has_ticket_types) return event.price_krw
     if (ticketType === 'returning') return event.price_returning || event.price_krw
     if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * friendsCount
     return event.price_solo || event.price_krw
+  }
+
+  const getPrice = () => {
+    const base = getBasePrice()
+    const discount = getDiscountRate()
+    return Math.floor(base * (1 - discount / 100))
   }
 
   const handleClick = async () => {
@@ -210,7 +243,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
             <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
             {[{name:event.solo_option1_name, price:event.solo_option1_price},{name:event.solo_option2_name, price:event.solo_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>setSubOption(o.name)}
+              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
@@ -222,7 +255,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
             <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
             {[{name:event.returning_option1_name, price:event.returning_option1_price},{name:event.returning_option2_name, price:event.returning_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>setSubOption(o.name)}
+              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
@@ -234,7 +267,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
             <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
             {[{name:event.friends_option1_name, price:event.friends_option1_price},{name:event.friends_option2_name, price:event.friends_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>setSubOption(o.name)}
+              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
@@ -258,9 +291,42 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
+        {/* 할인코드 */}
+        {!event.is_free && (
+          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            <div style={{ display:'flex', gap:8 }}>
+              <input
+                value={discountCode}
+                onChange={e => { setDiscountCode(e.target.value); setDiscountApplied(false); setDiscountError('') }}
+                placeholder="Discount code"
+                style={{ flex:1, padding:'11px 14px', borderRadius:10, border:`1.5px solid ${discountApplied ? '#00C471' : discountError ? '#dc2626' : '#EBEBEB'}`, fontSize:14, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none' }}
+              />
+              <button type="button" onClick={applyDiscount}
+                style={{ padding:'11px 16px', borderRadius:10, background:'#1A1A1A', color:'#fff', border:'none', fontSize:13, fontWeight:700, cursor:'pointer', flexShrink:0 }}>
+                Apply
+              </button>
+            </div>
+            {discountApplied && (
+              <p style={{ fontSize:12, color:'#00C471', fontWeight:600 }}>✓ {getDiscountRate()}% discount applied!</p>
+            )}
+            {discountError && (
+              <p style={{ fontSize:12, color:'#dc2626', fontWeight:600 }}>✗ {discountError}</p>
+            )}
+          </div>
+        )}
+
         <button onClick={handleClick} disabled={busy}
           style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
-          {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : `Buy — ₩${Number(getPrice()).toLocaleString()}`}
+          {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : (
+            <span>
+              Buy — ₩{Number(getPrice()).toLocaleString()}
+              {discountApplied && (
+                <span style={{ fontSize:11, marginLeft:6, textDecoration:'line-through', opacity:0.6 }}>
+                  ₩{Number(getBasePrice()).toLocaleString()}
+                </span>
+              )}
+            </span>
+          )}
         </button>
 
         {!event.is_free && (
