@@ -11,8 +11,7 @@ export async function POST(req: Request) {
   const result = await approvePayment(transactionId, orderNumber, amount)
 
   if (result.ok) {
-    // 성공 시 성공 페이지로 리다이렉트
-    return NextResponse.redirect(new URL(`/payment-success?order=${orderNumber}&amount=${orderAmount}&event=${eventTitle}`, req.url))
+    return NextResponse.redirect(new URL(`/payment-success?order=${orderNumber}&amount=${result.amount || 0}&event=${encodeURIComponent(result.eventTitle || '')}`, req.url))
   } else {
     return NextResponse.redirect(new URL(`/payment-fail?error=${encodeURIComponent(result.error || '결제 실패')}`, req.url))
   }
@@ -86,7 +85,7 @@ async function approvePayment(transactionId: string, orderNumber: string, amount
     )
   }
 
-  return { ok: true }
+  return { ok: true, amount: orderAmount, eventTitle: (orderData?.events as any)?.title || '' }
 }
 
 export { approvePayment }
