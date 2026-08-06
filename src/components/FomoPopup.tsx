@@ -8,8 +8,12 @@ export default function FomoPopup({ count }: { count: number }) {
 
   return (
     <div style={{
-      position: 'fixed', bottom: 88, left: '50%', transform: 'translateX(-50%)',
-      zIndex: 9000, pointerEvents: 'none',
+      position: 'fixed',
+      bottom: 'calc(68px + env(safe-area-inset-bottom) + 12px)',
+      left: 0, right: 0,
+      zIndex: 8500,
+      pointerEvents: 'none',
+      display: 'flex', justifyContent: 'center',
       animation: 'fomoFloat 3s ease-in-out infinite',
     }}>
       <div style={{
