@@ -155,6 +155,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
       amount: String(totalAmount),
       userName: user.email ?? 'Guest',
       orderNumber: prep.payment_id,
+      lang: 'en',
     }
 
     if (isMobile) {
