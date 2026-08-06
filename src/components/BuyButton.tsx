@@ -248,8 +248,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
                   ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
-                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
                 </span>
               </button>
             ))}
@@ -264,8 +264,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
                   ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
-                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
                 </span>
               </button>
             ))}
@@ -280,8 +280,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
                 <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
                   ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
-                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
                 </span>
               </button>
             ))}
