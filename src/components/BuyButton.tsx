@@ -67,8 +67,13 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
   const getBasePrice = () => {
     if (event.is_free) return 0
+    // 서브옵션 선택됐으면 그 가격
     if (subOptionPrice > 0) return subOptionPrice
+    // 서브옵션 있으면 option1(당일치기)이 기본
     if (!event.has_ticket_types) return event.price_krw
+    if (ticketType === 'solo' && event.solo_option1_price) return event.solo_option1_price
+    if (ticketType === 'returning' && event.returning_option1_price) return event.returning_option1_price
+    if (ticketType === 'with_friends' && event.friends_option1_price) return event.friends_option1_price * friendsCount
     if (ticketType === 'returning') return event.price_returning || event.price_krw
     if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * friendsCount
     return event.price_solo || event.price_krw
