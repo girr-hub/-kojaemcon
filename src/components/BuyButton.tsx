@@ -238,39 +238,51 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 </span>
               </button>
             ))}
-            {/* 서브옵션 */}
+            {/* 서브옵션 - 필수 선택 */}
         {ticketType === 'solo' && event.solo_option1_name && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
+            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
             {[{name:event.solo_option1_name, price:event.solo_option1_price},{name:event.solo_option2_name, price:event.solo_option2_price}].filter(o=>o.name).map(o=>(
               <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
+                  ₩{Number(o.price).toLocaleString()}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                </span>
               </button>
             ))}
           </div>
         )}
         {ticketType === 'returning' && event.returning_option1_name && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
+            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
             {[{name:event.returning_option1_name, price:event.returning_option1_price},{name:event.returning_option2_name, price:event.returning_option2_price}].filter(o=>o.name).map(o=>(
               <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
+                  ₩{Number(o.price).toLocaleString()}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                </span>
               </button>
             ))}
           </div>
         )}
         {ticketType === 'with_friends' && event.friends_option1_name && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION</p>
+            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
             {[{name:event.friends_option1_name, price:event.friends_option1_price},{name:event.friends_option2_name, price:event.friends_option2_price}].filter(o=>o.name).map(o=>(
               <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
+                  ₩{Number(o.price).toLocaleString()}
+                  {o.name === '1박2일' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩35,000)</span>}
+                  {o.name === '당일치기' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>(+₩0)</span>}
+                </span>
               </button>
             ))}
           </div>
@@ -315,7 +327,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
-        <button onClick={handleClick} disabled={busy}
+        <button onClick={handleClick} disabled={busy || (event.has_ticket_types && event.solo_option1_name && !subOption)}
           style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : (
             <span>
