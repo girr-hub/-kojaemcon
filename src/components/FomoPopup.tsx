@@ -1,31 +1,41 @@
 'use client'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 export default function FomoPopup({ count }: { count: number }) {
-  if (count <= 0) return null
+  const [mounted, setMounted] = useState(false)
 
-  return (
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted || count <= 0) return null
+
+  return createPortal(
     <>
       <style>{`
         @keyframes fomoFloat {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-6px); }
         }
+        .fomo-popup {
+          position: fixed !important;
+          bottom: 76px !important;
+          left: 0 !important;
+          right: 0 !important;
+          z-index: 99999 !important;
+          pointer-events: none;
+          display: flex;
+          justify-content: center;
+          padding: 0 16px;
+          animation: fomoFloat 3s ease-in-out infinite;
+        }
       `}</style>
-      <div style={{
-        position: 'fixed',
-        bottom: 76,
-        left: 0,
-        right: 0,
-        zIndex: 8500,
-        pointerEvents: 'none',
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '0 16px',
-        animation: 'fomoFloat 3s ease-in-out infinite',
-      }}>
+      <div className="fomo-popup">
         <div style={{
           background: 'rgba(26,26,26,0.92)',
           backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           color: '#fff',
           borderRadius: 100,
           padding: '10px 20px',
@@ -44,6 +54,7 @@ export default function FomoPopup({ count }: { count: number }) {
           </span>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
