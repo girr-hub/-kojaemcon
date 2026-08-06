@@ -153,13 +153,14 @@ img { max-width: 100%; display: block; }
 
 /* ── Animations ── */
 @keyframes pageEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInOnly { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-main { animation: pageEnter 0.2s cubic-bezier(0.32, 0.72, 0, 1) both; }
+main { animation: fadeInOnly 0.2s ease both; }
 a { transition: opacity 0.1s; }
 button { transition: opacity 0.1s, transform 0.1s, background 0.15s; }
 button:active, a:active { opacity: 0.75; transform: scale(0.97); }
