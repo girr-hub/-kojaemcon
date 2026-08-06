@@ -97,12 +97,12 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 18 }}>🎫</span>
                 <span style={{ fontSize: 16, fontWeight: 800, color: e.is_free ? '#00C471' : '#1A1A1A' }}>
-                  {e.is_free ? 'Free' : `₩${Number(e.price_krw).toLocaleString()}`}
+                  {e.is_free ? 'Free' : `₩${Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
                 </span>
               </div>
               {e.capacity > 0 && (
                 <span style={{ fontSize: 12, color: remaining <= 5 ? '#dc2626' : '#9A9A9A', fontWeight: 600 }}>
-                  {remaining <= 0 ? '🔴 Sold out' : `${soldCount ?? 0} / ${e.capacity} joined`}
+                  {remaining <= 0 ? '🔴 Sold out' : `${remaining} spots left`}
                 </span>
               )}
             </div>
