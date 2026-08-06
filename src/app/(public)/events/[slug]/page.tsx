@@ -1,4 +1,5 @@
 import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
+import FomoPopup from '@/components/FomoPopup'
 import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
 import ImageSlider from '@/components/ImageSlider'
@@ -20,6 +21,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       .eq('event_id', e.id)
       .in('status', ['paid', 'free_confirmed'])
     const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
+
+    // pending 인원 * 5 = 고민중인 사람들
+    const { count: pendingCount } = await sb.from('orders')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_id', e.id)
+      .eq('status', 'pending')
+    const consideringCount = (pendingCount ?? 0) * 5
 
     let attendees: any[] = []
     try {
@@ -50,6 +58,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
 
     return (
       <div style={{ background: '#FFFFFF', minHeight: '100vh', paddingBottom: 100 }}>
+        {/* FOMO 팝업 */}
+        {consideringCount > 0 && <FomoPopup count={consideringCount} />}
 
         {allImages.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
