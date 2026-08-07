@@ -115,7 +115,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
                         e.friends_option1_price || e.price_with_friends || e.price_krw,
                       ].filter(Boolean)
                       const minPrice = Math.min(...prices)
-                      return `₩${Number(minPrice).toLocaleString()} ~`
+                      return `From ₩${Number(minPrice).toLocaleString()}`
                     })()
                   )}
                 </span>
@@ -168,7 +168,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
                           {(name[0] || '?').toUpperCase()}
                         </div>
                       )}
-                      <span>{name}{nat ? ' 쨌 ' + nat : ''}</span>
+                      <span>{name}{nat ? ' · ' + nat : ''}</span>
                     </div>
                   )
                 })}
