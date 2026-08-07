@@ -96,7 +96,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             )}
             {e.venue_name && (
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?뱧</span>
+                <span style={{ fontSize: 18 }}>📍</span>
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{e.venue_name}</p>
                   {e.venue_address && <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>{e.venue_address}</p>}
@@ -105,14 +105,14 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             )}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?렖</span>
+                <span style={{ fontSize: 18 }}>🎫</span>
                 <span style={{ fontSize: 16, fontWeight: 800, color: e.is_free ? '#00C471' : '#1A1A1A' }}>
-                  {e.is_free ? 'Free' : `??{Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
+                  {e.is_free ? 'Free' : ``₩${Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
                 </span>
               </div>
               {e.capacity > 0 && (
                 <span style={{ fontSize: 12, color: remaining <= 5 ? '#dc2626' : '#9A9A9A', fontWeight: 600 }}>
-                  {remaining <= 0 ? '?뵶 Sold out' : `${remaining} spots left`}
+                  {remaining <= 0 ? '🔴 Sold out' : `${remaining} spots left`}
                 </span>
               )}
             </div>
