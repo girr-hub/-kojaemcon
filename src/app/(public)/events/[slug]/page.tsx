@@ -12,7 +12,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     if (!e) return (
       <div style={{ padding: 40, textAlign: 'center' }}>
         <p style={{ fontSize: 18, color: '#9A9A9A' }}>Event not found</p>
-        <Link href="/events" style={{ color: '#E9C000', fontWeight: 700 }}>â† Back to Events</Link>
+        <Link href="/events" style={{ color: '#E9C000', fontWeight: 700 }}>??Back to Events</Link>
       </div>
     )
 
@@ -22,12 +22,12 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       .in('status', ['paid', 'free_confirmed'])
     const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
 
-    // pending ì¸ì› * 5 = ê³ ë¯¼ì¤‘ì¸ ì‚¬ëŒë“¤
+    // pending ?¸ì› * 5 = ê³ ë?ì¤‘ì¸ ?¬ëŒ??
     const { count: pendingCount } = await sb.from('orders')
       .select('*', { count: 'exact', head: true })
       .eq('event_id', e.id)
       .eq('status', 'pending')
-    const consideringCount = (pendingCount ?? 0) * 5
+    const consideringCount = (pendingCount ?? 0)
 
     let attendees: any[] = []
     try {
@@ -58,7 +58,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
 
     return (
       <div style={{ background: '#FFFFFF', minHeight: '100vh', paddingBottom: 100 }}>
-        {/* FOMO íŒì—… */}
+        {/* FOMO ?ì—… */}
         {consideringCount > 0 && <FomoPopup count={consideringCount} />}
 
         {allImages.length > 0 ? (
@@ -70,7 +70,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
         ) : e.cover_image_url ? (
           <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
         ) : (
-          <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>ğŸª</div>
+          <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>?ª</div>
         )}
 
         <div style={{ padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -90,13 +90,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
             {dateStr && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>ğŸ“…</span>
+                <span style={{ fontSize: 18 }}>?“…</span>
                 <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{dateStr}</span>
               </div>
             )}
             {e.venue_name && (
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>ğŸ“</span>
+                <span style={{ fontSize: 18 }}>?“</span>
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{e.venue_name}</p>
                   {e.venue_address && <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>{e.venue_address}</p>}
@@ -105,14 +105,14 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             )}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>ğŸ«</span>
+                <span style={{ fontSize: 18 }}>?«</span>
                 <span style={{ fontSize: 16, fontWeight: 800, color: e.is_free ? '#00C471' : '#1A1A1A' }}>
-                  {e.is_free ? 'Free' : `â‚©${Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
+                  {e.is_free ? 'Free' : `??{Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
                 </span>
               </div>
               {e.capacity > 0 && (
                 <span style={{ fontSize: 12, color: remaining <= 5 ? '#dc2626' : '#9A9A9A', fontWeight: 600 }}>
-                  {remaining <= 0 ? 'ğŸ”´ Sold out' : `${remaining} spots left`}
+                  {remaining <= 0 ? '?”´ Sold out' : `${remaining} spots left`}
                 </span>
               )}
             </div>
@@ -131,8 +131,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16 }}>
             <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 8 }}>Refund Policy</h3>
             <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6 }}>
-              Cancel 24+ hours before the event for a full refund. Under 24 hours â€” no refund.
-              Questions? <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>Contact CS â†’</Link>
+              Cancel 24+ hours before the event for a full refund. Under 24 hours ??no refund.
+              Questions? <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>Contact CS ??/Link>
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
               Who&apos;s coming ({attendees.length})
             </h2>
             {attendees.length === 0 ? (
-              <p style={{ fontSize: 13, color: '#9A9A9A' }}>No one yet â€” be the first!</p>
+              <p style={{ fontSize: 13, color: '#9A9A9A' }}>No one yet ??be the first!</p>
             ) : (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {attendees.map((a: any) => {
@@ -173,9 +173,9 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     console.error('EventDetail error:', err)
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>ğŸ˜”</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>?˜”</div>
         <p style={{ fontSize: 16, color: '#1A1A1A', marginBottom: 8 }}>Something went wrong</p>
-        <Link href="/events" style={{ color: '#E9C000', fontWeight: 700 }}>â† Back to Events</Link>
+        <Link href="/events" style={{ color: '#E9C000', fontWeight: 700 }}>??Back to Events</Link>
       </div>
     )
   }
