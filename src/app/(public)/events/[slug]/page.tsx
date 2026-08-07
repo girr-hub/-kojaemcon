@@ -90,7 +90,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
             {dateStr && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?뱟</span>
+                <span style={{ fontSize: 18 }}>📅</span>
                 <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{dateStr}</span>
               </div>
             )}
@@ -107,7 +107,17 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 18 }}>🎫</span>
                 <span style={{ fontSize: 16, fontWeight: 800, color: e.is_free ? '#00C471' : '#1A1A1A' }}>
-                  {e.is_free ? 'Free' : `₩${Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
+                  {e.is_free ? 'Free' : (
+                    (() => {
+                      const prices = [
+                        e.solo_option1_price || e.price_solo || e.price_krw,
+                        e.returning_option1_price || e.price_returning || e.price_krw,
+                        e.friends_option1_price || e.price_with_friends || e.price_krw,
+                      ].filter(Boolean)
+                      const minPrice = Math.min(...prices)
+                      return `₩${Number(minPrice).toLocaleString()} ~`
+                    })()
+                  )}
                 </span>
               </div>
               {e.capacity > 0 && (
