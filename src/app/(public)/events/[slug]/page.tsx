@@ -1,4 +1,4 @@
-﻿import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
+import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 import FomoPopup from '@/components/FomoPopup'
 import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
@@ -131,8 +131,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16 }}>
             <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 8 }}>Refund Policy</h3>
             <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6 }}>
-              Cancel 24+ hours before the event for a full refund. Under 24 hours ??no refund.
-              Questions? <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>Contact CS ??/Link>
+              Cancel 24+ hours before the event for a full refund. Under 24 hours — no refund.
+              Questions? <Link href="/cs" style={{ color: '#1A1A1A', fontWeight: 700 }}>Contact CS </Link>
             </p>
           </div>
 
