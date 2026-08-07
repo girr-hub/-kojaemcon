@@ -1,4 +1,4 @@
-import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
+Ôªøimport { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 import FomoPopup from '@/components/FomoPopup'
 import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
@@ -22,7 +22,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       .in('status', ['paid', 'free_confirmed'])
     const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
 
-    // pending ?∏Ïõê * 5 = Í≥†Î?Ï§ëÏù∏ ?¨Îûå??
+    // pending ?Î™ÑÏçù * 5 = ÊÄ®Ï¢ä?‰ª•Î¨íÏî§ ?—âÏó∫??
     const { count: pendingCount } = await sb.from('orders')
       .select('*', { count: 'exact', head: true })
       .eq('event_id', e.id)
@@ -58,7 +58,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
 
     return (
       <div style={{ background: '#FFFFFF', minHeight: '100vh', paddingBottom: 100 }}>
-        {/* FOMO ?ùÏóÖ */}
+        {/* FOMO ?ÏïπÎæΩ */}
         {consideringCount > 0 && <FomoPopup count={consideringCount} />}
 
         {allImages.length > 0 ? (
@@ -70,7 +70,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
         ) : e.cover_image_url ? (
           <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
         ) : (
-          <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>?é™</div>
+          <div style={{ width: '100%', height: 240, background: '#F7F7F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>?Î†ï</div>
         )}
 
         <div style={{ padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -90,13 +90,13 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
             {dateStr && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?ìÖ</span>
+                <span style={{ fontSize: 18 }}>?Î±ü</span>
                 <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{dateStr}</span>
               </div>
             )}
             {e.venue_name && (
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?ìç</span>
+                <span style={{ fontSize: 18 }}>?Î±ß</span>
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{e.venue_name}</p>
                   {e.venue_address && <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>{e.venue_address}</p>}
@@ -105,14 +105,14 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
             )}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18 }}>?é´</span>
+                <span style={{ fontSize: 18 }}>?Î†ñ</span>
                 <span style={{ fontSize: 16, fontWeight: 800, color: e.is_free ? '#00C471' : '#1A1A1A' }}>
                   {e.is_free ? 'Free' : `??{Number(Math.min(e.solo_option1_price || e.price_krw, e.price_returning || e.price_krw, e.price_with_friends || e.price_krw, e.price_solo || e.price_krw)).toLocaleString()} ~`}
                 </span>
               </div>
               {e.capacity > 0 && (
                 <span style={{ fontSize: 12, color: remaining <= 5 ? '#dc2626' : '#9A9A9A', fontWeight: 600 }}>
-                  {remaining <= 0 ? '?î¥ Sold out' : `${remaining} spots left`}
+                  {remaining <= 0 ? '?Îµ∂ Sold out' : `${remaining} spots left`}
                 </span>
               )}
             </div>
@@ -158,7 +158,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
                           {(name[0] || '?').toUpperCase()}
                         </div>
                       )}
-                      <span>{name}{nat ? ' ¬∑ ' + nat : ''}</span>
+                      <span>{name}{nat ? ' Ï®å ' + nat : ''}</span>
                     </div>
                   )
                 })}
@@ -173,7 +173,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
     console.error('EventDetail error:', err)
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>?òî</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>?ÏÇç</div>
         <p style={{ fontSize: 16, color: '#1A1A1A', marginBottom: 8 }}>Something went wrong</p>
         <Link href="/events" style={{ color: '#E9C000', fontWeight: 700 }}>??Back to Events</Link>
       </div>
