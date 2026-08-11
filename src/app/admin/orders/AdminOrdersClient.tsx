@@ -59,6 +59,9 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
       이름: o.profiles?.display_name || '',
       실명: o.profiles?.real_name || '',
       이메일: o.profiles?.email || '',
+      국적: o.profiles?.nationality || '',
+      성별: o.profiles?.gender || '',
+      나이: o.profiles?.birth_date ? new Date().getFullYear() - new Date(o.profiles.birth_date).getFullYear() : '',
       금액: o.amount_krw,
       수량: o.quantity,
       상태: o.status,
@@ -144,7 +147,7 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ background: '#F8F8F6' }}>
-                  {['이벤트','이름','실명','이메일','금액','수량','상태','날짜'].map(h => (
+                  {['이벤트','이름','실명','이메일','국적','성별','나이','금액','수량','상태','날짜'].map(h => (
                     <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.06em', borderBottom: '1.5px solid #E8E8E4' }}>{h}</th>
                   ))}
                 </tr>
@@ -156,6 +159,9 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
                     <td style={{ padding: '10px 12px' }}>{o.profiles?.display_name}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B' }}>{o.profiles?.real_name || '-'}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.email}</td>
+                    <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.nationality || '-'}</td>
+                    <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.gender || '-'}</td>
+                    <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.birth_date ? new Date().getFullYear() - new Date(o.profiles.birth_date).getFullYear() : '-'}</td>
                     <td style={{ padding: '10px 12px', fontWeight: 700 }}>{o.amount_krw === 0 ? 'FREE' : '₩' + o.amount_krw?.toLocaleString()}</td>
                     <td style={{ padding: '10px 12px', textAlign: 'center' }}>{o.quantity}</td>
                     <td style={{ padding: '10px 12px' }}>
