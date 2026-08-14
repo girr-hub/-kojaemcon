@@ -45,22 +45,22 @@ export default function CommunityPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '16px 16px 100px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+    <div style={{ minHeight: '100vh', background: '#F7F7F7' }}>
+      {/* 상단 */}
+      <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+        <div style={{ padding: '16px 16px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div className="eyebrow">Community</div>
-            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: '#1A1A1A', lineHeight: 1.2 }}>Board</h1>
-            <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>Share tips, ask questions, connect.</p>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, letterSpacing: '-0.04em', color: '#1A1A1A' }}>Community</h1>
+            <p style={{ fontSize: 13, color: '#9A9A9A', marginTop: 2 }}>Share tips, ask questions, connect.</p>
           </div>
           <button onClick={() => { if (!user) { window.location.href = '/login'; return } setShowForm(!showForm) }}
-            className="btn-primary" style={{ padding: '10px 22px' }}>
-            {showForm ? '✕ Cancel' : '+ Write'}
+            style={{ padding: '8px 16px', borderRadius: 10, background: '#E9C000', color: '#1A1A1A', border: 'none', fontWeight: 800, fontSize: 13, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+            {showForm ? '✕ Cancel' : '✏️ Write'}
           </button>
         </div>
 
         {showForm && (
-          <div style={{ background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 24, marginBottom: 28 }}>
+          <div style={{ background: '#FFFFFF', borderBottom: '8px solid #F7F7F7', padding: '16px 16px 20px' }}>
             <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
               {CATEGORIES.filter(c => c !== 'All').map(c => (
                 <button key={c} type="button" onClick={() => setForm(f => ({ ...f, category: c }))}
@@ -75,22 +75,28 @@ export default function CommunityPage() {
               value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
             <textarea className="input-base" rows={5} style={{ resize: 'none', marginBottom: 14 }}
               placeholder="What's on your mind?" value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} />
-            <button onClick={submitPost} disabled={posting} className="btn-primary" style={{ padding: '10px 24px' }}>
+            <button onClick={submitPost} disabled={posting}
+              style={{ padding: '11px 24px', borderRadius: 10, background: '#E9C000', color: '#1A1A1A', border: 'none', fontWeight: 800, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
               {posting ? 'Posting...' : 'Post'}
             </button>
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: 6, marginBottom: 24, overflowX: 'auto', paddingBottom: 4 }}>
+        {/* 카테고리 탭 */}
+        <div style={{ display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', borderTop: '1px solid #F0F0F0' }}>
           {CATEGORIES.map(c => (
             <button key={c} onClick={() => setCat(c)}
-              style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', flexShrink: 0,
-                background: cat === c ? '#0A0A0A' : '#F8F8F6', color: cat === c ? '#fff' : '#6B6B6B',
-                border: cat === c ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4' }}>
+              style={{ padding: '12px 16px', fontSize: 13, fontWeight: cat === c ? 800 : 500, cursor: 'pointer', flexShrink: 0,
+                background: 'none', color: cat === c ? '#1A1A1A' : '#9A9A9A', border: 'none',
+                borderBottom: cat === c ? '2px solid #E9C000' : '2px solid transparent',
+                fontFamily: 'PretendardVariable, Pretendard, sans-serif', transition: 'all 0.15s' }}>
               {c}
             </button>
           ))}
         </div>
+      </div>
+
+      <div style={{ padding: '0 0 100px' }}>
 
         {loading ? <p style={{ color: '#9A9A9A', fontSize: 14 }}>Loading...</p> : posts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '64px 0' }}>
@@ -100,27 +106,32 @@ export default function CommunityPage() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {posts.map(post => (
-              <Link key={post.id} href={`/community/${post.id}`} style={{ textDecoration: 'none', display: 'block', padding: '20px 0', borderBottom: '1px solid #F8F8F6' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  {post.is_pinned && <span style={{ fontSize: 10, fontWeight: 700, color: '#D4B33A' }}>📌 PINNED</span>}
-                  <span style={{ fontSize: 10, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{post.category}</span>
-                </div>
-                <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 16, color: '#0A0A0A', marginBottom: 6, letterSpacing: '-0.01em' }}>{post.title}</h3>
-                <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6, marginBottom: 10,
-                  overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
-                  {post.content}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 12, color: '#9A9A9A' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {post.profiles?.avatar_url
-                      ? <img src={post.profiles.avatar_url} style={{ width: 20, height: 20, borderRadius: '50%', objectFit: 'cover' }} alt="" />
-                      : <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700 }}>{(post.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
-                    }
-                    <span>{post.profiles?.display_name ?? 'Unknown'}</span>
+              <Link key={post.id} href={`/community/${post.id}`} style={{ textDecoration: 'none', display: 'block', background: '#FFFFFF', borderBottom: '1px solid #F5F5F5', padding: '16px 16px' }}>
+                {post.is_pinned && (
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#E9C000', display: 'block', marginBottom: 4 }}>📌 Pinned</span>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 15, color: '#1A1A1A', marginBottom: 4, letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{post.title}</h3>
+                    <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.5, marginBottom: 10, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
+                      {post.content}
+                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#9A9A9A' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        {post.profiles?.avatar_url
+                          ? <img src={post.profiles.avatar_url} style={{ width: 18, height: 18, borderRadius: '50%', objectFit: 'cover' }} alt="" />
+                          : <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8, fontWeight: 800, color: '#1A1A1A' }}>{(post.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
+                        }
+                        <span style={{ fontWeight: 600, color: '#6B6B6B' }}>{post.profiles?.display_name ?? 'Unknown'}</span>
+                      </div>
+                      <span>·</span>
+                      <span>{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                      <span>·</span>
+                      <span>❤️ {post.likes || 0}</span>
+                      <span>💬 {post.post_comments?.[0]?.count ?? 0}</span>
+                    </div>
                   </div>
-                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                  <span>❤️ {post.likes || 0}</span>
-                  <span>💬 {post.post_comments?.[0]?.count ?? 0}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: '#9A9A9A', background: '#F7F7F7', padding: '3px 8px', borderRadius: 6, flexShrink: 0, letterSpacing: '0.05em' }}>{post.category}</span>
                 </div>
               </Link>
             ))}
