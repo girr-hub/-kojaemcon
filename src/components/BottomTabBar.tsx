@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const TABS = [
+const LEFT_TABS = [
   { href: '/', label: 'Home', icon: (a: boolean) => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path d="M3 9.5L12 3L21 9.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9.5Z"
@@ -16,16 +16,13 @@ const TABS = [
       <path d="M8 2V5M16 2V5" stroke={a?'#1A1A1A':'#C4C4C4'} strokeWidth="1.8" strokeLinecap="round"/>
     </svg>
   )},
+]
+
+const RIGHT_TABS = [
   { href: '/community', label: 'Community', icon: (a: boolean) => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path d="M21 15C21 16.1 20.1 17 19 17H7L3 21V5C3 3.9 3.9 3 5 3H19C20.1 3 21 3.9 21 5V15Z"
         fill={a?'#1A1A1A':'none'} stroke={a?'#1A1A1A':'#C4C4C4'} strokeWidth="1.8" strokeLinejoin="round"/>
-    </svg>
-  )},
-  { href: '/magazine', label: 'Magazine', icon: (a: boolean) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <rect x="4" y="3" width="16" height="18" rx="2" stroke={a?'#1A1A1A':'#C4C4C4'} strokeWidth="1.8"/>
-      <path d="M8 8H16M8 12H16M8 16H12" stroke={a?'#1A1A1A':'#C4C4C4'} strokeWidth="1.8" strokeLinecap="round"/>
     </svg>
   )},
   { href: '/my', label: 'My', icon: (a: boolean) => (
@@ -40,9 +37,6 @@ export default function BottomTabBar() {
   const pathname = usePathname()
   if (pathname.startsWith('/admin') || pathname.startsWith('/login') || pathname.startsWith('/signup')) return null
 
-  const LEFT = TABS.slice(0, 2)
-  const RIGHT = TABS.slice(2)
-
   return (
     <>
       <div style={{ height: 76 }} />
@@ -53,8 +47,7 @@ export default function BottomTabBar() {
         paddingBottom: 'env(safe-area-inset-bottom)',
         display: 'flex', alignItems: 'flex-end',
       }}>
-        {/* 좌측 탭 2개 */}
-        {LEFT.map(tab => {
+        {LEFT_TABS.map(tab => {
           const active = pathname === tab.href || (tab.href !== '/' && pathname.startsWith(tab.href))
           return (
             <Link key={tab.href} href={tab.href} style={{
@@ -63,7 +56,7 @@ export default function BottomTabBar() {
               textDecoration: 'none', WebkitTapHighlightColor: 'transparent',
             }}>
               {tab.icon(active)}
-              <span style={{ fontSize: 10, fontWeight: active ? 800 : 500, color: active ? '#1A1A1A' : '#C4C4C4', letterSpacing: '-0.01em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <span style={{ fontSize: 10, fontWeight: active ? 800 : 500, color: active ? '#1A1A1A' : '#C4C4C4', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                 {tab.label}
               </span>
             </Link>
@@ -85,8 +78,7 @@ export default function BottomTabBar() {
           </Link>
         </div>
 
-        {/* 우측 탭 2개 */}
-        {RIGHT.map(tab => {
+        {RIGHT_TABS.map(tab => {
           const active = pathname === tab.href || (tab.href !== '/' && pathname.startsWith(tab.href))
           return (
             <Link key={tab.href} href={tab.href} style={{
@@ -95,7 +87,7 @@ export default function BottomTabBar() {
               textDecoration: 'none', WebkitTapHighlightColor: 'transparent',
             }}>
               {tab.icon(active)}
-              <span style={{ fontSize: 10, fontWeight: active ? 800 : 500, color: active ? '#1A1A1A' : '#C4C4C4', letterSpacing: '-0.01em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <span style={{ fontSize: 10, fontWeight: active ? 800 : 500, color: active ? '#1A1A1A' : '#C4C4C4', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                 {tab.label}
               </span>
             </Link>
