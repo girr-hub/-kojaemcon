@@ -120,8 +120,17 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
       <div><label className={label}>Images (max 5, first = main)</label>
         <ImageUploader value={f.images} onChange={imgs=>setF({...f, images:imgs})}/></div>
 
-      <div><label className={label}>Description (HTML allowed)</label>
-        <HtmlEditor value={f.description_html} onChange={h=>setF({...f, description_html:h})}/></div>
+      <div>
+        <label className={label}>Description</label>
+        {mode === 'host' ? (
+          <textarea className={input} rows={8} style={{ resize:'vertical', lineHeight:1.6 }}
+            placeholder="Tell people about your event — what to expect, what to bring, who it's for..."
+            value={f.description_html}
+            onChange={e=>setF({...f, description_html:e.target.value})} />
+        ) : (
+          <HtmlEditor value={f.description_html} onChange={h=>setF({...f, description_html:h})}/>
+        )}
+      </div>
 
       {mode === 'admin' && (
         <>
