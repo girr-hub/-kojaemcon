@@ -2,9 +2,9 @@ import { supabaseAdmin } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 const CAT_LABELS: Record<string, string> = {
-  notice: '📢 공지사항',
-  newsletter: '📮 뉴스레터',
-  update: '🔔 업데이트',
+  notice: '📢 Notice',
+  newsletter: '📮 Newsletter',
+  update: '🔔 Update',
 }
 
 export default async function MagazinePage() {
@@ -15,61 +15,52 @@ export default async function MagazinePage() {
     .order('published_at', { ascending: false })
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff' }}>
-      {/* Header */}
-      <div style={{ background: '#12161A', padding: '20px 16px 16px', textAlign: 'center' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#E9C000', marginBottom: 12 }}>KOGEMCON</p>
-        <h1 style={{ fontFamily: 'Righteous, sans-serif', fontSize: 20, color: '#FFFFFF', letterSpacing: '0.02em', marginBottom: 10 }}>
-          MAGAZINE
-        </h1>
-        <p style={{ fontSize: 14, color: '#888' }}>공지사항 · 뉴스레터 · 업데이트</p>
-        <div style={{ height: 3, background: '#E9C000', marginTop: 24, maxWidth: 60, margin: '24px auto 0' }} />
+    <div style={{ minHeight: '100vh', background: '#F7F7F7' }}>
+
+      {/* 헤더 */}
+      <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0', padding: '16px 16px 0' }}>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, letterSpacing: '-0.04em', color: '#1A1A1A', marginBottom: 4 }}>Magazine</h1>
+        <p style={{ fontSize: 13, color: '#9A9A9A', marginBottom: 16 }}>Notices · Newsletters · Updates</p>
       </div>
 
-      {/* Posts */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: 'clamp(32px,5vw,64px) 24px' }}>
+      {/* 포스트 리스트 */}
+      <div style={{ background: '#FFFFFF', marginTop: 8 }}>
         {posts && posts.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {posts.map((post, i) => (
-              <Link key={post.id} href={`/magazine/${post.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-                <article style={{
-                  display: 'grid',
-                  gridTemplateColumns: post.cover_image_url ? '1fr 120px' : '1fr',
-                  gap: 20, padding: '24px 0',
-                  borderBottom: '1px solid #F0F0EC',
-                  alignItems: 'center',
-                }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          <div>
+            {posts.map(post => (
+              <Link key={post.id} href={`/magazine/${post.slug}`} style={{ textDecoration: 'none', display: 'block', borderBottom: '1px solid #F5F5F5' }}>
+                <article style={{ padding: '16px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#FFFBEA', padding: '2px 8px', borderRadius: 6 }}>
                         {CAT_LABELS[post.category] || post.category}
                       </span>
-                      <span style={{ fontSize: 10, color: '#C4C4C0', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                        {new Date(post.published_at || post.created_at).toLocaleDateString('ko-KR')}
+                      <span style={{ fontSize: 11, color: '#9A9A9A' }}>
+                        {new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-                    <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 'clamp(16px,3vw,20px)', color: '#12161A', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 8 }}>
+                    <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: '#1A1A1A', letterSpacing: '-0.03em', lineHeight: 1.35, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {post.title}
                     </h2>
                     {post.summary && (
-                      <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65, fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-                        overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
+                      <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
                         {post.summary}
                       </p>
                     )}
                   </div>
                   {post.cover_image_url && (
                     <img src={post.cover_image_url} alt={post.title}
-                      style={{ width: 120, height: 90, objectFit: 'cover', borderRadius: 10, flexShrink: 0 }} />
+                      style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 10, flexShrink: 0 }} />
                   )}
                 </article>
               </Link>
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '64px 0' }}>
-            <p style={{ fontSize: 40, marginBottom: 16 }}>📮</p>
-            <p style={{ fontSize: 15, color: '#9A9A9A' }}>아직 게시된 글이 없어요</p>
+          <div style={{ textAlign: 'center', padding: '64px 24px' }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>📮</div>
+            <p style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 6 }}>Nothing here yet</p>
+            <p style={{ fontSize: 14, color: '#9A9A9A' }}>Check back soon for news and updates!</p>
           </div>
         )}
       </div>
