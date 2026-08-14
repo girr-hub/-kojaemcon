@@ -9,7 +9,16 @@ export default function EventFeedCard({ event }: { event: any }) {
   const timeStr = date ? date.toLocaleString('en-US', {
     hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC'
   }) : ''
-  const minPrice = event.solo_option1_price || event.price_solo || event.price_krw || 0
+  const prices = [
+    event.solo_option1_price,
+    event.returning_option1_price,
+    event.friends_option1_price,
+    event.price_solo,
+    event.price_returning,
+    event.price_with_friends,
+    event.price_krw,
+  ].filter(p => p && p > 0)
+  const minPrice = prices.length > 0 ? Math.min(...prices) : 0
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
