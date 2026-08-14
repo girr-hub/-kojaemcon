@@ -8,7 +8,8 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
   try {
     const { slug } = await params
     const sb = await supabaseServer()
-    const { data: e } = await sb.from('events').select('*').eq('slug', slug).single()
+    const admin = supabaseAdmin()
+    const { data: e } = await admin.from('events').select('*').eq('slug', slug).single()
     if (!e) return (
       <div style={{ padding: 40, textAlign: 'center' }}>
         <p style={{ fontSize: 18, color: '#9A9A9A' }}>Event not found</p>
