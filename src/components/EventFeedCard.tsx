@@ -9,6 +9,7 @@ export default function EventFeedCard({ event }: { event: any }) {
   const timeStr = date ? date.toLocaleString('en-US', {
     hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC'
   }) : ''
+
   const prices = [
     event.solo_option1_price,
     event.returning_option1_price,
@@ -17,8 +18,9 @@ export default function EventFeedCard({ event }: { event: any }) {
     event.price_returning,
     event.price_with_friends,
     event.price_krw,
-  ].filter(p => p && p > 0)
+  ].filter((p: any) => p && p > 0)
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0
+  const soldOut = event.capacity > 0 && event.remaining <= 0
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
@@ -32,11 +34,16 @@ export default function EventFeedCard({ event }: { event: any }) {
         opacity: isClosed ? 0.55 : 1,
       }}>
         {/* 이미지 */}
-        <div style={{ width: 96, height: 96, flexShrink: 0, borderRadius: 8, overflow: 'hidden', background: '#EFEFEF' }}>
+        <div style={{ width: 96, height: 96, flexShrink: 0, borderRadius: 8, overflow: 'hidden', background: '#EFEFEF', position: 'relative' }}>
           {event.cover_image_url
             ? <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <div style={{ width: '100%', height: '100%', background: '#E8E8E8' }} />
           }
+          {isClosed && (
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.08em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>CLOSED</span>
+            </div>
+          )}
         </div>
 
         {/* 텍스트 */}
@@ -66,13 +73,22 @@ export default function EventFeedCard({ event }: { event: any }) {
             </p>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <span style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A', letterSpacing: '-0.03em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
               {event.is_free ? 'Free' : `From ₩${Number(minPrice).toLocaleString()}`}
             </span>
-            {event.capacity > 0 && (
-              <span style={{ fontSize: 12, color: event.remaining <= 5 && event.remaining > 0 ? '#E55' : '#BBB', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                {event.remaining <= 0 ? 'Sold out' : `${event.remaining} spots left`}
+
+            {isClosed ? (
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#999', background: '#F0F0F0', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                Closed
+              </span>
+            ) : soldOut ? (
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#999', background: '#F0F0F0', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                Sold out
+              </span>
+            ) : (
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: '#1A1A1A', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                Join
               </span>
             )}
           </div>
