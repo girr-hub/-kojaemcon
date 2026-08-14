@@ -2,58 +2,61 @@ import Link from 'next/link'
 
 export default function EventFeedCard({ event }: { event: any }) {
   const isClosed = event.status === 'closed'
-  const date = new Date(event.starts_at)
-  const month = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' })
-  const day = Number(date.toLocaleString('en-US', { day: 'numeric', timeZone: 'UTC' }))
-  const time = date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' })
+  const date = event.starts_at ? new Date(event.starts_at) : null
+  const dateStr = date ? date.toLocaleString('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }) : ''
+  const timeStr = date ? date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }) : ''
+
+  const minPrice = event.solo_option1_price || event.price_solo || event.price_krw || 0
 
   return (
     <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-      <article style={{ background: '#FFFFFF', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start', borderBottom: '1px solid #F5F5F5', opacity: isClosed ? 0.65 : 1 }}>
-        <div style={{ width: 96, height: 96, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#F7F7F7', position: 'relative' }}>
+      <article style={{
+        background: '#FFFFFF',
+        padding: '16px',
+        display: 'flex',
+        gap: 14,
+        alignItems: 'flex-start',
+        borderBottom: '1px solid #F2F2F2',
+        opacity: isClosed ? 0.6 : 1,
+      }}>
+        {/* 이미지 */}
+        <div style={{ width: 100, height: 100, flexShrink: 0, borderRadius: 10, overflow: 'hidden', background: '#F0F0F0' }}>
           {event.cover_image_url ? (
             <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, opacity: 0.25 }}>🎪</div>
-          )}
-          {isClosed && (
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 10, fontWeight: 800, color: '#fff', letterSpacing: '0.1em' }}>CLOSED</span>
-            </div>
+            <div style={{ width: '100%', height: '100%', background: '#E8E8E8' }} />
           )}
         </div>
+
+        {/* 텍스트 */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {event.category && (
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#FFFBEA', padding: '2px 7px', borderRadius: 6, display: 'inline-block', marginBottom: 5 }}>
-              {event.category}
-            </span>
-          )}
-          <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 15, letterSpacing: '-0.03em', lineHeight: 1.35, color: '#1A1A1A', marginBottom: 6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
+          <h3 style={{
+            fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+            fontWeight: 700, fontSize: 15,
+            letterSpacing: '-0.02em', lineHeight: 1.4,
+            color: '#1A1A1A', marginBottom: 5,
+            overflow: 'hidden', display: '-webkit-box',
+            WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any
+          }}>
             {event.title}
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
-            <span style={{ fontSize: 12, color: '#6B6B6B' }}>📅 {month} {day} · {time}</span>
-            {event.venue_name && <span style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📍 {event.venue_name}</span>}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <span style={{ fontSize: 14, fontWeight: 800, color: event.is_free ? '#00C471' : '#1A1A1A', letterSpacing: '-0.03em' }}>
-                {event.is_free ? 'Free' : `₩${Number(event.price_krw).toLocaleString()}`}
-              </span>
-              {event.capacity > 0 && (
-                <div style={{ fontSize: 11, fontWeight: 600, color: event.remaining <= 5 && event.remaining > 0 ? '#dc2626' : '#9A9A9A', marginTop: 2 }}>
-                  {event.remaining <= 0 ? '🔴 Sold out' : `${event.sold ?? 0}/${event.capacity} joined`}
-                </div>
-              )}
-            </div>
-            {!isClosed && (event.remaining > 0 || !event.capacity) && (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '5px 10px', borderRadius: 7 }}>
-                Join →
-              </span>
-            )}
-            {!isClosed && event.capacity > 0 && event.remaining <= 0 && (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', background: '#F0F0F0', padding: '5px 10px', borderRadius: 7 }}>
-                Sold out
+
+          <p style={{ fontSize: 13, color: '#888', marginBottom: 2 }}>
+            {dateStr}{timeStr ? ` · ${timeStr}` : ''}
+          </p>
+          {event.venue_name && (
+            <p style={{ fontSize: 13, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {event.venue_name}
+            </p>
+          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A', letterSpacing: '-0.03em' }}>
+              {event.is_free ? 'Free' : `From ₩${Number(minPrice).toLocaleString()}`}
+            </span>
+            {event.capacity > 0 && (
+              <span style={{ fontSize: 12, color: event.remaining <= 5 && event.remaining > 0 ? '#E55' : '#AAA' }}>
+                {event.remaining <= 0 ? 'Sold out' : `${event.remaining} left`}
               </span>
             )}
           </div>
