@@ -23,6 +23,7 @@ async function approvePayment(transactionId: string, orderNumber: string, amount
   const { data: orderData } = await admin.from('orders').select('amount_krw, events(title)').eq('payment_id', orderNumber).maybeSingle()
   const orderAmount = orderData?.amount_krw || 0
   const eventTitle = encodeURIComponent((orderData?.events as any)?.title || '')
+  const kakaoUrl = encodeURIComponent((orderData?.events as any)?.kakao_chat_url || '')
 
   // 1. 토큰 발행
   const tokenRes = await fetch('https://standard.payup.co.kr/auth/v1/accessToken', {

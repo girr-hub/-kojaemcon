@@ -36,6 +36,7 @@ function PaymentSuccessInner() {
   const params = useSearchParams()
   const amount = params.get('amount')
   const eventName = params.get('event')
+  const kakaoUrl = params.get('kakao') ? decodeURIComponent(params.get('kakao')!) : ''
 
   return (
     <div style={{ minHeight: '100vh', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
@@ -57,8 +58,15 @@ function PaymentSuccessInner() {
           You&apos;re all set! Check your email for confirmation.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {kakaoUrl && (
+            <a href={kakaoUrl} target="_blank" rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#FAE100', color: '#1A1A1A', borderRadius: 14, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, textDecoration: 'none', textAlign: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M12 2C6.477 2 2 5.477 2 9.5c0 2.572 1.53 4.836 3.875 6.197L4.5 20l4.688-2.344C10.049 17.88 11.007 18 12 18c5.523 0 10-3.477 10-7.5S17.523 2 12 2z"/></svg>
+              Join Group Chat
+            </a>
+          )}
           <Link href="/my" style={{ display: 'block', background: '#1A1A1A', color: '#E9C000', borderRadius: 14, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, textDecoration: 'none', textAlign: 'center' }}>
-            View My Tickets &rarr;
+            View My Tickets
           </Link>
           <Link href="/events" style={{ display: 'block', background: '#F7F7F7', color: '#6B6B6B', borderRadius: 14, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 14, textDecoration: 'none', textAlign: 'center' }}>
             Back to Events
