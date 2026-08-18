@@ -15,8 +15,6 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     summary: initial?.summary ?? '',
     category: initial?.category ?? 'party',
     description_html: initial?.description_html ?? '',
-    detail_page_html: initial?.detail_page_html ?? '',
-    detail_video_url: initial?.detail_video_url ?? null,
     starts_at: initial?.starts_at?.slice(0, 16) ?? '',
     ends_at: initial?.ends_at?.slice(0, 16) ?? '',
     venue_name: initial?.venue_name ?? '',
@@ -144,10 +142,7 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
 
           {f.source === 'official' && (
             <>
-              <div><label className={label}>Detail Page (full-width HTML)</label>
-                <HtmlEditor value={f.detail_page_html} onChange={h=>setF({...f, detail_page_html:h})}/></div>
-              <div><label className={label}>Detail Video</label>
-                <VideoUploader value={f.detail_video_url} onChange={v=>setF({...f, detail_video_url:v})}/></div>
+
             </>
           )}
         </>

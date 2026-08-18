@@ -26,25 +26,32 @@ export default function SponsorBanner({ position = 'home' }: { position?: string
   const b = banners[current]
 
   return (
-    <a href={b.link_url} target="_blank" rel="noopener noreferrer"
-      style={{ display: 'block', textDecoration: 'none', background: '#FFFFFF', borderBottom: '1px solid #F2F2F2' }}>
-      <div style={{ padding: '10px 16px', position: 'relative' }}>
-        {b.image_url ? (
-          <img src={b.image_url} alt={b.title} style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, display: 'block' }} />
-        ) : (
-          <div style={{ width: '100%', height: 80, borderRadius: 8, background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#555' }}>{b.title}</span>
-          </div>
-        )}
-        <span style={{ position: 'absolute', top: 16, right: 22, background: 'rgba(0,0,0,0.35)', borderRadius: 4, padding: '2px 6px', fontSize: 10, color: '#fff', fontWeight: 600 }}>AD</span>
+    <div style={{ background: '#FFFFFF', borderTop: '1px solid #F0F0F0', borderBottom: '1px solid #F0F0F0' }}>
+      {/* AD 라벨 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px 0' }}>
+        <span style={{ fontSize: 10, color: '#BBB', fontWeight: 600, letterSpacing: '0.08em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>AD</span>
         {banners.length > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4, marginTop: 8 }}>
+          <div style={{ display: 'flex', gap: 3 }}>
             {banners.map((_, i) => (
-              <div key={i} style={{ width: i === current ? 14 : 5, height: 5, borderRadius: 3, background: i === current ? '#1A1A1A' : '#DDD', transition: 'all 0.3s' }} />
+              <div key={i} onClick={() => setCurrent(i)}
+                style={{ width: i === current ? 12 : 4, height: 4, borderRadius: 2, background: i === current ? '#1A1A1A' : '#DDD', transition: 'all 0.3s', cursor: 'pointer' }} />
             ))}
           </div>
         )}
       </div>
-    </a>
+
+      <a href={b.link_url} target="_blank" rel="noopener noreferrer"
+        style={{ display: 'block', textDecoration: 'none', padding: '8px 16px 12px' }}>
+        {b.image_url ? (
+          <img src={b.image_url} alt={b.title}
+            style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, display: 'block' }} />
+        ) : (
+          <div style={{ width: '100%', height: 80, borderRadius: 8, background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#333' }}>{b.title}</span>
+            <span style={{ fontSize: 11, color: '#999' }}>→</span>
+          </div>
+        )}
+      </a>
+    </div>
   )
 }
