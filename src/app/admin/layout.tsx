@@ -37,7 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="text-xs uppercase tracking-widest text-ink/50 mb-8">Admin</div>
         <nav className="space-y-1">
           {nav.map(([l, h, badge]) => (
-            <Link key={h} href={h} className="block uppercase text-sm hover:text-primary py-1.5"
+            <Link key={h} href={h as string} className="block uppercase text-sm hover:text-primary py-1.5"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>{l}</span>
               {badge && Number(badge) > 0 && (
