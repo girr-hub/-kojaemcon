@@ -1,14 +1,30 @@
 'use client'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
 
 export default function BannersClient({ banners }: { banners: any[] }) {
   const [list, setList] = useState(banners)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ title: '', image_url: '', link_url: '', position: 'home', sort_order: 0, is_active: true })
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', background: '#fff', color: '#1A1A1A', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
   const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const sb = supabase()
+    const ext = file.name.split('.').pop()
+    const path = `banner_${Date.now()}.${ext}`
+    const { error } = await sb.storage.from('banners').upload(path, file, { upsert: true })
+    if (error) { alert(error.message); setUploading(false); return }
+    const { data } = sb.storage.from('banners').getPublicUrl(path)
+    setForm(f => ({ ...f, image_url: data.publicUrl }))
+    setUploading(false)
+  }
 
   const save = async () => {
     if (!form.title || !form.link_url) return alert('제목과 링크 URL은 필수예요')
@@ -47,7 +63,7 @@ export default function BannersClient({ banners }: { banners: any[] }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.04em' }}>스폰서 배너</h1>
-          <p style={{ fontSize: 13, color: '#9A9A9A', marginTop: 4 }}>이미지 권장 규격: 1200×300px</p>
+          <p style={{ fontSize: 13, color: '#9A9A9A', marginTop: 4 }}>권장 이미지: 1200×300px · 클릭 시 링크로 이동</p>
         </div>
         <button onClick={() => setShowForm(!showForm)}
           style={{ padding: '10px 20px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
@@ -63,15 +79,41 @@ export default function BannersClient({ banners }: { banners: any[] }) {
               <label style={labelStyle}>제목 *</label>
               <input style={inputStyle} value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="배너 제목" />
             </div>
+
+            {/* 이미지 업로드 */}
             <div>
-              <label style={labelStyle}>이미지 URL</label>
-              <input style={inputStyle} value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." />
-              <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 4 }}>권장: 1200×300px, 500KB 이하</p>
+              <label style={labelStyle}>배너 이미지</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 8, border: '1.5px dashed #D0D0D0', cursor: 'pointer', background: '#fff' }}>
+                  <span style={{ fontSize: 20 }}>🖼</span>
+                  <span style={{ fontSize: 14, color: uploading ? '#9A9A9A' : '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                    {uploading ? '업로드 중...' : form.image_url ? '이미지 변경' : '이미지 파일 선택 (JPG, PNG, WebP)'}
+                  </span>
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={uploading} />
+                </label>
+                {form.image_url && (
+                  <div style={{ position: 'relative' }}>
+                    <img src={form.image_url} alt="" style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid #E8E8E8' }} />
+                    <button onClick={() => setForm(f => ({ ...f, image_url: '' }))}
+                      style={{ position: 'absolute', top: 6, right: 6, width: 24, height: 24, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      ×
+                    </button>
+                  </div>
+                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ flex: 1, height: 1, background: '#E0E0E0' }} />
+                  <span style={{ fontSize: 11, color: '#9A9A9A' }}>또는 URL 직접 입력</span>
+                  <div style={{ flex: 1, height: 1, background: '#E0E0E0' }} />
+                </div>
+                <input style={inputStyle} value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." />
+              </div>
             </div>
+
             <div>
-              <label style={labelStyle}>링크 URL *</label>
+              <label style={labelStyle}>링크 URL * (클릭 시 이동)</label>
               <input style={inputStyle} value={form.link_url} onChange={e => setForm({...form, link_url: e.target.value})} placeholder="https://..." />
             </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
                 <label style={labelStyle}>노출 위치</label>
@@ -86,9 +128,10 @@ export default function BannersClient({ banners }: { banners: any[] }) {
                 <input style={inputStyle} type="number" value={form.sort_order} onChange={e => setForm({...form, sort_order: Number(e.target.value)})} />
               </div>
             </div>
+
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={save} disabled={saving}
-                style={{ padding: '11px 24px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <button onClick={save} disabled={saving || uploading}
+                style={{ padding: '11px 24px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: (saving || uploading) ? 0.6 : 1 }}>
                 {saving ? '저장 중...' : '저장'}
               </button>
               <button onClick={() => setShowForm(false)}
@@ -106,14 +149,16 @@ export default function BannersClient({ banners }: { banners: any[] }) {
         )}
         {list.map(b => (
           <div key={b.id} style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-            {b.image_url && (
-              <img src={b.image_url} alt="" style={{ width: 100, height: 56, objectFit: 'cover', borderRadius: 8, flexShrink: 0, border: '1px solid #F0F0F0' }} />
+            {b.image_url ? (
+              <img src={b.image_url} alt="" style={{ width: 120, height: 60, objectFit: 'cover', borderRadius: 8, flexShrink: 0, border: '1px solid #F0F0F0' }} />
+            ) : (
+              <div style={{ width: 120, height: 60, borderRadius: 8, background: '#F5F5F5', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#9A9A9A' }}>No image</div>
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 3, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{b.title}</p>
               <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 3 }}>위치: {b.position} · 순서: {b.sort_order}</p>
               <a href={b.link_url} target="_blank" rel="noopener noreferrer"
-                style={{ fontSize: 12, color: '#1A1A1A', textDecoration: 'underline', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                style={{ fontSize: 12, color: '#555', textDecoration: 'underline', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                 {b.link_url}
               </a>
             </div>
