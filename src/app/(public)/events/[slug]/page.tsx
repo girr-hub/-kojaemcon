@@ -50,7 +50,11 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       } catch {}
     }
 
-    const allImages = [...(e.detail_images ?? []), ...(e.images ?? [])].filter(Boolean)
+    // 커버 이미지 제외한 추가 이미지만
+    const extraImages = [...(e.detail_images ?? []), ...(e.images ?? [])]
+      .filter(Boolean)
+      .filter((img: string) => img !== e.cover_image_url)
+    const allImages = extraImages
     const startDate = e.starts_at ? new Date(e.starts_at) : null
     const dateStr = startDate ? startDate.toLocaleString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric',
