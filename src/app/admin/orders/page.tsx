@@ -4,7 +4,7 @@ import AdminOrdersClient from './AdminOrdersClient'
 export default async function AdminOrders() {
   const sb = supabaseAdmin()
   const { data: orders } = await sb.from('orders')
-    .select('*, events(id, title, starts_at), profiles(display_name, email, real_name, nationality, gender, birth_date)')
+    .select('*, events(id, title, starts_at), profiles(display_name, email, real_name, nationality, gender, birth_date, phone)')
     .order('created_at', { ascending: false })
 
   const { data: events } = await sb.from('events')

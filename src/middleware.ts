@@ -1,28 +1,33 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(req: NextRequest) {
-  let res = NextResponse.next({ request: { headers: req.headers } })
-  const sb = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return req.cookies.getAll() },
-        setAll(cookiesToSet: { name: string; value: string; options?: any }[]) {
-          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
-          res = NextResponse.next({ request: req })
-          cookiesToSet.forEach(({ name, value, options }) => res.cookies.set(name, value, options))
-        },
-      },
-    }
-  )
-  await sb.auth.getUser()
-  return res
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+
+const LIMIT = 100        // 요청 수 제한
+const WINDOW_MS = 60000  // 1분
+
+export function middleware(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const now = Date.now()
+
+  const record = rateLimitMap.get(ip)
+
+  if (!record || now > record.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + WINDOW_MS })
+    return NextResponse.next()
+  }
+
+  record.count += 1
+
+  if (record.count > LIMIT) {
+    return new NextResponse('Too many requests', {
+      status: 429,
+      headers: { 'Retry-After': '60' }
+    })
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|payment-success|payment-fail|api/payments).*)',
-  ],
+  matcher: '/api/:path*',
 }

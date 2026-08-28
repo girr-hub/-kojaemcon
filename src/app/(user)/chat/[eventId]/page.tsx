@@ -42,8 +42,14 @@ export default async function ChatPage({ params }: { params: Promise<{ eventId: 
   const { data: event } = await admin.from('events').select('title').eq('id', eventId).single()
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
-      <h1 className="headline-en text-4xl uppercase mb-4">{event?.title} Chat</h1>
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }}>
+      <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 52, zIndex: 100 }}>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>💬</div>
+        <div>
+          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: '#1A1A1A', letterSpacing: '-0.03em' }}>{event?.title}</p>
+          <p style={{ fontSize: 12, color: '#9A9A9A' }}>Group Chat</p>
+        </div>
+      </div>
       <ChatRoom roomId={room.id} currentUserId={user.id}/>
     </div>
   )

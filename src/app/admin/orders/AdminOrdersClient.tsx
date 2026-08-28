@@ -147,7 +147,7 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ background: '#F8F8F6' }}>
-                  {['이벤트','이름','실명','이메일','국적','성별','나이','금액','수량','상태','날짜'].map(h => (
+                  {['이벤트','이름','실명','이메일','연락처','국적','성별','나이','친구정보','금액','수량','상태','날짜'].map(h => (
                     <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.06em', borderBottom: '1.5px solid #E8E8E4' }}>{h}</th>
                   ))}
                 </tr>
@@ -159,9 +159,21 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
                     <td style={{ padding: '10px 12px' }}>{o.profiles?.display_name}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B' }}>{o.profiles?.real_name || '-'}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.email}</td>
+                    <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.phone || '-'}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.nationality || '-'}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.gender || '-'}</td>
                     <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12 }}>{o.profiles?.birth_date ? new Date().getFullYear() - new Date(o.profiles.birth_date).getFullYear() : '-'}</td>
+                    <td style={{ padding: '10px 12px', color: '#6B6B6B', fontSize: 12, maxWidth: 200 }}>
+                      {o.friend_info ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          {(Array.isArray(o.friend_info) ? o.friend_info : [o.friend_info]).map((f: any, i: number) => (
+                            <div key={i} style={{ fontSize: 11, background: '#F7F7F7', borderRadius: 6, padding: '4px 8px' }}>
+                              {f.name} · {f.nationality} · {f.age}세 · {f.gender} · {f.phone} {f.notes ? `(${f.notes})` : ''}
+                            </div>
+                          ))}
+                        </div>
+                      ) : '-'}
+                    </td>
                     <td style={{ padding: '10px 12px', fontWeight: 700 }}>{o.amount_krw === 0 ? 'FREE' : '₩' + o.amount_krw?.toLocaleString()}</td>
                     <td style={{ padding: '10px 12px', textAlign: 'center' }}>{o.quantity}</td>
                     <td style={{ padding: '10px 12px' }}>
