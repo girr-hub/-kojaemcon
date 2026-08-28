@@ -19,7 +19,7 @@ export default function SignupPage() {
   const [step, setStep] = useState(1) // 1: basic, 2: profile, 3: interests
   const [f, setF] = useState({
     display_name: '', real_name: '', email: '', password: '', nationality: '',
-    birth_date: '', gender: 'undisclosed', referral_source: '',
+    birth_date: '', gender: 'undisclosed', referral_source: '', phone: '',
   })
   const [interests, setInterests] = useState<string[]>([])
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
@@ -77,6 +77,7 @@ export default function SignupPage() {
     const birthYear = f.birth_date ? new Date(f.birth_date).getFullYear() : null
     await sb.from('profiles').update({
       display_name: f.display_name,
+      phone: f.phone,
       real_name: f.real_name,
       nationality: f.nationality,
       birth_year: birthYear,
@@ -152,6 +153,8 @@ export default function SignupPage() {
                 <input style={inputStyle} type="password" placeholder="Min 8 characters" required value={f.password} onChange={e => setF({ ...f, password: e.target.value })} />
               </div>
               <div>
+                <label style={labelStyle}>Phone number</label>
+                <input style={inputStyle} placeholder="+82 10-0000-0000" value={f.phone} onChange={e => setF({ ...f, phone: e.target.value })} />
                 <label style={labelStyle}>Nationality *</label>
                 <select style={inputStyle} required value={f.nationality} onChange={e => setF({ ...f, nationality: e.target.value })}>
                   <option value="">Select your country</option>
