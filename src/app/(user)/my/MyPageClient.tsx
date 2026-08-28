@@ -154,6 +154,10 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                         style={{ flex: 1, display: 'block', textAlign: 'center', padding: '10px', borderRadius: 10, background: '#F7F7F7', color: '#1A1A1A', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                         View Event
                       </Link>
+                      <Link href={`/chat/${ticket.events?.id}`}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '10px 14px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                        💬 Chat
+                      </Link>
                       <button onClick={() => setCancelTarget(ticket)}
                         style={{ padding: '10px 16px', borderRadius: 10, background: '#FFF0F0', color: '#DC2626', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                         Cancel
