@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { sendAdminNotification } from '@/lib/email'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
 // PC: SDK가 form을 submit하면 여기로 POST 요청이 들어옴
