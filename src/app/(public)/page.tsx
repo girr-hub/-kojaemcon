@@ -37,11 +37,18 @@ export default function HomePage() {
         remaining: e.capacity,
         isExperience: true,
       }))
+      const now = Date.now()
       const all = [...(Array.isArray(evts) ? evts : []), ...expMapped]
         .sort((a: any, b: any) => {
           const aDate = a.starts_at ? new Date(a.starts_at).getTime() : Infinity
           const bDate = b.starts_at ? new Date(b.starts_at).getTime() : Infinity
-          return aDate - bDate
+          const aFuture = aDate >= now
+          const bFuture = bDate >= now
+          // 미래 이벤트 먼저, 그 안에서 가까운 순
+          if (aFuture && bFuture) return aDate - bDate
+          // 과거 이벤트는 뒤로, 최근 지난 것 먼저
+          if (!aFuture && !bFuture) return bDate - aDate
+          return aFuture ? -1 : 1
         })
       setEvents(all)
       setLoading(false)
