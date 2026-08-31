@@ -32,7 +32,7 @@ export default function FloatingCS() {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="#1A1A1A">
         <path d="M12 2C6.477 2 2 5.477 2 9.5c0 2.572 1.53 4.836 3.875 6.197L4.5 20l4.688-2.344C10.049 17.88 11.007 18 12 18c5.523 0 10-3.477 10-7.5S17.523 2 12 2z"/>
       </svg>
-      문의
+      CS
     </a>
   )
 }
