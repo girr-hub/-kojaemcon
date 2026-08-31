@@ -1,15 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
-import Link from 'next/link'
 
 const BANKS = ['KB국민은행', '신한은행', '우리은행', '하나은행', 'IBK기업은행', 'NH농협은행', '카카오뱅크', '토스뱅크', '케이뱅크', '씨티은행', 'SC제일은행']
 
-export default function ExperienceDetailPage({ params }: { params: any }) {
+export default function ExperienceDetailPage({ params }: { params: { id: string } }) {
+  const id = params.id
   const [event, setEvent] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
-  const [showForm, setShowForm] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [currentImg, setCurrentImg] = useState(0)
@@ -20,11 +19,10 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
 
   useEffect(() => {
     const sb = supabase()
-    const id = typeof params === 'object' && 'then' in params ? (await params).id : params.id
     sb.from('experience_events').select('*').eq('id', id).single()
       .then(({ data }) => { setEvent(data); setLoading(false) })
     sb.auth.getUser().then(({ data: { user } }) => setUser(user))
-  }, [params.id])
+  }, [id])
 
   const submit = async () => {
     if (!user) { window.location.href = '/login'; return }
@@ -32,7 +30,6 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
       alert('Please fill in all required fields'); return
     }
     setSubmitting(true)
-    const id = typeof params === 'object' && 'then' in params ? (await params).id : params.id
     const res = await fetch('/api/experience', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -50,8 +47,6 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
 
   return (
     <div style={{ background: '#F5F5F5', minHeight: '100vh', paddingBottom: 100 }}>
-
-      {/* 이미지 슬라이더 */}
       {images.length > 0 && (
         <div style={{ position: 'relative', background: '#000' }}>
           <img src={images[currentImg]} alt="" style={{ width: '100%', height: 280, objectFit: 'cover', display: 'block', opacity: 0.9 }} />
@@ -88,7 +83,6 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
         )}
       </div>
 
-      {/* 신청 폼 */}
       {submitted ? (
         <div style={{ background: '#FFFFFF', margin: '0 16px', borderRadius: 14, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🎉</div>
@@ -98,17 +92,12 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
       ) : (
         <div style={{ background: '#FFFFFF', padding: '20px 16px' }}>
           <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 16, letterSpacing: '-0.03em' }}>Apply for Experience</h2>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {/* 실명 */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})}
-                placeholder="Your full name"
+              <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name"
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
-
-            {/* 계좌 정보 */}
             <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>페이백 계좌정보 <span style={{ color: '#DC2626' }}>*</span></p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -117,47 +106,32 @@ export default function ExperienceDetailPage({ params }: { params: any }) {
                   <option value="">은행 선택</option>
                   {BANKS.map(b => <option key={b} value={b}>{b}</option>)}
                 </select>
-                <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})}
-                  placeholder="계좌번호"
+                <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})} placeholder="계좌번호"
                   style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-                <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})}
-                  placeholder="계좌주 전화번호"
+                <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})} placeholder="계좌주 전화번호"
                   style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
               </div>
             </div>
-
-            {/* 희망 날짜 */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>체험 희망 날짜 <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})}
-                placeholder="예: 2026년 9월 15일 또는 주말 희망"
+              <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})} placeholder="예: 2026년 9월 15일"
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
-
-            {/* SNS */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>운영 중인 SNS 계정</label>
-              <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})}
-                placeholder="예: @instagram_id, YouTube: 채널명"
+              <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="예: @instagram_id"
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
-
-            {/* 동행인 */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>동행인 수</label>
               <input type="number" min="0" value={form.companions} onChange={e => setForm({...form, companions: Number(e.target.value)})}
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
-
-            {/* 희망 장소 */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>희망 체험 장소 <span style={{ color: '#DC2626' }}>*</span></label>
-              <textarea value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})}
-                placeholder="희망하는 체험 장소를 모두 입력해주세요"
-                rows={3}
+              <textarea value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})} placeholder="희망하는 체험 장소를 모두 입력해주세요" rows={3}
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', resize: 'none', boxSizing: 'border-box' as any }} />
             </div>
-
             <button onClick={submit} disabled={submitting}
               style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: submitting ? 0.6 : 1 }}>
               {submitting ? '신청 중...' : '체험단 신청하기'}
