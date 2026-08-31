@@ -3,6 +3,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import VisitTracker from '@/components/VisitTracker'
 import BottomTabBar from '@/components/BottomTabBar'
+import FloatingCS from '@/components/FloatingCS'
 
 export const metadata = {
   title: 'KOGEMCON · Find your Gems in Korea',
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <BottomTabBar />
+            <FloatingCS />
         <VisitTracker />
       </body>
     </html>
