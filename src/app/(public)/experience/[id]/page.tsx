@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const BANKS = ['KB국민은행', '신한은행', '우리은행', '하나은행', 'IBK기업은행', 'NH농협은행', '카카오뱅크', '토스뱅크', '케이뱅크', '씨티은행', 'SC제일은행']
 
-export default function ExperienceDetailPage({ params }: { params: { id: string } }) {
+export default function ExperienceDetailPage({ params }: { params: any }) {
   const [event, setEvent] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
@@ -20,7 +20,8 @@ export default function ExperienceDetailPage({ params }: { params: { id: string 
 
   useEffect(() => {
     const sb = supabase()
-    sb.from('experience_events').select('*').eq('id', params.id).single()
+    const id = typeof params === 'object' && 'then' in params ? (await params).id : params.id
+    sb.from('experience_events').select('*').eq('id', id).single()
       .then(({ data }) => { setEvent(data); setLoading(false) })
     sb.auth.getUser().then(({ data: { user } }) => setUser(user))
   }, [params.id])
@@ -31,10 +32,11 @@ export default function ExperienceDetailPage({ params }: { params: { id: string 
       alert('Please fill in all required fields'); return
     }
     setSubmitting(true)
+    const id = typeof params === 'object' && 'then' in params ? (await params).id : params.id
     const res = await fetch('/api/experience', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'apply', event_id: params.id, ...form })
+      body: JSON.stringify({ action: 'apply', event_id: id, ...form })
     }).then(r => r.json())
     setSubmitting(false)
     if (res.ok) setSubmitted(true)
