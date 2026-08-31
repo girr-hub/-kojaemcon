@@ -35,5 +35,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
+  if (action === 'update') {
+    const { id, ...updates } = body
+    delete updates.action
+    const { error } = await admin.from('experience_events').update(updates).eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+    return NextResponse.json({ ok: true })
+  }
+
+  if (action === 'delete') {
+    await admin.from('experience_applications').delete().eq('event_id', body.id)
+    await admin.from('experience_events').delete().eq('id', body.id)
+    return NextResponse.json({ ok: true })
+  }
+
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
 }

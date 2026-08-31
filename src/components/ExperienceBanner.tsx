@@ -1,18 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import Link from 'next/link'
 
 export default function ExperienceBanner() {
   const [items, setItems] = useState<any[]>([])
 
   useEffect(() => {
-    supabase().from('experience_events')
-      .select('id, title, description, images, location')
-      .eq('status', 'published')
-      .order('created_at', { ascending: false })
-      .limit(3)
-      .then(({ data, error }) => { console.log('experience:', data, error); setItems(data ?? []) })
+    fetch('/api/experience-list')
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d)) setItems(d) })
   }, [])
 
   if (items.length === 0) return (
@@ -36,6 +32,7 @@ export default function ExperienceBanner() {
               <p style={{ fontSize: 12, color: '#999', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any, lineHeight: 1.5 }}>{e.description}</p>
               {e.location && <p style={{ fontSize: 12, color: '#BBB', marginTop: 4 }}>📍 {e.location}</p>}
             </div>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>Join</span>
           </div>
         </Link>
       ))}
