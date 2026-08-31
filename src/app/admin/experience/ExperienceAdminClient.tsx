@@ -5,6 +5,24 @@ export default function ExperienceAdminClient({ events, applications }: { events
   const [list, setList] = useState(events)
   const [editTarget, setEditTarget] = useState<any>(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+
+  const handleImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    setUploading(true)
+    const { supabase } = await import('@/lib/supabase/client')
+    const sb = supabase()
+    const urls: string[] = []
+    for (const file of files) {
+      const ext = file.name.split('.').pop()
+      const path = `experience_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+      await sb.storage.from('event-images').upload(path, file, { upsert: true })
+      const { data } = sb.storage.from('event-images').getPublicUrl(path)
+      urls.push(data.publicUrl)
+    }
+    setEditTarget((prev: any) => ({ ...prev, images: [...(prev.images ?? []), ...urls] }))
+    setUploading(false)
+  }
 
   const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
   const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
@@ -50,6 +68,21 @@ export default function ExperienceAdminClient({ events, applications }: { events
           <div style={{ background: '#fff', borderRadius: 16, padding: 24, width: '100%', maxWidth: 500, maxHeight: '80vh', overflowY: 'auto' }}>
             <h2 style={{ fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>체험단 수정</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={labelStyle}>사진</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+                  {(editTarget.images ?? []).map((url: string, i: number) => (
+                    <div key={i} style={{ position: 'relative', width: 72, height: 72 }}>
+                      <img src={url} style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8 }} alt="" />
+                      <button onClick={() => setEditTarget((prev: any) => ({ ...prev, images: prev.images.filter((_: any, idx: number) => idx !== i) }))}
+                        style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', background: '#DC2626', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12 }}>×</button>
+                    </div>
+                  ))}
+                  <label style={{ width: 72, height: 72, borderRadius: 8, border: '1.5px dashed #D0D0D0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 24, color: '#9A9A9A' }}>
+                    +<input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleImages} disabled={uploading} />
+                  </label>
+                </div>
+              </div>
               <div>
                 <label style={labelStyle}>제목</label>
                 <input style={inputStyle} value={editTarget.title} onChange={e => setEditTarget({...editTarget, title: e.target.value})} />

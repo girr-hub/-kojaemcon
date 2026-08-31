@@ -18,10 +18,11 @@ export default function ExperienceDetailPage({ params }: { params: { id: string 
   })
 
   useEffect(() => {
-    const sb = supabase()
-    sb.from('experience_events').select('*').eq('id', id).single()
-      .then(({ data }) => { setEvent(data); setLoading(false) })
-    sb.auth.getUser().then(({ data: { user } }) => setUser(user))
+    // API로 데이터 가져오기 (RLS 우회)
+    fetch(`/api/experience-list?id=${id}`)
+      .then(r => r.json())
+      .then(d => { setEvent(Array.isArray(d) ? d[0] : d); setLoading(false) })
+    supabase().auth.getUser().then(({ data: { user } }) => setUser(user))
   }, [id])
 
   const submit = async () => {
