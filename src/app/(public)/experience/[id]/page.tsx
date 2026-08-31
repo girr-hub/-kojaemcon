@@ -2,7 +2,7 @@
 import { useEffect, useState, use } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
-const BANKS = ['KB국민은행', '신한은행', '우리은행', '하나은행', 'IBK기업은행', 'NH농협은행', '카카오뱅크', '토스뱅크', '케이뱅크', '씨티은행', 'SC제일은행']
+const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IBK Industrial Bank', 'NH NongHyup Bank', 'Kakao Bank', 'Toss Bank', 'K Bank', 'Citibank Korea', 'Standard Chartered Bank']
 
 export default function ExperienceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -100,42 +100,42 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
             <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>페이백 계좌정보 <span style={{ color: '#DC2626' }}>*</span></p>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <select value={form.bank_name} onChange={e => setForm({...form, bank_name: e.target.value})}
                   style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', background: '#fff', boxSizing: 'border-box' as any }}>
-                  <option value="">은행 선택</option>
+                  <option value="">Select Bank</option>
                   {BANKS.map(b => <option key={b} value={b}>{b}</option>)}
                 </select>
-                <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})} placeholder="계좌번호"
+                <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})} placeholder="Account Number"
                   style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-                <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})} placeholder="계좌주 전화번호"
+                <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})} placeholder="Account Holder Phone"
                   style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
               </div>
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>체험 희망 날짜 <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})} placeholder="예: 2026년 9월 15일"
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Preferred Date <span style={{ color: '#DC2626' }}>*</span></label>
+              <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})} placeholder="e.g. September 15, 2026"
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>운영 중인 SNS 계정</label>
-              <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="예: @instagram_id"
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>SNS Accounts</label>
+              <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="e.g. @instagram_id, YouTube: channel name"
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>동행인 수</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Number of Companions</label>
               <input type="number" min="0" value={form.companions} onChange={e => setForm({...form, companions: Number(e.target.value)})}
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>희망 체험 장소 <span style={{ color: '#DC2626' }}>*</span></label>
-              <textarea value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})} placeholder="희망하는 체험 장소를 모두 입력해주세요" rows={3}
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Preferred Location <span style={{ color: '#DC2626' }}>*</span></label>
+              <textarea value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})} placeholder="Enter all preferred locations" rows={3}
                 style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', resize: 'none', boxSizing: 'border-box' as any }} />
             </div>
             <button onClick={submit} disabled={submitting}
               style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: submitting ? 0.6 : 1 }}>
-              {submitting ? '신청 중...' : '체험단 신청하기'}
+              {submitting ? 'Submitting...' : 'Apply Now'}
             </button>
           </div>
         </div>
