@@ -28,16 +28,25 @@ export default function FloatingChat() {
 
       const eventIds = orders.map((o: any) => o.event_id)
 
+      // 미래 이벤트만 (ends_at이 없거나 미래인 것)
+      const now = new Date().toISOString()
       const { data: chatRooms } = await sb
         .from('chat_rooms')
-        .select('id, event_id, events(title)')
+        .select('id, event_id, events(title, ends_at, starts_at)')
         .in('event_id', eventIds)
 
-      setRooms(chatRooms ?? [])
+      const activeRooms = (chatRooms ?? []).filter((r: any) => {
+        const event = r.events as any
+        if (!event) return false
+        const endsAt = event.ends_at || event.starts_at
+        if (!endsAt) return true
+        return new Date(endsAt) > new Date()
+      })
+      setRooms(activeRooms)
 
       // 읽지 않은 메시지 수 계산
       const unreadMap: Record<string, number> = {}
-      for (const room of chatRooms ?? []) {
+      for (const room of activeRooms) {
         const { data: member } = await sb
           .from('chat_members')
           .select('last_read_at')
@@ -59,7 +68,7 @@ export default function FloatingChat() {
 
       // 실시간 업데이트
       const channel = sb.channel('chat-notifications')
-      for (const room of chatRooms ?? []) {
+      for (const room of activeRooms) {
         channel.on('postgres_changes', {
           event: 'INSERT', schema: 'public', table: 'chat_messages',
           filter: `room_id=eq.${room.id}`,
