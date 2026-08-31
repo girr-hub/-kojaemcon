@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-export default function ExperienceBanner() {
+export default function ExperienceBanner({ showAll = false }: { showAll?: boolean }) {
   const [items, setItems] = useState<any[]>([])
 
   useEffect(() => {
