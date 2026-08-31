@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 const LEFT_TABS = [
   { href: '/', label: 'Home', icon: (a: boolean) => (
@@ -35,6 +36,7 @@ const RIGHT_TABS = [
 
 export default function BottomTabBar() {
   const pathname = usePathname()
+  const [showHostMenu, setShowHostMenu] = useState(false)
   if (pathname.startsWith('/admin') || pathname.startsWith('/login') || pathname.startsWith('/signup')) return null
 
   return (
@@ -64,18 +66,47 @@ export default function BottomTabBar() {
         })}
 
         {/* 중앙 Host 버튼 */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 8 }}>
-          <Link href="/host/new" style={{
-            width: 52, height: 52, borderRadius: '50%',
-            background: '#1A1A1A',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            textDecoration: 'none', marginBottom: 4,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-          }}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 8, position: 'relative' }}>
+          <button onClick={() => setShowHostMenu(prev => !prev)}
+            style={{
+              width: 52, height: 52, borderRadius: '50%',
+              background: '#1A1A1A', border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: 4, boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+            }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E9C000" strokeWidth="2.5" strokeLinecap="round">
               <path d="M12 5v14M5 12h14"/>
             </svg>
-          </Link>
+          </button>
+
+          {showHostMenu && (
+            <>
+              <div onClick={() => setShowHostMenu(false)}
+                style={{ position: 'fixed', inset: 0, zIndex: 8400 }} />
+              <div style={{
+                position: 'absolute', bottom: 64, left: '50%', transform: 'translateX(-50%)',
+                background: '#FFFFFF', borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                border: '1px solid #F0F0F0', overflow: 'hidden', zIndex: 8500, width: 180,
+              }}>
+                <Link href="/host/new" onClick={() => setShowHostMenu(false)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', textDecoration: 'none', borderBottom: '1px solid #F5F5F5' }}>
+                  <span style={{ fontSize: 20 }}>🎪</span>
+                  <div>
+                    <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, color: '#1A1A1A' }}>Host Event</p>
+                    <p style={{ fontSize: 11, color: '#9A9A9A' }}>일반 이벤트 개설</p>
+                  </div>
+                </Link>
+                <Link href="/experience/new" onClick={() => setShowHostMenu(false)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', textDecoration: 'none' }}>
+                  <span style={{ fontSize: 20 }}>🌟</span>
+                  <div>
+                    <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, color: '#1A1A1A' }}>체험단 모집</p>
+                    <p style={{ fontSize: 11, color: '#9A9A9A' }}>외국인 체험단 등록</p>
+                  </div>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
 
         {RIGHT_TABS.map(tab => {
