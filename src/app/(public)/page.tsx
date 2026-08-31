@@ -32,7 +32,7 @@ export default function HomePage() {
         venue_name: e.location,
         cover_image_url: e.images?.[0] || null,
         status: 'published',
-        category: '체험단',
+        category: 'Experience',
         capacity: e.capacity,
         remaining: e.capacity,
         isExperience: true,
