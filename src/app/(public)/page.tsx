@@ -38,6 +38,11 @@ export default function HomePage() {
         isExperience: true,
       }))
       const all = [...(Array.isArray(evts) ? evts : []), ...expMapped]
+        .sort((a: any, b: any) => {
+          const aDate = a.starts_at ? new Date(a.starts_at).getTime() : Infinity
+          const bDate = b.starts_at ? new Date(b.starts_at).getTime() : Infinity
+          return aDate - bDate
+        })
       setEvents(all)
       setLoading(false)
     })

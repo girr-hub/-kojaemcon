@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 export default function NewExperiencePage() {
   const router = useRouter()
-  const [form, setForm] = useState({ title: '', description: '', location: '', capacity: 10, available_dates: '' })
+  const [form, setForm] = useState({ title: '', description: '', location: '', capacity: 10, available_dates: '', starts_at: '' })
   const [images, setImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -34,7 +34,7 @@ export default function NewExperiencePage() {
     const res = await fetch('/api/experience', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'create', ...form, images, available_dates: dates })
+      body: JSON.stringify({ action: 'create', ...form, images, available_dates: dates, starts_at: form.starts_at || null })
     }).then(r => r.json())
     setSaving(false)
     if (res.ok) router.push('/experience')
@@ -94,6 +94,10 @@ export default function NewExperiencePage() {
           <input style={inputStyle} value={form.available_dates} onChange={e => setForm({...form, available_dates: e.target.value})} placeholder="예: 9월 15일, 9월 22일, 주말 협의 가능" />
         </div>
 
+        <div>
+          <label style={labelStyle}>체험 시작일</label>
+          <input style={inputStyle} type="datetime-local" value={form.starts_at} onChange={e => setForm({...form, starts_at: e.target.value})} />
+        </div>
         <div>
           <label style={labelStyle}>모집 인원</label>
           <input style={inputStyle} type="number" min="1" value={form.capacity} onChange={e => setForm({...form, capacity: Number(e.target.value)})} />

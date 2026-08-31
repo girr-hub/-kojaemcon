@@ -63,6 +63,10 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 <input style={inputStyle} value={editTarget.location} onChange={e => setEditTarget({...editTarget, location: e.target.value})} />
               </div>
               <div>
+                <label style={labelStyle}>체험 시작일</label>
+                <input style={inputStyle} type="datetime-local" value={editTarget.starts_at ? editTarget.starts_at.slice(0,16) : ''} onChange={e => setEditTarget({...editTarget, starts_at: e.target.value || null})} />
+              </div>
+              <div>
                 <label style={labelStyle}>모집 인원</label>
                 <input style={inputStyle} type="number" value={editTarget.capacity} onChange={e => setEditTarget({...editTarget, capacity: Number(e.target.value)})} />
               </div>
