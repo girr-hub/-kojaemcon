@@ -12,7 +12,7 @@ export default function ExperienceBanner() {
       .eq('status', 'published')
       .order('created_at', { ascending: false })
       .limit(3)
-      .then(({ data }) => setItems(data ?? []))
+      .then(({ data, error }) => { console.log('experience:', data, error); setItems(data ?? []) })
   }, [])
 
   if (items.length === 0) return (
