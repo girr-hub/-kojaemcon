@@ -23,7 +23,7 @@ export default function EventFeedCard({ event }: { event: any }) {
   const soldOut = event.capacity > 0 && event.remaining <= 0
 
   return (
-    <Link href={`/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link href={event.isExperience ? `/experience/${event.experience_id}` : `/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
       <article style={{
         background: '#FFFFFF',
         padding: '14px 16px',

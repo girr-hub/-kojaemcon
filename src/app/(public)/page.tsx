@@ -18,9 +18,29 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/events-list')
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d)) setEvents(d); setLoading(false) })
+    Promise.all([
+      fetch('/api/events-list').then(r => r.json()),
+      fetch('/api/experience-list').then(r => r.json()),
+    ]).then(([evts, exps]) => {
+      const expMapped = (Array.isArray(exps) ? exps : []).map((e: any) => ({
+        ...e,
+        slug: null,
+        experience_id: e.id,
+        is_free: true,
+        price_krw: 0,
+        starts_at: null,
+        venue_name: e.location,
+        cover_image_url: e.images?.[0] || null,
+        status: 'published',
+        category: '체험단',
+        capacity: e.capacity,
+        remaining: e.capacity,
+        isExperience: true,
+      }))
+      const all = [...(Array.isArray(evts) ? evts : []), ...expMapped]
+      setEvents(all)
+      setLoading(false)
+    })
   }, [])
 
   return (
