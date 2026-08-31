@@ -1,11 +1,11 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 const BANKS = ['KB국민은행', '신한은행', '우리은행', '하나은행', 'IBK기업은행', 'NH농협은행', '카카오뱅크', '토스뱅크', '케이뱅크', '씨티은행', 'SC제일은행']
 
-export default function ExperienceDetailPage({ params }: { params: { id: string } }) {
-  const id = params.id
+export default function ExperienceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [event, setEvent] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
