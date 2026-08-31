@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import RichTextEditor from '@/components/RichTextEditor'
 import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -80,8 +81,8 @@ export default function NewExperiencePage() {
         </div>
 
         <div>
-          <label style={labelStyle}>설명</label>
-          <textarea style={{...inputStyle, resize: 'none'}} rows={5} value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="체험 내용, 혜택, 조건 등을 자세히 작성해주세요" />
+          <label style={labelStyle}>Description</label>
+          <RichTextEditor value={form.description} onChange={v => setForm({...form, description: v})} />
         </div>
 
         <div>

@@ -70,7 +70,14 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
 
       <div style={{ background: '#FFFFFF', padding: '20px 16px', marginBottom: 8 }}>
         <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 8 }}>{event.title}</h1>
-        <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.7, marginBottom: 12 }}>{event.description}</p>
+        <div style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.7, marginBottom: 12 }}
+          dangerouslySetInnerHTML={{ __html: (event.description || '')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/### (.+)/g, '<h3 style="font-size:16px;font-weight:800;color:#1A1A1A;margin:8px 0 4px">$1</h3>')
+            .replace(/• (.+)/g, '<div style="display:flex;gap:6px;margin:2px 0"><span>•</span><span>$1</span></div>')
+            .replace(/\n/g, '<br/>')
+          }} />
         {event.location && <p style={{ fontSize: 13, color: '#999' }}>📍 {event.location}</p>}
         {event.available_dates?.length > 0 && (
           <div style={{ marginTop: 12 }}>

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import RichTextEditor from '@/components/RichTextEditor'
 
 export default function ExperienceAdminClient({ events, applications }: { events: any[], applications: any[] }) {
   const [list, setList] = useState(events)
@@ -88,8 +89,8 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 <input style={inputStyle} value={editTarget.title} onChange={e => setEditTarget({...editTarget, title: e.target.value})} />
               </div>
               <div>
-                <label style={labelStyle}>설명</label>
-                <textarea style={{...inputStyle, resize: 'none'}} rows={4} value={editTarget.description} onChange={e => setEditTarget({...editTarget, description: e.target.value})} />
+                <label style={labelStyle}>Description</label>
+                <RichTextEditor value={editTarget.description || ''} onChange={v => setEditTarget({...editTarget, description: v})} />
               </div>
               <div>
                 <label style={labelStyle}>장소</label>
