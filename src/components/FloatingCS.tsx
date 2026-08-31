@@ -23,7 +23,7 @@ export default function FloatingCS() {
         alignItems: 'center',
         gap: 4,
         boxShadow: '-2px 0 12px rgba(0,0,0,0.1)',
-        writingMode: 'vertical-rl',
+        writingMode: 'horizontal-tb',
         fontSize: 11,
         fontWeight: 800,
         fontFamily: 'PretendardVariable, Pretendard, sans-serif',
