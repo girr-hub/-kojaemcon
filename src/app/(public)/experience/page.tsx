@@ -16,7 +16,7 @@ export default async function ExperiencePage() {
             <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, color: '#1A1A1A', letterSpacing: '-0.04em' }}>
               Experience
             </h1>
-            <p style={{ fontSize: 13, color: '#999', marginTop: 2 }}>외국인 체험단 모집</p>
+            <p style={{ fontSize: 13, color: '#999', marginTop: 2 }}>Experiences for foreigners in Korea</p>
           </div>
           <Link href="/experience/new"
             style={{ background: '#1A1A1A', color: '#E9C000', fontSize: 13, fontWeight: 700, padding: '8px 14px', borderRadius: 8, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>

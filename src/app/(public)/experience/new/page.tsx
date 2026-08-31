@@ -47,15 +47,15 @@ export default function NewExperiencePage() {
   return (
     <div style={{ background: '#F5F5F5', minHeight: '100vh', paddingBottom: 100 }}>
       <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0', padding: '14px 16px' }}>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, color: '#1A1A1A', letterSpacing: '-0.04em' }}>체험단 모집 등록</h1>
-        <p style={{ fontSize: 13, color: '#999', marginTop: 2 }}>외국인 체험단을 모집해보세요</p>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, color: '#1A1A1A', letterSpacing: '-0.04em' }}>Host an Experience</h1>
+        <p style={{ fontSize: 13, color: '#999', marginTop: 2 }}>Recruit foreigners for your experience</p>
       </div>
 
       <div style={{ background: '#FFFFFF', marginTop: 8, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
         {/* 이미지 업로드 */}
         <div>
-          <label style={labelStyle}>사진 ({images.length}/10)</label>
+          <label style={labelStyle}>Photos ({images.length}/10)</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
             {images.map((url, i) => (
               <div key={i} style={{ position: 'relative', width: 80, height: 80 }}>
@@ -75,7 +75,7 @@ export default function NewExperiencePage() {
         </div>
 
         <div>
-          <label style={labelStyle}>제목 *</label>
+          <label style={labelStyle}>Title *</label>
           <input style={inputStyle} value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="체험단 모집 제목" />
         </div>
 
@@ -85,27 +85,27 @@ export default function NewExperiencePage() {
         </div>
 
         <div>
-          <label style={labelStyle}>장소</label>
+          <label style={labelStyle}>Location</label>
           <input style={inputStyle} value={form.location} onChange={e => setForm({...form, location: e.target.value})} placeholder="서울 강남구 / 전국 어디서나 등" />
         </div>
 
         <div>
-          <label style={labelStyle}>체험 가능 날짜 (쉼표로 구분)</label>
+          <label style={labelStyle}>Available Dates (comma separated)</label>
           <input style={inputStyle} value={form.available_dates} onChange={e => setForm({...form, available_dates: e.target.value})} placeholder="예: 9월 15일, 9월 22일, 주말 협의 가능" />
         </div>
 
         <div>
-          <label style={labelStyle}>체험 시작일</label>
+          <label style={labelStyle}>Start Date</label>
           <input style={inputStyle} type="datetime-local" value={form.starts_at} onChange={e => setForm({...form, starts_at: e.target.value})} />
         </div>
         <div>
-          <label style={labelStyle}>모집 인원</label>
+          <label style={labelStyle}>Capacity</label>
           <input style={inputStyle} type="number" min="1" value={form.capacity} onChange={e => setForm({...form, capacity: Number(e.target.value)})} />
         </div>
 
         <button onClick={submit} disabled={saving || uploading}
           style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: (saving || uploading) ? 0.6 : 1 }}>
-          {saving ? '등록 중...' : '체험단 모집 등록'}
+          {saving ? 'Publishing...' : 'Host an Experience'}
         </button>
       </div>
     </div>
