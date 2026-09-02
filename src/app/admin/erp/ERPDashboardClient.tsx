@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
