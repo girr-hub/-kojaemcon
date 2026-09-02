@@ -210,52 +210,10 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
             ) : (
               <StandardForm form={form} setForm={setForm} />
             )}
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name"
-                style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-            </div>
-            <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <select value={form.bank_name} onChange={e => setForm({...form, bank_name: e.target.value})}
-                  style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', background: '#fff', boxSizing: 'border-box' as any }}>
-                  <option value="">Select Bank</option>
-                  {BANKS.map(b => <option key={b} value={b}>{b}</option>)}
-                </select>
-                <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})} placeholder="Account Number"
-                  style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-                <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})} placeholder="Account Holder Phone"
-                  style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-              </div>
-            </div>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Preferred Date <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})} placeholder="e.g. September 15, 2026"
-                style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>SNS Accounts</label>
-              <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="e.g. @instagram_id, YouTube: channel name"
-                style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Number of Companions (excluding yourself, max 1)</label>
-              <input type="number" min="0" max="1" value={form.companions} onChange={e => setForm({...form, companions: Math.min(1, Number(e.target.value))})}
-                style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-            </div>
-            <div style={{ background: '#FFFBEA', borderRadius: 10, padding: '14px', border: '1px solid #F5E87C' }}>
-              <p style={{ fontSize: 13, color: '#7A6100', lineHeight: 1.7, marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                I have read and understood all the details. For any inquiries, I will contact via the CS KakaoTalk channel.
-              </p>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Type "I understand" to confirm <span style={{ color: '#DC2626' }}>*</span></label>
-              <input value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})}
-                placeholder="I understand"
-                style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: `1.5px solid ${form.preferred_location.toLowerCase().trim() === 'i understand' ? '#00C471' : '#E8E8E8'}`, fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' as any }} />
-              {form.preferred_location.toLowerCase().trim() === 'i understand' && (
-                <p style={{ fontSize: 12, color: '#00C471', marginTop: 6, fontWeight: 600 }}>✓ Confirmed</p>
-              )}
-            </div>
+
+
+
+
             <button onClick={submit} disabled={submitting}
               style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: submitting ? 0.6 : 1 }}>
               {submitting ? 'Submitting...' : 'Apply Now'}
