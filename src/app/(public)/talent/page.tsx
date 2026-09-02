@@ -42,14 +42,15 @@ export default function TalentPage() {
     setLoading(true)
     const sb = supabase()
 
-    const { data: existing } = await sb.from('site_settings').select('value').eq('key', 'talent_roster').single()
-    const roster = (existing?.value as any[]) ?? []
-    roster.push({ ...f, created_at: new Date().toISOString(), id: crypto.randomUUID() })
-
-    await sb.from('site_settings').upsert({
-      key: 'talent_roster',
-      value: roster as any,
-      updated_at: new Date().toISOString(),
+    await sb.from('talent_profiles').insert({
+      name: f.name,
+      email: f.email,
+      nationality: f.nationality,
+      categories: f.categories,
+      bio: f.bio,
+      instagram: f.instagram,
+      portfolio: f.portfolio,
+      status: 'pending',
     })
 
     setDone(true)

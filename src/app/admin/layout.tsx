@@ -29,6 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ['공계정 관리', '/admin/fake-users'],
     ['스폰서 배너', '/admin/banners'],
     ['체험단 관리', '/admin/experience'],
+    ['Talent', '/admin/talent'],
   ]
 
   return (
