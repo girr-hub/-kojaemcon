@@ -31,6 +31,9 @@ export default function ExperienceBanner({ showAll = false }: { showAll?: boolea
               <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4, letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</h3>
               <p style={{ fontSize: 12, color: '#999', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any, lineHeight: 1.5 }}>{e.description}</p>
               {e.location && <p style={{ fontSize: 12, color: '#BBB', marginTop: 4 }}>📍 {e.location}</p>}
+              <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 4 }}>
+                신청 {e.applicant_count ?? 0}명{e.capacity ? ` / 모집 ${e.capacity}명` : ''}
+              </p>
             </div>
             <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>Join</span>
           </div>

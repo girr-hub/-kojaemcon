@@ -8,13 +8,26 @@ export async function GET(req: Request) {
 
   if (id) {
     const { data } = await admin.from('experience_events').select('*').eq('id', id).single()
-    return NextResponse.json(data ?? null)
+    if (!data) return NextResponse.json(null)
+    const { count } = await admin.from('experience_applications')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_id', id)
+    return NextResponse.json({ ...data, applicant_count: count ?? 0 })
   }
 
   const { data } = await admin.from('experience_events')
     .select('id, title, description, images, location, status, starts_at, capacity')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
-    .limit(5)
-  return NextResponse.json(data ?? [])
+    .limit(10)
+
+  // 각 이벤트 신청 수 추가
+  const eventsWithCount = await Promise.all((data ?? []).map(async (e: any) => {
+    const { count } = await admin.from('experience_applications')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_id', e.id)
+    return { ...e, applicant_count: count ?? 0 }
+  }))
+
+  return NextResponse.json(eventsWithCount)
 }

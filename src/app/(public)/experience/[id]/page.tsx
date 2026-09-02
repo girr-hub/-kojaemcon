@@ -183,6 +183,14 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
             .replace(/\n/g, '<br/>')
           }} />
         {event.location && <p style={{ fontSize: 13, color: '#999' }}>📍 {event.location}</p>}
+        <div style={{ display: 'flex', gap: 16, marginTop: 10 }}>
+          <span style={{ fontSize: 13, color: '#6B6B6B', fontWeight: 600 }}>
+            신청 {event.applicant_count ?? 0}명
+          </span>
+          {event.capacity && (
+            <span style={{ fontSize: 13, color: '#9A9A9A' }}>/ 모집 {event.capacity}명</span>
+          )}
+        </div>
         {event.available_dates?.length > 0 && (
           <div style={{ marginTop: 12 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 6 }}>Available Dates</p>
