@@ -1,395 +1,369 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) {
   return (
-    <div style={{ background: '#fff', border: '1.5px solid #2a2a2a', borderRadius: 14, padding: 20 }}>
-      <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#888', marginBottom: 8 }}>{label}</p>
-      <p style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.03em', color: '#0A0A0A' }}>{value}</p>
-      {sub && <p style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>{sub}</p>}
+    <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', marginBottom: 6, letterSpacing: '0.05em' }}>{label}</p>
+      <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.03em', color: color || '#1A1A1A' }}>{value}</p>
+      {sub && <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 4 }}>{sub}</p>}
     </div>
   )
 }
 
-function BreakdownBar({ title, data }: { title: string; data: Record<string, number> }) {
-  const entries = Object.entries(data).sort((a, b) => b[1] - a[1])
+function BarChart({ title, data, color = '#E9C000' }: { title: string; data: Record<string, number>; color?: string }) {
+  const entries = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 10)
   const total = entries.reduce((s, [, v]) => s + v, 0) || 1
   return (
-    <div style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 14, padding: 24 }}>
-      <p style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 14, color: '#fff', marginBottom: 16 }}>{title}</p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {entries.slice(0, 10).map(([key, val]) => (
+    <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{title}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {entries.map(([key, val]) => (
           <div key={key}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#ccc', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#555', marginBottom: 3 }}>
               <span>{key}</span>
-              <span style={{ fontWeight: 700, color: '#D4B33A' }}>{val} ({Math.round(val / total * 100)}%)</span>
+              <span style={{ fontWeight: 700 }}>{val} ({Math.round(val / total * 100)}%)</span>
             </div>
-            <div style={{ height: 6, background: '#2a2a2a', borderRadius: 3, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${(val / total) * 100}%`, background: '#D4B33A', borderRadius: 3 }} />
+            <div style={{ height: 5, background: '#F0F0F0', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${(val / total) * 100}%`, background: color, borderRadius: 3 }} />
             </div>
           </div>
         ))}
-        {entries.length === 0 && <p style={{ fontSize: 12, color: '#666' }}>No data yet</p>}
+        {entries.length === 0 && <p style={{ fontSize: 12, color: '#9A9A9A' }}>No data yet</p>}
       </div>
     </div>
   )
 }
 
-// 방문자 추세 차트
-function VisitChart({ data }: { data: { date: string; count: number }[] }) {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+function LineChart({ title, data }: { title: string; data: { date: string; count: number }[] }) {
   const max = Math.max(...data.map(d => d.count), 1)
+  const w = 100 / (data.length - 1)
+  const points = data.map((d, i) => `${i * w},${100 - (d.count / max) * 85}`).join(' ')
+  return (
+    <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{title}</p>
+      <svg viewBox={`0 0 100 100`} style={{ width: '100%', height: 120, overflow: 'visible' }} preserveAspectRatio="none">
+        <polyline points={points} fill="none" stroke="#E9C000" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        {data.map((d, i) => (
+          <circle key={i} cx={i * w} cy={100 - (d.count / max) * 85} r="1.5" fill="#E9C000" vectorEffect="non-scaling-stroke" />
+        ))}
+      </svg>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#9A9A9A', marginTop: 4 }}>
+        <span>{data[0]?.date?.slice(5)}</span>
+        <span>{data[data.length-1]?.date?.slice(5)}</span>
+      </div>
+    </div>
+  )
+}
 
-  // 7일 이동평균 (추세선)
-  const movingAvg = data.map((_, i) => {
-    const window = data.slice(Math.max(0, i - 3), i + 4)
-    return Math.round(window.reduce((s, d) => s + d.count, 0) / window.length)
-  })
+const TABS = [
+  { id: 'overview', label: '📊 Overview' },
+  { id: 'visitors', label: '👁 Visitors' },
+  { id: 'users', label: '👥 Users' },
+  { id: 'revenue', label: '💰 Revenue' },
+  { id: 'events', label: '🎪 Events' },
+  { id: 'experience', label: '🌟 Experience' },
+  { id: 'cs', label: '💬 CS' },
+]
 
-  const chartH = 140
-  const chartW = 100 // %
+export default function ERPDashboardClient({
+  todayVisits, dailyAvg, weeklyAvg, totalUsers, newUsers30, newUsers7,
+  dailyVisits, dailySignups, nationalityMap, genderMap, ageMap, interestMap, pageMap,
+  events, allOrders, totalRevenue, todayRevenue, monthRevenue, revenueByEvent,
+  csTickets, openCs, totalCs, experiences, expApplications
+}: any) {
+  const [tab, setTab] = useState('overview')
+
+  useEffect(() => {
+    const timer = setInterval(() => window.location.reload(), 60000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const paidOrders = allOrders?.filter((o: any) => o.status === 'paid') ?? []
+  const freeOrders = allOrders?.filter((o: any) => o.status === 'free_confirmed') ?? []
+  const pendingOrders = allOrders?.filter((o: any) => o.status === 'pending') ?? []
+  const cancelledOrders = allOrders?.filter((o: any) => o.status === 'cancelled') ?? []
 
   return (
-    <div style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 14, padding: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <p style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 14, color: '#fff' }}>Daily Visitors — Last 30 Days</p>
-        <div style={{ display: 'flex', gap: 12, fontSize: 10, color: '#888' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 12, height: 3, background: '#D4B33A', display: 'inline-block', borderRadius: 2 }} />
-            Daily
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 12, height: 2, background: '#ff6b6b', display: 'inline-block', borderRadius: 2, borderTop: '2px dashed #ff6b6b' }} />
-            7-day avg
-          </span>
-        </div>
+    <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <h1 style={{ fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.04em' }}>ERP Dashboard</h1>
+        <span style={{ fontSize: 12, color: '#9A9A9A' }}>Auto-refresh: 60s</span>
       </div>
 
-      {/* SVG Chart */}
-      <div style={{ position: 'relative', height: chartH + 24 }}>
-        <svg
-          width="100%" height={chartH}
-          viewBox={`0 0 ${data.length * 10} ${chartH}`}
-          preserveAspectRatio="none"
-          style={{ overflow: 'visible' }}
-        >
-          {/* Grid lines */}
-          {[0.25, 0.5, 0.75, 1].map(pct => (
-            <line key={pct} x1="0" y1={chartH * (1 - pct)} x2={data.length * 10} y2={chartH * (1 - pct)}
-              stroke="#2a2a2a" strokeWidth="1" strokeDasharray="4 4" />
-          ))}
-
-          {/* Bar chart */}
-          {data.map((d, i) => {
-            const h = max === 0 ? 0 : (d.count / max) * (chartH - 8)
-            const isHovered = hoveredIdx === i
-            return (
-              <g key={i}>
-                <rect
-                  x={i * 10 + 1} y={chartH - h} width={8} height={h}
-                  fill={isHovered ? '#E9C000' : '#D4B33A'}
-                  rx="2"
-                  style={{ cursor: 'pointer', transition: 'fill 0.1s' }}
-                  onMouseEnter={() => setHoveredIdx(i)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                />
-                {isHovered && (
-                  <g>
-                    <rect x={i * 10 - 8} y={chartH - h - 22} width={34} height={18} rx="4" fill="#E9C000" />
-                    <text x={i * 10 + 9} y={chartH - h - 10} textAnchor="middle" fontSize="9" fill="#12161A" fontWeight="700">
-                      {d.count}
-                    </text>
-                  </g>
-                )}
-              </g>
-            )
-          })}
-
-          {/* Trend line (7-day moving average) */}
-          <polyline
-            points={movingAvg.map((v, i) => `${i * 10 + 5},${chartH - (v / max) * (chartH - 8)}`).join(' ')}
-            fill="none" stroke="#ff6b6b" strokeWidth="1.5" strokeDasharray="4 2"
-          />
-        </svg>
-
-        {/* X-axis labels — 5일 간격 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-          {data.filter((_, i) => i % 5 === 0 || i === data.length - 1).map((d, i) => (
-            <span key={i} style={{ fontSize: 9, color: '#666', fontFamily: 'Inter' }}>
-              {d.date.slice(5)} {/* MM-DD */}
-            </span>
-          ))}
-        </div>
+      {/* 탭 */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap' }}>
+        {TABS.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            style={{ padding: '7px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: tab === t.id ? 700 : 500,
+              background: tab === t.id ? '#1A1A1A' : '#F0F0F0', color: tab === t.id ? '#E9C000' : '#555',
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Hover info */}
-      {hoveredIdx !== null && (
-        <div style={{ marginTop: 12, padding: '10px 14px', background: '#2a2a2a', borderRadius: 8, fontSize: 12 }}>
-          <span style={{ color: '#888' }}>{data[hoveredIdx].date}</span>
-          <span style={{ color: '#D4B33A', fontWeight: 700, marginLeft: 12 }}>{data[hoveredIdx].count} visits</span>
-          <span style={{ color: '#ff6b6b', marginLeft: 12 }}>7d avg: {movingAvg[hoveredIdx]}</span>
+      {/* Overview */}
+      {tab === 'overview' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <StatCard label="Today Visitors" value={todayVisits} sub={`Avg ${dailyAvg}/day`} />
+            <StatCard label="Total Users" value={totalUsers} sub={`+${newUsers7} this week`} />
+            <StatCard label="Total Revenue" value={`₩${Number(totalRevenue).toLocaleString()}`} sub={`₩${Number(monthRevenue).toLocaleString()} this month`} color="#15803D" />
+            <StatCard label="Open CS" value={openCs} sub={`${totalCs} total`} color={openCs > 0 ? '#DC2626' : '#1A1A1A'} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <StatCard label="Paid Orders" value={paidOrders.length} />
+            <StatCard label="Free Orders" value={freeOrders.length} />
+            <StatCard label="Pending" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : '#1A1A1A'} />
+            <StatCard label="Cancelled" value={cancelledOrders.length} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <LineChart title="Visitors (30 days)" data={dailyVisits} />
+            <LineChart title="Signups (30 days)" data={dailySignups} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+            <BarChart title="Nationality" data={nationalityMap} />
+            <BarChart title="Gender" data={genderMap} color="#6366f1" />
+            <BarChart title="Age" data={ageMap} color="#10b981" />
+          </div>
+        </div>
+      )}
+
+      {/* Visitors */}
+      {tab === 'visitors' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Today" value={todayVisits} />
+            <StatCard label="Weekly Avg" value={weeklyAvg} sub="per day" />
+            <StatCard label="30-day Avg" value={dailyAvg} sub="per day" />
+          </div>
+          <LineChart title="Daily Visitors (30 days)" data={dailyVisits} />
+          <BarChart title="Top Pages" data={pageMap} />
+        </div>
+      )}
+
+      {/* Users */}
+      {tab === 'users' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Total Users" value={totalUsers} />
+            <StatCard label="New (7 days)" value={newUsers7} />
+            <StatCard label="New (30 days)" value={newUsers30} />
+          </div>
+          <LineChart title="Daily Signups (30 days)" data={dailySignups} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <BarChart title="Nationality" data={nationalityMap} />
+            <BarChart title="Gender" data={genderMap} color="#6366f1" />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <BarChart title="Age Group" data={ageMap} color="#10b981" />
+            <BarChart title="Interests" data={interestMap} color="#f59e0b" />
+          </div>
+          {/* 최근 가입 유저 */}
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>Recent Signups</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Name', 'Email', 'Nationality', 'Gender', 'Joined'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {allOrders?.slice(0, 20).map((o: any, i: number) => (
+                  o.profiles && <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                    <td style={{ padding: '8px 12px', fontWeight: 600 }}>{o.profiles?.display_name || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{o.profiles?.email || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{o.profiles?.nationality || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{o.profiles?.gender || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{new Date(o.created_at).toLocaleDateString('ko-KR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Revenue */}
+      {tab === 'revenue' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Total Revenue" value={`₩${Number(totalRevenue).toLocaleString()}`} color="#15803D" />
+            <StatCard label="Today Revenue" value={`₩${Number(todayRevenue).toLocaleString()}`} />
+            <StatCard label="30-day Revenue" value={`₩${Number(monthRevenue).toLocaleString()}`} />
+          </div>
+          <BarChart title="Revenue by Event" data={Object.fromEntries(Object.entries(revenueByEvent).map(([k, v]) => [k, v as number]))} color="#15803D" />
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>Recent Paid Orders</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Event', 'User', 'Amount', 'Date'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {paidOrders.slice(0, 30).map((o: any, i: number) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                    <td style={{ padding: '8px 12px', fontWeight: 600 }}>{o.events?.title || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{o.profiles?.display_name || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#15803D', fontWeight: 700 }}>₩{Number(o.amount_krw).toLocaleString()}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{new Date(o.created_at).toLocaleDateString('ko-KR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Events */}
+      {tab === 'events' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Total Events" value={events.length} />
+            <StatCard label="Total Orders" value={allOrders?.length ?? 0} />
+            <StatCard label="Pending Orders" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : '#1A1A1A'} />
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>Events Overview</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Title', 'Date', 'Status', 'Paid', 'Free', 'Pending', 'Revenue'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {events.map((e: any) => {
+                  const eOrders = allOrders?.filter((o: any) => o.events?.id === e.id) ?? []
+                  const ePaid = eOrders.filter((o: any) => o.status === 'paid')
+                  const eFree = eOrders.filter((o: any) => o.status === 'free_confirmed')
+                  const ePending = eOrders.filter((o: any) => o.status === 'pending')
+                  const eRevenue = ePaid.reduce((s: number, o: any) => s + (o.amount_krw || 0), 0)
+                  return (
+                    <tr key={e.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                      <td style={{ padding: '8px 12px', fontWeight: 600, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</td>
+                      <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{e.starts_at ? new Date(e.starts_at).toLocaleDateString('ko-KR') : '-'}</td>
+                      <td style={{ padding: '8px 12px' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: e.status === 'published' ? '#DCFCE7' : '#F3F4F6', color: e.status === 'published' ? '#15803D' : '#6B7280' }}>{e.status}</span>
+                      </td>
+                      <td style={{ padding: '8px 12px', fontWeight: 700, color: '#15803D' }}>{ePaid.length}</td>
+                      <td style={{ padding: '8px 12px', color: '#1D4ED8' }}>{eFree.length}</td>
+                      <td style={{ padding: '8px 12px', color: ePending.length > 0 ? '#D97706' : '#9A9A9A' }}>{ePending.length}</td>
+                      <td style={{ padding: '8px 12px', fontWeight: 700, color: '#15803D' }}>₩{Number(eRevenue).toLocaleString()}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Experience */}
+      {tab === 'experience' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Total Experiences" value={experiences.length} />
+            <StatCard label="Total Applications" value={expApplications?.length ?? 0} />
+            <StatCard label="Published" value={experiences.filter((e: any) => e.status === 'published').length} />
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>Experience Events</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Title', 'Status', 'Capacity', 'Applications', 'Created'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {experiences.map((e: any) => {
+                  const apps = expApplications?.filter((a: any) => a.event_id === e.id) ?? []
+                  return (
+                    <tr key={e.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                      <td style={{ padding: '8px 12px', fontWeight: 600 }}>{e.title}</td>
+                      <td style={{ padding: '8px 12px' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: e.status === 'published' ? '#DCFCE7' : '#F3F4F6', color: e.status === 'published' ? '#15803D' : '#6B7280' }}>{e.status}</span>
+                      </td>
+                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{e.capacity}</td>
+                      <td style={{ padding: '8px 12px', fontWeight: 700, color: '#1D4ED8' }}>{apps.length}</td>
+                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{new Date(e.created_at).toLocaleDateString('ko-KR')}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>Recent Applications</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Experience', 'Name', 'Phone', 'SNS', 'Date'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {expApplications?.slice(0, 30).map((a: any, i: number) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                    <td style={{ padding: '8px 12px', fontWeight: 600 }}>{(a.experience_events as any)?.title || '-'}</td>
+                    <td style={{ padding: '8px 12px' }}>{a.real_name}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_phone || a.phone || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.sns_accounts || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* CS */}
+      {tab === 'cs' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <StatCard label="Open Tickets" value={openCs} color={openCs > 0 ? '#DC2626' : '#1A1A1A'} />
+            <StatCard label="Total Tickets" value={totalCs} />
+            <StatCard label="Resolved" value={totalCs - openCs} color="#15803D" />
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>CS Tickets</p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#F7F7F7' }}>
+                  {['Subject', 'Name', 'Email', 'Category', 'Status', 'Date'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {csTickets.map((c: any, i: number) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                    <td style={{ padding: '8px 12px', fontWeight: 600, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.subject}</td>
+                    <td style={{ padding: '8px 12px' }}>{c.name}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{c.email}</td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{c.category}</td>
+                    <td style={{ padding: '8px 12px' }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: c.status === 'open' ? '#FEE2E2' : '#DCFCE7', color: c.status === 'open' ? '#DC2626' : '#15803D' }}>{c.status}</span>
+                    </td>
+                    <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(c.created_at).toLocaleDateString('ko-KR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
   )
 }
-
-export default function ERPDashboardClient({
-  todayVisits, dailyAvg, weeklyAvg, monthlyAvg, totalUsers,
-  dailyVisits, nationalityMap, genderMap, ageMap, referralMap, interestMap, events, allOrders = [], csTickets = [],
-}: {
-  todayVisits: number; dailyAvg: number; weeklyAvg: number; monthlyAvg: number; totalUsers: number
-  dailyVisits: { date: string; count: number }[]
-  nationalityMap: Record<string, number>; genderMap: Record<string, number>
-  ageMap: Record<string, number>; referralMap: Record<string, number>
-  interestMap: Record<string, number>; events: any[]
-  allOrders?: any[]
-  csTickets?: any[]
-}) {
-  const [tab, setTab] = useState<'analytics' | 'events' | 'cs' | 'email' | 'survey'>('analytics')
-
-  const exportCSV = (data: any[], filename: string) => {
-    if (!data.length) return
-    const headers = Object.keys(data[0])
-    const rows = data.map(row => headers.map(h => {
-      const v = row[h]; if (v === null || v === undefined) return ''
-      const s = String(v).replace(/"/g, '""')
-      return s.includes(',') || s.includes('\n') ? '"' + s + '"' : s
-    }).join(','))
-    const csv = [headers.join(','), ...rows].join('\n')
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob); const a = document.createElement('a')
-    a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url)
-  }
-
-  const exportOrders = () => exportCSV(allOrders.map(o => ({
-    이벤트: o.events?.title || '', 이름: o.profiles?.display_name || '',
-    실명: o.profiles?.real_name || '', 이메일: o.profiles?.email || '',
-    국적: o.profiles?.nationality || '', 금액: o.amount_krw,
-    상태: o.status, 날짜: new Date(o.created_at).toLocaleDateString('ko-KR'),
-  })), 'kogemcon_orders_' + new Date().toISOString().slice(0,10) + '.csv')
-
-  const exportUsers = () => exportCSV(
-    Object.entries(nationalityMap).map(([nationality, count]) => ({ nationality, count })),
-    'kogemcon_users_' + new Date().toISOString().slice(0,10) + '.csv'
-  )
-
-  // 이벤트별 통계
-  const eventStats = allOrders.reduce((acc: any, o: any) => {
-    const id = o.events?.id; const title = o.events?.title
-    if (!id) return acc
-    if (!acc[id]) acc[id] = { title, total: 0, paid: 0, free: 0, cancelled: 0, revenue: 0 }
-    acc[id].total++
-    if (o.status === 'paid') { acc[id].paid++; acc[id].revenue += o.amount_krw || 0 }
-    else if (o.status === 'free_confirmed') acc[id].free++
-    else if (o.status === 'cancelled') acc[id].cancelled++
-    return acc
-  }, {})
-  const [selectedEvent, setSelectedEvent] = useState('')
-  const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState('')
-  const [sending, setSending] = useState(false)
-  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null)
-
-  const sendEmail = async (surveyMode = false) => {
-    if (!selectedEvent || (!surveyMode && (!subject || !message))) { alert('Fill in all fields'); return }
-    setSending(true); setResult(null)
-    const event = events.find((e: any) => e.id === selectedEvent)
-    const res = await fetch('/api/admin/send-event-email', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        event_id: selectedEvent,
-        subject: surveyMode ? `How was ${event?.title}? Share your feedback` : subject,
-        message: surveyMode
-          ? `Hi! Thank you for attending ${event?.title}.\n\nPlease take 2 minutes to fill out our satisfaction survey:\nhttps://kojaemcon.vercel.app/events/${selectedEvent}/survey\n\n— KOGEMCON Team`
-          : message,
-      }),
-    })
-    const data = await res.json()
-    setSending(false)
-    if (res.ok) { setResult({ ok: true, text: `Sent to ${data.sent_to} attendees!` }); setSubject(''); setMessage('') }
-    else setResult({ ok: false, text: data.error })
-  }
-
-  const TABS = [
-    { id: 'analytics', label: '📊 Analytics' },
-    { id: 'events', label: '🎪 Events' },
-    { id: 'cs', label: '💌 CS' },
-    { id: 'email', label: '📧 Email' },
-    { id: 'survey', label: '⭐ Survey' },
-  ]
-
-  return (
-    <div style={{ minHeight: '100vh', background: '#0d0d0d', padding: '32px 24px' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#fff', marginBottom: 24 }}>
-          ERP Dashboard
-        </h1>
-
-        <div style={{ display: 'flex', gap: 3, marginBottom: 28, background: '#1a1a1a', padding: 4, borderRadius: 10, width: 'fit-content' }}>
-          {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id as any)}
-              style={{ padding: '9px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
-                background: tab === t.id ? '#D4B33A' : 'transparent', color: tab === t.id ? '#0A0A0A' : '#999' }}>
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* CSV 추출 버튼 */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          <button onClick={exportOrders} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#D4B33A', color: '#0A0A0A', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-            📥 주문 전체 CSV
-          </button>
-          <button onClick={exportUsers} style={{ padding: '8px 16px', borderRadius: 8, border: '1.5px solid #2a2a2a', background: 'transparent', color: '#ccc', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-            👥 유저 통계 CSV
-          </button>
-        </div>
-
-        {tab === 'events' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {Object.values(eventStats).sort((a: any, b: any) => b.total - a.total).map((ev: any, i: number) => (
-              <div key={i} style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 14, padding: '16px 20px' }}>
-                <h3 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 12 }}>{ev.title}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
-                  {[
-                    { label: '총 참가', value: ev.total, color: '#fff' },
-                    { label: '유료', value: ev.paid, color: '#4ade80' },
-                    { label: '무료', value: ev.free, color: '#60a5fa' },
-                    { label: '취소', value: ev.cancelled, color: '#f87171' },
-                    { label: '매출', value: '₩' + ev.revenue.toLocaleString(), color: '#D4B33A' },
-                  ].map(s => (
-                    <div key={s.label} style={{ background: '#0d0d0d', borderRadius: 10, padding: '10px', textAlign: 'center' }}>
-                      <div style={{ fontSize: 16, fontWeight: 900, color: s.color, fontFamily: 'Inter' }}>{s.value}</div>
-                      <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-            {Object.keys(eventStats).length === 0 && <p style={{ color: '#666', fontSize: 14 }}>주문 데이터가 없어요</p>}
-          </div>
-        )}
-
-        {tab === 'cs' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {['all','open','in_progress','resolved'].map(s => (
-                  <button key={s} onClick={() => {}}
-                    style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: '#2a2a2a', color: '#ccc', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-                    {s === 'all' ? '전체' : s === 'open' ? '🔴 미답변' : s === 'in_progress' ? '🟡 처리중' : '✅ 완료'} {csTickets.filter((t: any) => s === 'all' || t.status === s).length}
-                  </button>
-                ))}
-              </div>
-              <button onClick={() => {
-                const rows = csTickets.map((t: any) => ({
-                  이름: t.name, 이메일: t.email, 카테고리: t.category,
-                  제목: t.subject, 내용: t.message, 상태: t.status,
-                  날짜: new Date(t.created_at).toLocaleDateString('ko-KR'),
-                }))
-                exportCSV(rows, 'kogemcon_cs_' + new Date().toISOString().slice(0,10) + '.csv')
-              }} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#D4B33A', color: '#0A0A0A', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-                📥 CSV 추출
-              </button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {csTickets.map((t: any) => (
-                <div key={t.id} style={{ background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 12, padding: '14px 16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                    <div>
-                      <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, marginRight: 8,
-                        background: t.status === 'open' ? '#fca5a5' : t.status === 'resolved' ? '#86efac' : '#fde68a',
-                        color: '#0A0A0A' }}>{t.status}</span>
-                      <span style={{ fontSize: 11, color: '#888' }}>{t.category}</span>
-                    </div>
-                    <span style={{ fontSize: 11, color: '#666' }}>{new Date(t.created_at).toLocaleDateString('ko-KR')}</span>
-                  </div>
-                  <p style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 4 }}>{t.subject}</p>
-                  <p style={{ fontSize: 12, color: '#999', marginBottom: 6 }}>{t.name} · {t.email}</p>
-                  <p style={{ fontSize: 13, color: '#ccc', lineHeight: 1.6 }}>{t.message}</p>
-                  {t.admin_reply && (
-                    <div style={{ marginTop: 10, padding: '10px 12px', background: '#0d0d0d', borderRadius: 8, borderLeft: '3px solid #D4B33A' }}>
-                      <p style={{ fontSize: 11, color: '#D4B33A', fontWeight: 700, marginBottom: 4 }}>Admin Reply</p>
-                      <p style={{ fontSize: 13, color: '#ccc' }}>{t.admin_reply}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-              {csTickets.length === 0 && <p style={{ color: '#666', fontSize: 14 }}>문의가 없어요</p>}
-            </div>
-          </div>
-        )}
-
-        {tab === 'analytics' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
-              <StatCard label="Today's Visits" value={todayVisits} sub="since midnight KST" />
-              <StatCard label="Daily Avg" value={dailyAvg} sub="per day, last 30 days" />
-              <StatCard label="Weekly Avg" value={weeklyAvg} sub="per day, last 7 days" />
-              <StatCard label="Monthly Avg" value={monthlyAvg} sub="per day, last 30 days" />
-              <StatCard label="Total Users" value={totalUsers} />
-            </div>
-
-            {/* Visit chart with trend line */}
-            <VisitChart data={dailyVisits} />
-
-            {/* Breakdowns */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-              <BreakdownBar title="Nationality" data={nationalityMap} />
-              <BreakdownBar title="Gender" data={genderMap} />
-              <BreakdownBar title="Age Range" data={ageMap} />
-              <BreakdownBar title="Signup Referral" data={referralMap} />
-            </div>
-            <BreakdownBar title="Top Interests" data={interestMap} />
-          </div>
-        )}
-
-        {(tab === 'email' || tab === 'survey') && (
-          <div style={{ maxWidth: 560, background: '#1a1a1a', border: '1.5px solid #2a2a2a', borderRadius: 16, padding: 28 }}>
-            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 6 }}>Event</label>
-            <select value={selectedEvent} onChange={e => setSelectedEvent(e.target.value)} className="input-dark" style={{ marginBottom: 16 }}>
-              <option value="">Select an event</option>
-              {events.map((e: any) => <option key={e.id} value={e.id}>{e.title} ({new Date(e.starts_at).toLocaleDateString()})</option>)}
-            </select>
-
-            {tab === 'email' && (
-              <>
-                <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 6 }}>Subject</label>
-                <input value={subject} onChange={e => setSubject(e.target.value)} className="input-dark" placeholder="Subject..." style={{ marginBottom: 16 }} />
-                <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 6 }}>Message</label>
-                <textarea value={message} onChange={e => setMessage(e.target.value)} className="input-dark" rows={6} style={{ resize: 'none', marginBottom: 20 }} placeholder="Write your message..." />
-                <button onClick={() => sendEmail(false)} disabled={sending} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '12px' }}>
-                  {sending ? 'Sending...' : 'Send to all attendees'}
-                </button>
-              </>
-            )}
-
-            {tab === 'survey' && (
-              <>
-                <p style={{ fontSize: 13, color: '#999', marginBottom: 20, lineHeight: 1.6 }}>
-                  Send a satisfaction survey link to all attendees of a completed event.
-                </p>
-                <button onClick={() => sendEmail(true)} disabled={sending || !selectedEvent} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '12px' }}>
-                  {sending ? 'Sending...' : 'Send survey link to attendees'}
-                </button>
-              </>
-            )}
-
-            {result && (
-              <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 10,
-                background: result.ok ? '#0f2918' : '#2a1212',
-                border: `1px solid ${result.ok ? '#15803d' : '#dc2626'}`,
-                fontSize: 13, color: result.ok ? '#4ade80' : '#f87171' }}>
-                {result.text}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
