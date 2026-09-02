@@ -153,39 +153,49 @@ export default function ExperienceAdminClient({ events, applications }: { events
         </div>
       </div>
 
-      {/* 신청 목록 */}
+      {/* 신청 목록 - 이벤트별 */}
       <div>
-        <h2 style={{ fontWeight: 700, fontSize: 16, color: '#1A1A1A', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>신청 현황 ({applications.length})</h2>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: '#F7F7F7' }}>
-                {['체험단', '실명', '은행', '계좌번호', '전화', '희망날짜', '장소', 'SNS', '동행인', '신청일'].map(h => (
-                  <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 700, color: '#6B6B6B', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {applications.map(a => (
-                <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
-                  <td style={{ padding: '10px 12px', fontWeight: 600, fontSize: 12, whiteSpace: 'nowrap' }}>{(a.experience_events as any)?.title}</td>
-                  <td style={{ padding: '10px 12px' }}>{a.real_name}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B' }}>{a.bank_name}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B' }}>{a.account_number}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.account_phone}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.preferred_date}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B', maxWidth: 150 }}>{a.preferred_location}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B' }}>{a.sns_accounts || '-'}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B', textAlign: 'center' }}>{a.companions}</td>
-                  <td style={{ padding: '10px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {applications.length === 0 && (
-            <p style={{ textAlign: 'center', padding: '32px', color: '#9A9A9A', fontSize: 14 }}>신청이 없어요</p>
-          )}
-        </div>
+        <h2 style={{ fontWeight: 700, fontSize: 16, color: '#1A1A1A', marginBottom: 16, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>신청 현황 ({applications.length})</h2>
+        {list.map(e => {
+          const apps = applications.filter((a: any) => a.event_id === e.id)
+          if (apps.length === 0) return null
+          return (
+            <div key={e.id} style={{ marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, padding: '10px 14px', background: '#F7F7F7', borderRadius: 10 }}>
+                <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
+                <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: '#FAFAFA' }}>
+                      {['실명', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
+                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {apps.map((a: any) => (
+                      <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                        <td style={{ padding: '8px 12px', fontWeight: 600 }}>{a.real_name}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.bank_name || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_number || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.account_phone || a.phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.preferred_date || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.sns_accounts || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', textAlign: 'center' }}>{a.companions}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
+        })}
+        {applications.length === 0 && (
+          <p style={{ textAlign: 'center', padding: '32px', color: '#9A9A9A', fontSize: 14 }}>신청이 없어요</p>
+        )}
       </div>
     </div>
   )
