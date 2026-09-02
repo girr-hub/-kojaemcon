@@ -6,6 +6,95 @@ const ONHWA_ID = 'f4e90964-0f01-4ba3-9992-7c5464a539a3'
 
 const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IBK Industrial Bank', 'NH NongHyup Bank', 'Kakao Bank', 'Toss Bank', 'K Bank', 'Citibank Korea', 'Standard Chartered Bank']
 
+
+const inputStyle: any = { width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
+const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
+
+function OnhwaForm({ form, setForm }: { form: any, setForm: any }) {
+  return (
+    <>
+      <div>
+        <label style={labelStyle}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Phone Number <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.phone || ''} onChange={e => setForm({...form, phone: e.target.value})} placeholder="+82 10-0000-0000" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>KakaoTalk ID</label>
+        <input value={form.kakao_id || ''} onChange={e => setForm({...form, kakao_id: e.target.value})} placeholder="Your KakaoTalk ID" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>SNS Accounts</label>
+        <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="e.g. @instagram_id" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Number of Companions (excluding yourself)</label>
+        <input type="number" min="0" value={form.companions} onChange={e => setForm({...form, companions: Number(e.target.value)})} style={inputStyle} />
+      </div>
+      <div style={{ background: '#FFFBEA', borderRadius: 10, padding: '14px', border: '1px solid #F5E87C' }}>
+        <p style={{ fontSize: 13, color: '#7A6100', lineHeight: 1.7, marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          I agree to write a review on-site before leaving the venue.
+        </p>
+        <label style={labelStyle}>Type "I agree" to confirm <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})}
+          placeholder="I agree"
+          style={{ ...inputStyle, border: '1.5px solid ' + (form.preferred_location.toLowerCase().trim() === 'i agree' ? '#00C471' : '#E8E8E8') }} />
+        {form.preferred_location.toLowerCase().trim() === 'i agree' && (
+          <p style={{ fontSize: 12, color: '#00C471', marginTop: 6, fontWeight: 600 }}>✓ Confirmed</p>
+        )}
+      </div>
+    </>
+  )
+}
+
+function StandardForm({ form, setForm }: { form: any, setForm: any }) {
+  return (
+    <>
+      <div>
+        <label style={labelStyle}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name" style={inputStyle} />
+      </div>
+      <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <select value={form.bank_name} onChange={e => setForm({...form, bank_name: e.target.value})} style={{ ...inputStyle, background: '#fff' }}>
+            <option value="">Select Bank</option>
+            {['KB Kookmin Bank','Shinhan Bank','Woori Bank','Hana Bank','IBK Industrial Bank','NH NongHyup Bank','Kakao Bank','Toss Bank','K Bank','Citibank Korea','Standard Chartered Bank'].map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+          <input value={form.account_number} onChange={e => setForm({...form, account_number: e.target.value})} placeholder="Account Number" style={inputStyle} />
+          <input value={form.account_phone} onChange={e => setForm({...form, account_phone: e.target.value})} placeholder="Account Holder Phone" style={inputStyle} />
+        </div>
+      </div>
+      <div>
+        <label style={labelStyle}>Preferred Date <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.preferred_date} onChange={e => setForm({...form, preferred_date: e.target.value})} placeholder="e.g. September 15, 2026" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>SNS Accounts</label>
+        <input value={form.sns_accounts} onChange={e => setForm({...form, sns_accounts: e.target.value})} placeholder="e.g. @instagram_id" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Number of Companions (excluding yourself, max 1)</label>
+        <input type="number" min="0" max="1" value={form.companions} onChange={e => setForm({...form, companions: Math.min(1, Number(e.target.value))})} style={inputStyle} />
+      </div>
+      <div style={{ background: '#FFFBEA', borderRadius: 10, padding: '14px', border: '1px solid #F5E87C' }}>
+        <p style={{ fontSize: 13, color: '#7A6100', lineHeight: 1.7, marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          I have read and understood all the details. For any inquiries, I will contact via the CS KakaoTalk channel.
+        </p>
+        <label style={labelStyle}>Type "I understand" to confirm <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})}
+          placeholder="I understand"
+          style={{ ...inputStyle, border: '1.5px solid ' + (form.preferred_location.toLowerCase().trim() === 'i understand' ? '#00C471' : '#E8E8E8') }} />
+        {form.preferred_location.toLowerCase().trim() === 'i understand' && (
+          <p style={{ fontSize: 12, color: '#00C471', marginTop: 6, fontWeight: 600 }}>✓ Confirmed</p>
+        )}
+      </div>
+    </>
+  )
+}
+
 export default function ExperienceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [event, setEvent] = useState<any>(null)
