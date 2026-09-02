@@ -6,6 +6,24 @@ export default function ExperienceAdminClient({ events, applications }: { events
   const [list, setList] = useState(events)
   const [editTarget, setEditTarget] = useState<any>(null)
   const [saving, setSaving] = useState(false)
+
+  const downloadCSV = (eventTitle: string, apps: any[]) => {
+    const headers = ['실명', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '카카오ID', '신청일']
+    const rows = apps.map(a => [
+      a.real_name, a.bank_name || '-', a.account_number || '-',
+      a.account_phone || a.phone || '-', a.preferred_date || '-',
+      a.sns_accounts || '-', a.companions, a.kakao_id || '-',
+      new Date(a.created_at).toLocaleDateString('ko-KR')
+    ])
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${eventTitle}_신청자_${new Date().toLocaleDateString('ko-KR')}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
   const [uploading, setUploading] = useState(false)
 
   const handleImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,9 +179,15 @@ export default function ExperienceAdminClient({ events, applications }: { events
           if (apps.length === 0) return null
           return (
             <div key={e.id} style={{ marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, padding: '10px 14px', background: '#F7F7F7', borderRadius: 10 }}>
-                <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, padding: '10px 14px', background: '#F7F7F7', borderRadius: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
+                </div>
+                <button onClick={() => downloadCSV(e.title, apps)}
+                  style={{ padding: '6px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                  CSV 다운로드
+                </button>
               </div>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
