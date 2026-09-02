@@ -2,6 +2,8 @@
 import { useEffect, useState, use } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
+const ONHWA_ID = 'f4e90964-0f01-4ba3-9992-7c5464a539a3'
+
 const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IBK Industrial Bank', 'NH NongHyup Bank', 'Kakao Bank', 'Toss Bank', 'K Bank', 'Citibank Korea', 'Standard Chartered Bank']
 
 export default function ExperienceDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,7 +16,8 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
   const [currentImg, setCurrentImg] = useState(0)
   const [form, setForm] = useState({
     real_name: '', bank_name: '', account_number: '', account_phone: '',
-    preferred_date: '', sns_accounts: '', companions: 0, preferred_location: ''
+    preferred_date: '', sns_accounts: '', companions: 0, preferred_location: '',
+    phone: '', kakao_id: ''
   })
 
   useEffect(() => {
@@ -27,11 +30,20 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
 
   const submit = async () => {
     if (!user) { window.location.href = '/login'; return }
-    if (!form.real_name || !form.bank_name || !form.account_number || !form.account_phone || !form.preferred_date) {
-      alert('Please fill in all required fields'); return
-    }
-    if (form.preferred_location.toLowerCase().trim() !== 'i understand') {
-      alert('Please type "I understand" to confirm'); return
+    if (id === ONHWA_ID) {
+      if (!form.real_name || !form.phone || !form.preferred_location) {
+        alert('Please fill in all required fields'); return
+      }
+      if (form.preferred_location.toLowerCase().trim() !== 'i agree') {
+        alert('Please type "I agree" to confirm'); return
+      }
+    } else {
+      if (!form.real_name || !form.bank_name || !form.account_number || !form.account_phone || !form.preferred_date) {
+        alert('Please fill in all required fields'); return
+      }
+      if (form.preferred_location.toLowerCase().trim() !== 'i understand') {
+        alert('Please type "I understand" to confirm'); return
+      }
     }
     setSubmitting(true)
     const res = await fetch('/api/experience', {
@@ -104,6 +116,11 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
         <div style={{ background: '#FFFFFF', padding: '20px 16px' }}>
           <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 16, letterSpacing: '-0.03em' }}>Apply for Experience</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {id === ONHWA_ID ? (
+              <OnhwaForm form={form} setForm={setForm} />
+            ) : (
+              <StandardForm form={form} setForm={setForm} />
+            )}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
               <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name"
