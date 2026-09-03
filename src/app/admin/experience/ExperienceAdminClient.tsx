@@ -8,9 +8,9 @@ export default function ExperienceAdminClient({ events, applications }: { events
   const [saving, setSaving] = useState(false)
 
   const downloadCSV = (eventTitle: string, apps: any[]) => {
-    const headers = ['실명', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '카카오ID', '신청일']
-    const rows = apps.map(a => [
-      a.real_name, a.bank_name || '-', a.account_number || '-',
+    const headers = ['#', '실명', '이메일', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '카카오ID', '신청일']
+    const rows = apps.map((a: any, i: number) => [
+      i + 1, a.real_name, (a.profiles as any)?.email || '-', a.bank_name || '-', a.account_number || '-',
       a.account_phone || a.phone || '-', a.preferred_date || '-',
       a.sns_accounts || '-', a.companions, a.kakao_id || '-',
       new Date(a.created_at).toLocaleDateString('ko-KR')
@@ -193,15 +193,17 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
-                      {['실명', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
+                      {['#', '실명', '이메일', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
                         <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {apps.map((a: any) => (
+                    {apps.map((a: any, appIndex: number) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{appIndex + 1}</td>
                         <td style={{ padding: '8px 12px', fontWeight: 600 }}>{a.real_name}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{(a.profiles as any)?.email || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.bank_name || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_number || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.account_phone || a.phone || '-'}</td>

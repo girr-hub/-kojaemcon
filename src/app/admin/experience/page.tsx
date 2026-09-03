@@ -10,7 +10,7 @@ export default async function ExperienceAdminPage() {
 
   const { data: applications } = await admin
     .from('experience_applications')
-    .select('*, experience_events(title)')
+    .select('*, experience_events(title), profiles(email, display_name)')
     .order('created_at', { ascending: false })
 
   return <ExperienceAdminClient events={events ?? []} applications={applications ?? []} />
