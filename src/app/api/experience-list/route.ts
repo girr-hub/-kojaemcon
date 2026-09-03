@@ -17,7 +17,7 @@ export async function GET(req: Request) {
 
   const { data } = await admin.from('experience_events')
     .select('id, title, description, images, location, status, starts_at, capacity')
-    .eq('status', 'published')
+    .in('status', ['published', 'closed'])
     .order('created_at', { ascending: false })
     .limit(10)
 

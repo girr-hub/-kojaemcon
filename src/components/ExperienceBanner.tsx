@@ -35,7 +35,9 @@ export default function ExperienceBanner({ showAll = false }: { showAll?: boolea
                 신청 {e.applicant_count ?? 0}명{e.capacity ? ` / 모집 ${e.capacity}명` : ''}
               </p>
             </div>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>Join</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: e.status === 'closed' ? '#fff' : '#1A1A1A', background: e.status === 'closed' ? '#DC2626' : '#E9C000', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>
+              {e.status === 'closed' ? 'Closed' : 'Join'}
+            </span>
           </div>
         </Link>
       ))}

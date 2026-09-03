@@ -39,7 +39,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
   }
 
   const toggleStatus = async (id: string, status: string) => {
-    const newStatus = status === 'published' ? 'draft' : 'published'
+    const newStatus = status === 'published' ? 'closed' : status === 'closed' ? 'draft' : 'published'
     await fetch('/api/experience', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action: 'update', id, status: newStatus })
@@ -167,8 +167,9 @@ export default function ExperienceAdminClient({ events, applications }: { events
                   style={{ padding: '6px 12px', borderRadius: 8, background: '#F0F0F0', color: '#1A1A1A', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>수정</button>
                 <button onClick={() => toggleStatus(e.id, e.status)}
                   style={{ padding: '6px 12px', borderRadius: 8, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer',
-                    background: e.status === 'published' ? '#DCFCE7' : '#F0F0F0', color: e.status === 'published' ? '#15803D' : '#9A9A9A' }}>
-                  {e.status === 'published' ? 'ON' : 'OFF'}
+                    background: e.status === 'published' ? '#DCFCE7' : e.status === 'closed' ? '#FEE2E2' : '#F0F0F0',
+                    color: e.status === 'published' ? '#15803D' : e.status === 'closed' ? '#DC2626' : '#9A9A9A' }}>
+                  {e.status === 'published' ? 'ON' : e.status === 'closed' ? 'CLOSED' : 'OFF'}
                 </button>
                 <button onClick={() => deleteEvent(e.id)}
                   style={{ padding: '6px 12px', borderRadius: 8, background: '#FEE2E2', color: '#DC2626', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>삭제</button>
