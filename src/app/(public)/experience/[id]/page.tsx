@@ -10,6 +10,76 @@ const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IB
 const inputStyle: any = { width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
 const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
 
+function BeautyForm({ form, setForm }: { form: any, setForm: any }) {
+  return (
+    <>
+      <div>
+        <label style={labelStyle}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Nationality <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.nationality || ''} onChange={e => setForm({...form, nationality: e.target.value})} placeholder="e.g. American, French..." style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Instagram URL</label>
+        <input value={form.instagram_url || ''} onChange={e => setForm({...form, instagram_url: e.target.value})} placeholder="https://instagram.com/yourhandle" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Instagram Followers</label>
+        <input value={form.instagram_followers || ''} onChange={e => setForm({...form, instagram_followers: e.target.value})} placeholder="e.g. 5000" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>TikTok URL</label>
+        <input value={form.tiktok_url || ''} onChange={e => setForm({...form, tiktok_url: e.target.value})} placeholder="https://tiktok.com/@yourhandle" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>TikTok Followers</label>
+        <input value={form.tiktok_followers || ''} onChange={e => setForm({...form, tiktok_followers: e.target.value})} placeholder="e.g. 10000" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Comment Activity Level</label>
+        <select value={form.comment_activity || ''} onChange={e => setForm({...form, comment_activity: e.target.value})} style={{ ...inputStyle, background: '#fff' }}>
+          <option value="">Select activity level</option>
+          <option value="very_active">Very Active (100+ comments)</option>
+          <option value="active">Active (50–99 comments)</option>
+          <option value="slightly_active">Slightly Active (20–49 comments)</option>
+          <option value="inactive">Inactive (0–19 comments)</option>
+        </select>
+      </div>
+      <div>
+        <label style={labelStyle}>Select Treatment <span style={{ color: '#DC2626' }}>*</span></label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {[
+            { value: 'hilowave', label: '① HiloWave 2cc', sub: 'Worth ₩880,000 · Facial Care' },
+            { value: 'rarefit', label: '② Rare Fit Injection + Body Onda Lifting 100kJ', sub: 'Worth ₩2,090,000 · Body Care (Fat Dissolving + Lifting)' },
+          ].map(opt => (
+            <label key={opt.value} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', borderRadius: 10, border: `1.5px solid ${form.selected_treatment === opt.value ? '#1A1A1A' : '#E8E8E8'}`, background: form.selected_treatment === opt.value ? '#F7F7F7' : '#fff', cursor: 'pointer' }}>
+              <input type="radio" name="treatment" value={opt.value} checked={form.selected_treatment === opt.value} onChange={e => setForm({...form, selected_treatment: e.target.value})} style={{ marginTop: 2, flexShrink: 0 }} />
+              <div>
+                <p style={{ fontWeight: 700, fontSize: 13, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{opt.label}</p>
+                <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>{opt.sub}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div style={{ background: '#FFF3F3', borderRadius: 10, padding: '14px', border: '1px solid #FFCDD2' }}>
+        <p style={{ fontSize: 13, color: '#B71C1C', lineHeight: 1.7, marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600 }}>
+          ⚠️ I have read and understood all terms. I acknowledge that if review guidelines are not followed or the review is insincere, the full amount will be charged. I take full responsibility for any consequences resulting from not understanding the content.
+        </p>
+        <label style={labelStyle}>Type "I agree" to confirm <span style={{ color: '#DC2626' }}>*</span></label>
+        <input value={form.preferred_location} onChange={e => setForm({...form, preferred_location: e.target.value})}
+          placeholder="I agree"
+          style={{ ...inputStyle, border: '1.5px solid ' + (form.preferred_location.toLowerCase().trim() === 'i agree' ? '#00C471' : '#E8E8E8') }} />
+        {form.preferred_location.toLowerCase().trim() === 'i agree' && (
+          <p style={{ fontSize: 12, color: '#00C471', marginTop: 6, fontWeight: 600 }}>✓ Confirmed</p>
+        )}
+      </div>
+    </>
+  )
+}
+
 function OnhwaForm({ form, setForm }: { form: any, setForm: any }) {
   return (
     <>
