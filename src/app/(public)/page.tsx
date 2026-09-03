@@ -31,7 +31,7 @@ export default function HomePage() {
         starts_at: null,
         venue_name: e.location,
         cover_image_url: e.images?.[0] || null,
-        status: 'published',
+        status: e.status,
         category: 'Experience',
         capacity: e.capacity,
         remaining: e.capacity,
