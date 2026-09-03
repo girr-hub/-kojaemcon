@@ -3,6 +3,7 @@ import { useEffect, useState, use } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 const ONHWA_ID = 'f4e90964-0f01-4ba3-9992-7c5464a539a3'
+const BEAUTY_ID = '6dc8c452-74cd-4260-9432-2a25bd99d2ec'
 
 const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IBK Industrial Bank', 'NH NongHyup Bank', 'Kakao Bank', 'Toss Bank', 'K Bank', 'Citibank Korea', 'Standard Chartered Bank']
 
@@ -197,7 +198,14 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
 
   const submit = async () => {
     if (!user) { window.location.href = '/login'; return }
-    if (id === ONHWA_ID) {
+    if (id === BEAUTY_ID) {
+      if (!form.real_name || !form.nationality || !form.selected_treatment) {
+        alert('Please fill in all required fields'); return
+      }
+      if (form.preferred_location.toLowerCase().trim() !== 'i agree') {
+        alert('Please type "I agree" to confirm'); return
+      }
+    } else if (id === ONHWA_ID) {
       if (!form.real_name || !form.phone || !form.preferred_location) {
         alert('Please fill in all required fields'); return
       }
@@ -299,6 +307,8 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {id === ONHWA_ID ? (
               <OnhwaForm form={form} setForm={setForm} />
+            ) : id === BEAUTY_ID ? (
+              <BeautyForm form={form} setForm={setForm} />
             ) : (
               <StandardForm form={form} setForm={setForm} />
             )}
