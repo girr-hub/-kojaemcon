@@ -18,6 +18,10 @@ function OnhwaForm({ form, setForm }: { form: any, setForm: any }) {
         <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name" style={inputStyle} />
       </div>
       <div>
+        <label style={labelStyle}>Email <span style={{ color: '#DC2626' }}>*</span></label>
+        <input type="email" value={form.email || ''} onChange={e => setForm({...form, email: e.target.value})} placeholder="your@email.com" style={inputStyle} />
+      </div>
+      <div>
         <label style={labelStyle}>Phone Number <span style={{ color: '#DC2626' }}>*</span></label>
         <input value={form.phone || ''} onChange={e => setForm({...form, phone: e.target.value})} placeholder="+82 10-0000-0000" style={inputStyle} />
       </div>
@@ -55,6 +59,10 @@ function StandardForm({ form, setForm }: { form: any, setForm: any }) {
       <div>
         <label style={labelStyle}>Real Name <span style={{ color: '#DC2626' }}>*</span></label>
         <input value={form.real_name} onChange={e => setForm({...form, real_name: e.target.value})} placeholder="Your full name" style={inputStyle} />
+      </div>
+      <div>
+        <label style={labelStyle}>Email <span style={{ color: '#DC2626' }}>*</span></label>
+        <input type="email" value={form.email || ''} onChange={e => setForm({...form, email: e.target.value})} placeholder="your@email.com" style={inputStyle} />
       </div>
       <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
         <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
@@ -106,7 +114,7 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
   const [form, setForm] = useState({
     real_name: '', bank_name: '', account_number: '', account_phone: '',
     preferred_date: '', sns_accounts: '', companions: 0, preferred_location: '',
-    phone: '', kakao_id: ''
+    phone: '', kakao_id: '', email: ''
   })
 
   useEffect(() => {
@@ -138,7 +146,7 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
     const res = await fetch('/api/experience', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'apply', event_id: id, ...form })
+      body: JSON.stringify({ action: 'apply', event_id: id, ...form, email: form.email || '' })
     }).then(r => r.json())
     setSubmitting(false)
     if (res.ok) setSubmitted(true)

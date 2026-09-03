@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const { event_id, real_name, bank_name, account_number, account_phone, preferred_date, sns_accounts, companions, preferred_location } = body
     const { error } = await admin.from('experience_applications').insert({
       event_id, user_id: user.id, real_name, bank_name, account_number, account_phone,
-      preferred_date, sns_accounts, companions, preferred_location
+      preferred_date, sns_accounts, companions, preferred_location, email: body.email || ''
     })
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
     return NextResponse.json({ ok: true })
