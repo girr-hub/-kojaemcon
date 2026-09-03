@@ -185,7 +185,8 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
   const [form, setForm] = useState({
     real_name: '', bank_name: '', account_number: '', account_phone: '',
     preferred_date: '', sns_accounts: '', companions: 0, preferred_location: '',
-    phone: '', kakao_id: '', email: ''
+    phone: '', kakao_id: '', email: '',
+    nationality: '', instagram_url: '', instagram_followers: '', tiktok_url: '', tiktok_followers: '', comment_activity: '', selected_treatment: ''
   })
 
   useEffect(() => {
