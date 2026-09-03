@@ -56,7 +56,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
     setList(prev => prev.filter(e => e.id !== id))
   }
 
-  const downloadCSV = (eventTitle: string, apps: any[]) => {
+  const downloadCSV = (eventId: string, eventTitle: string, apps: any[]) => {
     const headers = ['#', '실명', '이메일', '국적', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일']
     const rows = apps.map((a: any, i: number) => [
       i + 1, a.real_name,
