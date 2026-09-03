@@ -132,9 +132,9 @@ export default function ExperienceAdminClient({ events, applications }: { events
               <div>
                 <label style={labelStyle}>상태</label>
                 <select style={inputStyle} value={editTarget.status} onChange={e => setEditTarget({...editTarget, status: e.target.value})}>
-                  <option value="published">Published</option>
-                  <option value="draft">Draft</option>
-                  <option value="closed">Closed</option>
+                  <option value="published">Published (모집중)</option>
+                  <option value="closed">Closed (마감)</option>
+                  <option value="draft">Draft (비공개)</option>
                 </select>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
