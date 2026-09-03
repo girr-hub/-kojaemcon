@@ -6,24 +6,6 @@ export default function ExperienceAdminClient({ events, applications }: { events
   const [list, setList] = useState(events)
   const [editTarget, setEditTarget] = useState<any>(null)
   const [saving, setSaving] = useState(false)
-
-  const downloadCSV = (eventTitle: string, apps: any[]) => {
-    const headers = ['#', '실명', '이메일', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '카카오ID', '신청일']
-    const rows = apps.map((a: any, i: number) => [
-      i + 1, a.real_name, a.profile_email || '-', a.bank_name || '-', a.account_number || '-',
-      a.account_phone || a.phone || '-', a.preferred_date || '-',
-      a.sns_accounts || '-', a.companions, a.kakao_id || '-',
-      new Date(a.created_at).toLocaleDateString('ko-KR')
-    ])
-    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${eventTitle}_신청자_${new Date().toLocaleDateString('ko-KR')}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
   const [uploading, setUploading] = useState(false)
 
   const handleImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,9 +24,6 @@ export default function ExperienceAdminClient({ events, applications }: { events
     setEditTarget((prev: any) => ({ ...prev, images: [...(prev.images ?? []), ...urls] }))
     setUploading(false)
   }
-
-  const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
-  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
 
   const save = async () => {
     setSaving(true)
@@ -76,6 +55,34 @@ export default function ExperienceAdminClient({ events, applications }: { events
     })
     setList(prev => prev.filter(e => e.id !== id))
   }
+
+  const downloadCSV = (eventTitle: string, apps: any[]) => {
+    const headers = ['#', '실명', '이메일', '국적', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일']
+    const rows = apps.map((a: any, i: number) => [
+      i + 1, a.real_name,
+      a.profile_email || '-',
+      a.profile_nationality || '-',
+      a.profile_phone || '-',
+      a.bank_name || '-',
+      a.account_number || '-',
+      a.account_phone || a.phone || '-',
+      a.preferred_date || '-',
+      a.sns_accounts || '-',
+      a.companions,
+      new Date(a.created_at).toLocaleDateString('ko-KR')
+    ])
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${eventTitle}_${new Date().toLocaleDateString('ko-KR')}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
+  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
 
   return (
     <div>
@@ -130,9 +137,9 @@ export default function ExperienceAdminClient({ events, applications }: { events
                   <option value="closed">Closed</option>
                 </select>
               </div>
-              <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={save} disabled={saving}
-                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
                   {saving ? '저장 중...' : '저장'}
                 </button>
                 <button onClick={() => setEditTarget(null)}
@@ -178,33 +185,35 @@ export default function ExperienceAdminClient({ events, applications }: { events
           const apps = applications.filter((a: any) => a.event_id === e.id)
           if (apps.length === 0) return null
           return (
-            <div key={e.id} style={{ marginBottom: 24 }}>
+            <div key={e.id} style={{ marginBottom: 32 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, padding: '10px 14px', background: '#F7F7F7', borderRadius: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
                 </div>
                 <button onClick={() => downloadCSV(e.title, apps)}
-                  style={{ padding: '6px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                  style={{ padding: '6px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
                   CSV 다운로드
                 </button>
               </div>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
-                      {['#', '실명', '이메일', '은행', '계좌번호', '전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
+                      {['#', '실명', '이메일', '국적', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
                         <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {apps.map((a: any, appIndex: number) => (
+                    {apps.map((a: any, i: number) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
-                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{appIndex + 1}</td>
-                        <td style={{ padding: '8px 12px', fontWeight: 600 }}>{a.real_name}</td>
+                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
+                        <td style={{ padding: '8px 12px', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.real_name}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.profile_email || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.bank_name || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_nationality || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.bank_name || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_number || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.account_phone || a.phone || '-'}</td>
                         <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.preferred_date || '-'}</td>

@@ -3,6 +3,7 @@ import ExperienceAdminClient from './ExperienceAdminClient'
 
 export default async function ExperienceAdminPage() {
   const admin = supabaseAdmin()
+
   const { data: events } = await admin
     .from('experience_events')
     .select('*')
@@ -13,32 +14,25 @@ export default async function ExperienceAdminPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
-  // user_id로 이메일 가져오기
   const userIds = [...new Set((applications ?? []).map((a: any) => a.user_id).filter(Boolean))]
-  let emailMap: Record<string, string> = {}
+  let profileMap: Record<string, any> = {}
   if (userIds.length > 0) {
     const { data: profiles } = await admin
       .from('profiles')
-      .select('id, email')
+      .select('id, email, nationality, phone')
       .in('id', userIds)
-    profiles?.forEach((p: any) => { emailMap[p.id] = p.email })
+    profiles?.forEach((p: any) => { profileMap[p.id] = p })
   }
 
-  // 이벤트 타이틀 매핑
-  const eventIds = [...new Set((applications ?? []).map((a: any) => a.event_id).filter(Boolean))]
-  let eventMap: Record<string, string> = {}
-  if (eventIds.length > 0) {
-    const { data: evts } = await admin
-      .from('experience_events')
-      .select('id, title')
-      .in('id', eventIds)
-    evts?.forEach((e: any) => { eventMap[e.id] = e.title })
-  }
+  const eventTitleMap: Record<string, string> = {}
+  events?.forEach((e: any) => { eventTitleMap[e.id] = e.title })
 
   const enriched = (applications ?? []).map((a: any) => ({
     ...a,
-    profile_email: a.email || emailMap[a.user_id] || '',
-    experience_events: { title: eventMap[a.event_id] || '' }
+    profile_email: a.email || profileMap[a.user_id]?.email || '',
+    profile_nationality: profileMap[a.user_id]?.nationality || '',
+    profile_phone: profileMap[a.user_id]?.phone || '',
+    experience_events: { title: eventTitleMap[a.event_id] || '' }
   }))
 
   return <ExperienceAdminClient events={events ?? []} applications={enriched} />
