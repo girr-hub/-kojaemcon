@@ -211,7 +211,13 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
         )}
       </div>
 
-      {submitted ? (
+      {event.status === 'closed' ? (
+        <div style={{ background: '#FEE2E2', margin: '0 16px', borderRadius: 14, padding: 24, textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
+          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#DC2626', marginBottom: 6 }}>Applications Closed</p>
+          <p style={{ fontSize: 14, color: '#6B6B6B' }}>This experience is no longer accepting applications.</p>
+        </div>
+      ) : submitted ? (
         <div style={{ background: '#FFFFFF', margin: '0 16px', borderRadius: 14, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🎉</div>
           <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 6 }}>Application Submitted!</p>
