@@ -192,7 +192,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
                   <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
                 </div>
-                <button onClick={() => downloadCSV(e.title, apps)}
+                <button onClick={() => downloadCSV(e.id, e.title, apps)}
                   style={{ padding: '6px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
                   CSV 다운로드
                 </button>
