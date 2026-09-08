@@ -198,6 +198,35 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 </button>
               </div>
               <div style={{ overflowX: 'auto' }}>
+                {e.id === '6dc8c452-74cd-4260-9432-2a25bd99d2ec' ? (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: '#FAFAFA' }}>
+                      {['#', '실명', '이메일', '국적', '핸드폰', '인스타URL', '인스타팔로워', '틱톡URL', '틱톡팔로워', '댓글활성화', '선택시술', '신청일'].map(h => (
+                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {apps.map((a: any, i: number) => (
+                      <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
+                        <td style={{ padding: '8px 12px', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.real_name}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.profile_email || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_nationality || a.nationality || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.instagram_url || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.instagram_followers || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.tiktok_url || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.tiktok_followers || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.comment_activity || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.selected_treatment || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
@@ -225,6 +254,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
                     ))}
                   </tbody>
                 </table>
+                )}
               </div>
             </div>
           )
