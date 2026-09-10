@@ -28,7 +28,7 @@ export default function HomePage() {
         experience_id: e.id,
         is_free: true,
         price_krw: 0,
-        starts_at: null,
+        starts_at: e.starts_at || null,
         venue_name: e.location,
         cover_image_url: e.images?.[0] || null,
         status: e.status,

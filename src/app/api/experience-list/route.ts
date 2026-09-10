@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     .select('id, title, description, images, location, status, starts_at, capacity')
     .in('status', ['published', 'closed'])
     .order('created_at', { ascending: false })
-    .limit(10)
+    .limit(20)
 
   // 각 이벤트 신청 수 추가
   const eventsWithCount = await Promise.all((data ?? []).map(async (e: any) => {
