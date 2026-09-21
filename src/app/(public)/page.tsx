@@ -40,13 +40,14 @@ export default function HomePage() {
       const now = Date.now()
       const all = [...(Array.isArray(evts) ? evts : []), ...expMapped]
         .sort((a: any, b: any) => {
+          // 체험단은 항상 앞에
+          if (a.isExperience && !b.isExperience) return -1
+          if (!a.isExperience && b.isExperience) return 1
           const aDate = a.starts_at ? new Date(a.starts_at).getTime() : Infinity
           const bDate = b.starts_at ? new Date(b.starts_at).getTime() : Infinity
           const aFuture = aDate >= now
           const bFuture = bDate >= now
-          // 미래 이벤트 먼저, 그 안에서 가까운 순
           if (aFuture && bFuture) return aDate - bDate
-          // 과거 이벤트는 뒤로, 최근 지난 것 먼저
           if (!aFuture && !bFuture) return bDate - aDate
           return aFuture ? -1 : 1
         })
