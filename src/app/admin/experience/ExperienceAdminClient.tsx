@@ -202,7 +202,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
-                      {['#', '실명', '이메일', '국적', '핸드폰', '인스타URL', '인스타팔로워', '틱톡URL', '틱톡팔로워', '댓글활성화', '선택시술', '신청일'].map(h => (
+                      {['#', '실명', '이메일', '국적', '나이', '핸드폰', '인스타URL', '인스타팔로워', '틱톡URL', '틱톡팔로워', '댓글활성화', '선택시술', '신청일'].map(h => (
                         <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>
@@ -230,7 +230,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
-                      {['#', '실명', '이메일', '국적', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
+                      {['#', '실명', '이메일', '국적', '나이', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
                         <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>

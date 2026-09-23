@@ -88,6 +88,18 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   }
 
   const handleClick = async () => {
+    // 나이 제한 체크
+    const userAge = user?.user_metadata?.birth_year 
+      ? new Date().getFullYear() - user.user_metadata.birth_year 
+      : null
+    if (userAge && event.min_age && userAge < event.min_age) {
+      alert(`This event is for ages ${event.min_age}+. You don't meet the age requirement.`)
+      return
+    }
+    if (userAge && event.max_age && userAge > event.max_age) {
+      alert(`This event is for ages up to ${event.max_age}. You don't meet the age requirement.`)
+      return
+    }
     const sb = supabase()
     const { data: { session } } = await sb.auth.getSession()
     const user = session?.user

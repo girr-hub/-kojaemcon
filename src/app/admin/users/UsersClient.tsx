@@ -85,6 +85,7 @@ export default function UsersClient({ users }: { users: any[] }) {
                   { label: 'Nationality', value: selected.nationality },
                   { label: 'Gender', value: selected.gender },
                   { label: 'Birth Date', value: selected.birth_date },
+                  { label: 'Age', value: selected.birth_date ? String(new Date().getFullYear() - new Date(selected.birth_date).getFullYear()) : selected.birth_year ? String(new Date().getFullYear() - selected.birth_year) : undefined },
                   { label: 'Role', value: selected.role || 'user' },
                   { label: 'Joined', value: new Date(selected.created_at).toLocaleDateString('ko-KR') },
                   { label: 'Bio', value: selected.bio },
