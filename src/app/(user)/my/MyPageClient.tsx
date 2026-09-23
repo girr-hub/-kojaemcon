@@ -18,6 +18,65 @@ const TABS = [
   { id: 'events', label: 'Hosted', emoji: '🎪' },
 ]
 
+function CSTab() {
+  const [tickets, setTickets] = useState<any[]>([])
+  const [selected, setSelected] = useState<any>(null)
+  const sb = supabase()
+
+  useEffect(() => {
+    sb.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return
+      sb.from('cs_tickets').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+        .then(({ data }) => setTickets(data ?? []))
+    })
+  }, [])
+
+  return (
+    <div style={{ padding: '16px' }}>
+      <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 16, letterSpacing: '-0.03em' }}>My CS</h2>
+      {tickets.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '48px 0', color: '#9A9A9A', fontSize: 14 }}>No CS tickets yet</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {tickets.map(t => (
+            <div key={t.id} onClick={() => setSelected(selected?.id === t.id ? null : t)}
+              style={{ background: '#fff', border: `1.5px solid ${selected?.id === t.id ? '#1A1A1A' : '#F0F0F0'}`, borderRadius: 12, padding: '14px 16px', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{t.subject}</p>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                  background: t.status === 'resolved' ? '#DCFCE7' : '#FEF9C3',
+                  color: t.status === 'resolved' ? '#15803D' : '#854D0E' }}>
+                  {t.status === 'resolved' ? 'Answered' : 'Pending'}
+                </span>
+              </div>
+              <p style={{ fontSize: 12, color: '#9A9A9A' }}>{t.category} · {new Date(t.created_at).toLocaleDateString('ko-KR')}</p>
+              {selected?.id === t.id && (
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #F0F0F0' }}>
+                  <p style={{ fontSize: 13, color: '#555', lineHeight: 1.7, marginBottom: 12 }}>{t.message}</p>
+                  {t.admin_reply ? (
+                    <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, padding: '10px 12px' }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: '#15803D', marginBottom: 4 }}>KOGEMCON 답변</p>
+                      <p style={{ fontSize: 13, color: '#1A1A1A', lineHeight: 1.7 }}>{t.admin_reply}</p>
+                      {t.replied_at && <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 6 }}>{new Date(t.replied_at).toLocaleDateString('ko-KR')}</p>}
+                    </div>
+                  ) : (
+                    <div style={{ background: '#FFFBEA', border: '1px solid #FDE68A', borderRadius: 8, padding: '10px 12px' }}>
+                      <p style={{ fontSize: 13, color: '#854D0E' }}>답변 준비 중이에요. 빠른 문의는 카카오톡 CS를 이용해주세요.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{ marginTop: 16, textAlign: 'center' }}>
+        <a href="/cs" style={{ fontSize: 13, color: '#1A1A1A', fontWeight: 700, textDecoration: 'underline' }}>새 문의하기 →</a>
+      </div>
+    </div>
+  )
+}
+
 export default function MyPageClient({ user, tickets, hosted, profile }: {
   user: any; tickets: any[]; hosted: any[]; profile: any
 }) {

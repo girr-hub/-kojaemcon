@@ -11,6 +11,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [friendsCount, setFriendsCount] = useState(1)
   const [ticketQty, setTicketQty] = useState(1)
+  const [soloQty, setSoloQty] = useState(1)
+  const [returningQty, setReturningQty] = useState(1)
   const [subOption, setSubOption] = useState<string>('')
   const [subOptionPrice, setSubOptionPrice] = useState<number>(0)
   const [discountCode, setDiscountCode] = useState('')
