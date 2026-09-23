@@ -40,9 +40,19 @@ export default function HomePage() {
       const now = Date.now()
       const all = [...(Array.isArray(evts) ? evts : []), ...expMapped]
         .sort((a: any, b: any) => {
-          // 체험단은 항상 앞에
-          if (a.isExperience && !b.isExperience) return -1
-          if (!a.isExperience && b.isExperience) return 1
+          // 1. 투어 카테고리 최상단
+          const aTour = a.category === 'tour' || a.category === '투어'
+          const bTour = b.category === 'tour' || b.category === '투어'
+          if (aTour && !bTour) return -1
+          if (!aTour && bTour) return 1
+
+          // 2. 진행중(published) 이벤트 우선
+          const aActive = a.status === 'published'
+          const bActive = b.status === 'published'
+          if (aActive && !bActive) return -1
+          if (!aActive && bActive) return 1
+
+          // 3. 날짜순 (가까운 미래 먼저)
           const aDate = a.starts_at ? new Date(a.starts_at).getTime() : Infinity
           const bDate = b.starts_at ? new Date(b.starts_at).getTime() : Infinity
           const aFuture = aDate >= now
