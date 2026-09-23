@@ -147,7 +147,7 @@ export default function AdminOrdersClient({ orders, events }: { orders: any[]; e
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ background: '#F8F8F6' }}>
-                  {['이벤트','이름','실명','이메일','연락처','국적','성별','나이','친구정보','금액','수량','상태','날짜'].map(h => (
+                  {['이벤트','실명','이름','이메일','연락처','국적','성별','나이','친구정보','금액','수량','상태','날짜'].map(h => (
                     <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.06em', borderBottom: '1.5px solid #E8E8E4' }}>{h}</th>
                   ))}
                 </tr>
