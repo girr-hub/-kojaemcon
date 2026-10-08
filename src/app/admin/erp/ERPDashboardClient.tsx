@@ -63,6 +63,7 @@ const TABS = [
   { id: 'revenue', label: '💰 Revenue' },
   { id: 'events', label: '🎪 Events' },
   { id: 'experience', label: '🌟 Experience' },
+  { id: 'survey', label: '⭐ 만족도' },
   { id: 'cs', label: '💬 CS' },
 ]
 
@@ -324,6 +325,25 @@ export default function ERPDashboardClient({
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* 만족도 */}
+      {tab === 'survey' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A' }}>만족도 조사 결과</p>
+              <button onClick={async () => {
+                const res = await fetch('/api/send-surveys', { method: 'POST' }).then(r => r.json())
+                alert(`발송 완료: ${res.sent}명`)
+              }}
+                style={{ padding: '7px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                📧 만족도 조사 발송
+              </button>
+            </div>
+            <p style={{ fontSize: 13, color: '#9A9A9A' }}>종료된 이벤트 참가자에게 만족도 조사 이메일을 발송합니다.</p>
           </div>
         </div>
       )}

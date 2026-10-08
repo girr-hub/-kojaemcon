@@ -106,6 +106,28 @@ export default async function ERPPage() {
   const { data: experiences } = await admin.from('experience_events').select('id, title, status, capacity, created_at').order('created_at', { ascending: false })
   const { data: expApplications } = await admin.from('experience_applications').select('*, experience_events(title)').order('created_at', { ascending: false })
 
+  // 만족도 조사 데이터
+  const { data: surveys } = await admin.from('satisfaction_surveys')
+    .select('*, events(title)')
+    .order('created_at', { ascending: false })
+    .limit(100)
+
+  // 체류시간 데이터 (페이지별 평균)
+  const { data: visitData } = await admin.from('page_visits')
+    .select('page, duration_seconds')
+    .gte('visited_at', thirtyDaysAgo.toISOString())
+    .gt('duration_seconds', 0)
+
+  const durationByPage: Record<string, { total: number; count: number }> = {}
+  visitData?.forEach((v: any) => {
+    if (!durationByPage[v.page]) durationByPage[v.page] = { total: 0, count: 0 }
+    durationByPage[v.page].total += v.duration_seconds
+    durationByPage[v.page].count += 1
+  })
+  const avgDurationByPage = Object.fromEntries(
+    Object.entries(durationByPage).map(([k, v]) => [k, Math.round((v as any).total / (v as any).count)])
+  )
+
   return (
     <ERPDashboardClient
       todayVisits={todayVisits ?? 0}
@@ -134,6 +156,8 @@ export default async function ERPPage() {
       experiences={experiences ?? []}
       expApplications={expApplications ?? []}
       referralMap={{}}
+      surveys={surveys ?? []}
+      avgDurationByPage={avgDurationByPage}
     />
   )
 }
