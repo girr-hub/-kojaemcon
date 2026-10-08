@@ -1,21 +1,19 @@
 import { NextResponse } from 'next/server'
-import { supabaseAdmin, supabaseServer } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/server'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
-  try {
-    const { path, referrer } = await req.json()
-    const sb = await supabaseServer()
-    const { data: { user } } = await sb.auth.getUser()
+  const { page, duration_seconds, session_id } = await req.json()
+  const admin = supabaseAdmin()
+  const sb = await supabaseServer()
+  const { data: { user } } = await sb.auth.getUser()
 
-    const admin = supabaseAdmin()
-    await admin.from('page_visits').insert({
-      user_id: user?.id ?? null,
-      path,
-      referrer: referrer || null,
-    })
+  await admin.from('page_visits').insert({
+    page, duration_seconds, session_id, user_id: user?.id || null,
+    visited_at: new Date().toISOString()
+  })
 
-    return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ ok: false })
-  }
+  return NextResponse.json({ ok: true })
 }

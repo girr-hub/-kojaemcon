@@ -4,6 +4,7 @@ import Footer from '@/components/Footer'
 import VisitTracker from '@/components/VisitTracker'
 import BottomTabBar from '@/components/BottomTabBar'
 import FloatingCS from '@/components/FloatingCS'
+import PageTracker from '@/components/PageTracker'
 import FloatingChat from '@/components/FloatingChat'
 
 export const metadata = {
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <BottomTabBar />
             <FloatingCS />
+            <PageTracker />
             <FloatingChat />
         <VisitTracker />
       </body>
