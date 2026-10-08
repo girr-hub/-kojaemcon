@@ -2,6 +2,7 @@ import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 import FomoPopup from '@/components/FomoPopup'
 import Link from 'next/link'
 import BuyButton from '@/components/BuyButton'
+import NotifyButton from '@/components/NotifyButton'
 import ImageSlider from '@/components/ImageSlider'
 
 export default async function EventDetail({ params }: { params: Promise<{ slug: string }> }) {
