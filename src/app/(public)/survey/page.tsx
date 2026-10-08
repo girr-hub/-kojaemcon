@@ -1,9 +1,10 @@
 'use client'
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useSearchParams } from 'next/navigation'
 
-export default function SurveyPage() {
+function SurveyContent() {
   const params = useSearchParams()
   const eventId = params.get('event_id')
   const [event, setEvent] = useState<any>(null)
@@ -45,7 +46,6 @@ export default function SurveyPage() {
       <div style={{ background: '#fff', borderRadius: 16, padding: 28, width: '100%', maxWidth: 400 }}>
         <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', marginBottom: 6, letterSpacing: '-0.04em' }}>How was it? 🌟</h1>
         {event && <p style={{ fontSize: 14, color: '#9A9A9A', marginBottom: 24 }}>{event.title}</p>}
-
         <div style={{ marginBottom: 24 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: '#6B6B6B', marginBottom: 12 }}>Overall Rating</p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
@@ -62,19 +62,25 @@ export default function SurveyPage() {
             </p>
           )}
         </div>
-
         <div style={{ marginBottom: 20 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: '#6B6B6B', marginBottom: 8 }}>Comments (optional)</p>
           <textarea value={comment} onChange={e => setComment(e.target.value)} rows={4}
             placeholder="Tell us what you liked or how we can improve..."
             style={{ width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', resize: 'none', boxSizing: 'border-box' as any }} />
         </div>
-
         <button onClick={submit} disabled={loading || !rating}
           style={{ width: '100%', padding: '14px', borderRadius: 12, background: rating ? '#1A1A1A' : '#F0F0F0', color: rating ? '#E9C000' : '#9A9A9A', border: 'none', fontWeight: 800, fontSize: 15, cursor: rating ? 'pointer' : 'default', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
           {loading ? 'Submitting...' : 'Submit Feedback'}
         </button>
       </div>
     </div>
+  )
+}
+
+export default function SurveyPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+      <SurveyContent />
+    </Suspense>
   )
 }
