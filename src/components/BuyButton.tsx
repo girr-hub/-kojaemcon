@@ -73,7 +73,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     // 서브옵션 선택됐으면 그 가격
     if (subOptionPrice > 0) return subOptionPrice
     // 서브옵션 있으면 option1(당일치기)이 기본
-    if (!event.has_ticket_types) return event.price_krw
+    if (!event.has_ticket_types) return event.price_krw * soloQty
     if (ticketType === 'solo' && event.solo_option1_price) return event.solo_option1_price
     if (ticketType === 'returning' && event.returning_option1_price) return event.returning_option1_price
     if (ticketType === 'with_friends' && event.friends_option1_price) return event.friends_option1_price * friendsCount
@@ -329,13 +329,28 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         {event.slug === 'day-trip-to-buyeo-mudhgtqw' && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
             <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>🚲 BICYCLE <span style={{color:'#dc2626'}}>*Required</span></p>
-            {['Yes, I'll ride a bike', 'No, I'll skip the bike'].map(opt => (
+            {["Yes, I'll ride a bike", "No, I'll skip the bike"].map(opt => (
               <button key={opt} type="button" onClick={() => setBikeOption(opt)}
                 style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:bikeOption===opt?'#1A1A1A':'#EBEBEB', background:bikeOption===opt?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
                 <span style={{ fontSize:13, fontWeight:600, color:bikeOption===opt?'#fff':'#1A1A1A' }}>{opt}</span>
                 {bikeOption===opt && <span style={{ fontSize:16 }}>✓</span>}
               </button>
             ))}
+          </div>
+        )}
+
+        {/* 티켓 수량 */}
+        {!event.is_free && !event.has_ticket_types && (
+          <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
+            <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many tickets?</p>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <button type="button" onClick={() => setSoloQty(Math.max(1, soloQty - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
+              <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{soloQty}</span>
+              <button type="button" onClick={() => setSoloQty(Math.min(10, soloQty + 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
+            </div>
+            <p style={{ fontSize:13, fontWeight:800, color:'#0A0A0A', marginTop:8 }}>
+              Total: ₩{(Number(event.price_krw) * soloQty).toLocaleString()}
+            </p>
           </div>
         )}
 
