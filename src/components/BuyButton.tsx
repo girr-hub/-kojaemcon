@@ -15,6 +15,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [returningQty, setReturningQty] = useState(1)
   const [subOption, setSubOption] = useState<string>('')
   const [subOptionPrice, setSubOptionPrice] = useState<number>(0)
+  const [bikeOption, setBikeOption] = useState<string>('')
   const [discountCode, setDiscountCode] = useState('')
   const [discountApplied, setDiscountApplied] = useState(false)
   const [discountError, setDiscountError] = useState('')
@@ -324,6 +325,20 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
+        {/* 자전거 옵션 - 부여트립 전용 */}
+        {event.slug === 'day-trip-to-buyeo-mudhgtqw' && (
+          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>🚲 BICYCLE <span style={{color:'#dc2626'}}>*Required</span></p>
+            {['Yes, I'll ride a bike', 'No, I'll skip the bike'].map(opt => (
+              <button key={opt} type="button" onClick={() => setBikeOption(opt)}
+                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:bikeOption===opt?'#1A1A1A':'#EBEBEB', background:bikeOption===opt?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
+                <span style={{ fontSize:13, fontWeight:600, color:bikeOption===opt?'#fff':'#1A1A1A' }}>{opt}</span>
+                {bikeOption===opt && <span style={{ fontSize:16 }}>✓</span>}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* 할인코드 */}
         {!event.is_free && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
@@ -348,7 +363,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
-        <button onClick={handleClick} disabled={busy || (event.has_ticket_types && event.solo_option1_name && !subOption)}
+        <button onClick={handleClick} disabled={busy || (event.has_ticket_types && event.solo_option1_name && !subOption) || (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption)}
           style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : (
             <span>
