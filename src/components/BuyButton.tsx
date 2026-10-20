@@ -38,8 +38,8 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     setFriendsCount(newCount)
     setCompanionInfo(prev => {
       const arr = [...prev]
-      while (arr.length < newCount - 1) arr.push({ name: '', gender: '', nationality: '', age: '' })
-      return arr.slice(0, newCount - 1)
+      while (arr.length < newCount) arr.push({ name: '', gender: '', nationality: '', age: '' })
+      return arr.slice(0, newCount)
     })
   }
 
@@ -282,7 +282,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             {/* 인원수 선택 (with_friends) */}
             {ticketType === 'with_friends' && (
               <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people? (including you)</p>
+                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many friends are coming? (not including you)</p>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                   <button type="button" onClick={() => handleFriendsCountChange(friendsCount - 1)} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
                   <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
