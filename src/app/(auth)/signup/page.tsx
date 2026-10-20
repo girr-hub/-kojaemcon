@@ -141,7 +141,7 @@ export default function SignupPage() {
               <div>
                 <label style={labelStyle}>Display name *</label>
                 <input style={inputStyle} placeholder="How others see you" required value={f.display_name} onChange={e => setF({ ...f, display_name: e.target.value })} />
-                <label style={{...labelStyle, marginTop: 12}}>Real name <span style={{color:'#9A9A9A',fontWeight:400}}>(optional)</span></label>
+                <label style={{...labelStyle, marginTop: 12}}>Real name *</label>
                 <input style={inputStyle} placeholder="Your legal name" value={(f as any).real_name || ''} onChange={e => setF({ ...f, real_name: e.target.value } as any)} />
               </div>
               <div>
@@ -153,7 +153,7 @@ export default function SignupPage() {
                 <input style={inputStyle} type="password" placeholder="Min 8 characters" required value={f.password} onChange={e => setF({ ...f, password: e.target.value })} />
               </div>
               <div>
-                <label style={labelStyle}>Phone number</label>
+                <label style={labelStyle}>Phone number *</label>
                 <input style={inputStyle} placeholder="+82 10-0000-0000" value={f.phone} onChange={e => setF({ ...f, phone: e.target.value })} />
                 <label style={labelStyle}>Nationality *</label>
                 <select style={inputStyle} required value={f.nationality} onChange={e => setF({ ...f, nationality: e.target.value })}>
@@ -190,7 +190,7 @@ export default function SignupPage() {
 
             <button
               onClick={() => {
-                if (!f.display_name || !f.email || !f.password || !f.nationality || !f.birth_date || !f.gender || f.gender === '') {
+                if (!f.display_name || !(f as any).real_name || !f.email || !f.password || !f.phone || !f.nationality || !f.birth_date || !f.gender || f.gender === '') {
                   setErr('Please fill in all required fields (Name, Email, Password, Nationality, Date of birth, Gender)')
                   return
                 }
