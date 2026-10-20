@@ -8,11 +8,12 @@ export default async function ERPPage() {
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
   // 방문자
   const { count: todayVisits } = await admin.from('page_visits').select('*', { count: 'exact', head: true }).gte('visited_at', todayStart.toISOString())
-  const { data: dailyRaw } = await admin.from('page_visits').select('visited_at').gte('visited_at', thirtyDaysAgo.toISOString()).order('visited_at', { ascending: true })
+  const { data: dailyRaw } = await admin.from('page_visits').select('visited_at').gte('visited_at', ninetyDaysAgo.toISOString()).order('visited_at', { ascending: true })
   const dailyMap: Record<string, number> = {}
   dailyRaw?.forEach((v: any) => {
     const d = new Date(v.visited_at)
@@ -20,13 +21,13 @@ export default async function ERPPage() {
     dailyMap[key] = (dailyMap[key] || 0) + 1
   })
   const dailyVisits: { date: string; count: number }[] = []
-  for (let i = 29; i >= 0; i--) {
+  for (let i = 89; i >= 0; i--) {
     const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
     dailyVisits.push({ date: key, count: dailyMap[key] || 0 })
   }
-  const totalLast30 = dailyVisits.reduce((s, d) => s + d.count, 0)
-  const dailyAvg = Math.round(totalLast30 / 30)
+  const totalLast90 = dailyVisits.reduce((s, d) => s + d.count, 0)
+  const dailyAvg = Math.round(totalLast90 / 90)
   const { count: weekTotal } = await admin.from('page_visits').select('*', { count: 'exact', head: true }).gte('visited_at', sevenDaysAgo.toISOString())
   const weeklyAvg = Math.round((weekTotal ?? 0) / 7)
 
@@ -67,10 +68,10 @@ export default async function ERPPage() {
   profiles?.forEach((p: any) => {
     const d = new Date(p.created_at)
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
-    if (new Date(p.created_at) > thirtyDaysAgo) signupMap[key] = (signupMap[key] || 0) + 1
+    if (new Date(p.created_at) > ninetyDaysAgo) signupMap[key] = (signupMap[key] || 0) + 1
   })
   const dailySignups: { date: string; count: number }[] = []
-  for (let i = 29; i >= 0; i--) {
+  for (let i = 89; i >= 0; i--) {
     const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
     dailySignups.push({ date: key, count: signupMap[key] || 0 })

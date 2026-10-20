@@ -35,47 +35,49 @@ function BarChart({ title, data, color = '#E9C000' }: { title: string; data: Rec
   )
 }
 
-function LineChart({ title, data }: { title: string; data: { date: string; count: number }[] }) {
-  const max = Math.max(...data.map(d => d.count), 1)
-  const w = 100 / (data.length - 1)
-  const points = data.map((d, i) => `${i * w},${100 - (d.count / max) * 85}`).join(' ')
+function LineChart({ title, data, period }: { title: string; data: { date: string; count: number }[]; period: number }) {
+  const sliced = data.slice(-period)
+  if (sliced.length === 0) return null
+  const max = Math.max(...sliced.map(d => d.count), 1)
   const yMid = Math.round(max / 2)
+  const PAD_L = 28
+  const PAD_B = 18
+  const W = 260
+  const H = 80
+  const total_w = W + PAD_L
+  const total_h = H + PAD_B
+  const pts = sliced.map((d, i) => {
+    const x = PAD_L + (i / (sliced.length - 1 || 1)) * W
+    const y = H - (d.count / max) * H * 0.85
+    return `${x},${y}`
+  }).join(' ')
+  const dotData = sliced.filter((_, i) => i === 0 || i === sliced.length - 1 || sliced.length <= 14)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
       <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{title}</p>
-      <svg viewBox={`0 0 110 110`} style={{ width: '100%', height: 120, overflow: 'visible' }} preserveAspectRatio="none">
+      <svg viewBox={`0 0 ${total_w} ${total_h}`} style={{ width: '100%', height: 110, overflow: 'visible' }}>
         {/* y축 수치 */}
-        <text x="8" y="18" fontSize="7" fill="#999" textAnchor="middle">{max}</text>
-        <text x="8" y="60" fontSize="7" fill="#999" textAnchor="middle">{yMid}</text>
-        <text x="8" y="100" fontSize="7" fill="#999" textAnchor="middle">0</text>
-        {/* 가이드라인 */}
-        <line x1="14" y1="15" x2="110" y2="15" stroke="#F0F0EC" strokeWidth="0.5" />
-        <line x1="14" y1="57" x2="110" y2="57" stroke="#F0F0EC" strokeWidth="0.5" />
-        <g transform="translate(14, 0) scale(0.87, 1)">
-        <polyline points={points} fill="none" stroke="#E9C000" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-        {data.map((d, i) => (
-          <circle key={i} cx={i * w} cy={100 - (d.count / max) * 85} r="1.5" fill="#E9C000" vectorEffect="non-scaling-stroke" />
-        ))}
-        </g>
+        <text x={PAD_L - 4} y={8} textAnchor="end" fontSize={8} fill="#999">{max.toLocaleString()}</text>
+        <text x={PAD_L - 4} y={H * 0.075 + H * 0.425 + 4} textAnchor="end" fontSize={8} fill="#999">{yMid.toLocaleString()}</text>
+        <text x={PAD_L - 4} y={H + 4} textAnchor="end" fontSize={8} fill="#999">0</text>
+        {/* 수평 가이드라인 */}
+        <line x1={PAD_L} y1={H * 0.15} x2={PAD_L + W} y2={H * 0.15} stroke="#F0F0EE" strokeWidth={0.5} />
+        <line x1={PAD_L} y1={H * 0.575} x2={PAD_L + W} y2={H * 0.575} stroke="#F0F0EE" strokeWidth={0.5} />
+        <line x1={PAD_L} y1={H} x2={PAD_L + W} y2={H} stroke="#E8E8E8" strokeWidth={0.8} />
+        {/* 라인 */}
+        {sliced.length > 1 && <polyline points={pts} fill="none" stroke="#E9C000" strokeWidth="1.5" />}
+        {/* x축 날짜 (시작/끝) */}
+        {sliced.length > 0 && (
+          <text x={PAD_L} y={total_h - 2} textAnchor="start" fontSize={7} fill="#BBB">{sliced[0].date.slice(5)}</text>
+        )}
+        {sliced.length > 1 && (
+          <text x={PAD_L + W} y={total_h - 2} textAnchor="end" fontSize={7} fill="#BBB">{sliced[sliced.length-1].date.slice(5)}</text>
+        )}
       </svg>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#9A9A9A', marginTop: 4 }}>
-        <span>{data[0]?.date?.slice(5)}</span>
-        <span>{data[data.length-1]?.date?.slice(5)}</span>
-      </div>
     </div>
   )
 }
 
-const TABS = [
-  { id: 'overview', label: '📊 Overview' },
-  { id: 'visitors', label: '👁 Visitors' },
-  { id: 'users', label: '👥 Users' },
-  { id: 'revenue', label: '💰 Revenue' },
-  { id: 'events', label: '🎪 Events' },
-  { id: 'experience', label: '🌟 Experience' },
-  { id: 'survey', label: '⭐ 만족도' },
-  { id: 'cs', label: '💬 CS' },
-]
 
 export default function ERPDashboardClient({
   todayVisits, dailyAvg, weeklyAvg, totalUsers, newUsers30, newUsers7,
@@ -84,6 +86,7 @@ export default function ERPDashboardClient({
   csTickets, openCs, totalCs, experiences, expApplications
 }: any) {
   const [tab, setTab] = useState('overview')
+  const [period, setPeriod] = useState(30)
 
   useEffect(() => {
     const timer = setInterval(() => window.location.reload(), 60000)
@@ -117,6 +120,17 @@ export default function ERPDashboardClient({
       {/* Overview */}
       {tab === 'overview' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* 기간 필터 */}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+          {[90, 30, 15, 7, 3].map(d => (
+            <button key={d} onClick={() => setPeriod(d)} style={{
+              padding: '5px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              background: period === d ? '#1A1A1A' : '#F5F5F5',
+              color: period === d ? '#E9C000' : '#666',
+              border: period === d ? 'none' : '1px solid #E8E8E8'
+            }}>{d}일</button>
+          ))}
+        </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             <StatCard label="Today Visitors" value={todayVisits} sub={`Avg ${dailyAvg}/day`} />
             <StatCard label="Total Users" value={totalUsers} sub={`+${newUsers7} this week`} />
@@ -130,8 +144,8 @@ export default function ERPDashboardClient({
             <StatCard label="Cancelled" value={cancelledOrders.length} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <LineChart title="Visitors (30 days)" data={dailyVisits} />
-            <LineChart title="Signups (30 days)" data={dailySignups} />
+            <LineChart title="Visitors (30 days)" data={dailyVisits} period={period} />
+            <LineChart title="Signups (30 days)" data={dailySignups} period={period} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
             <BarChart title="Nationality" data={nationalityMap} />
@@ -149,7 +163,7 @@ export default function ERPDashboardClient({
             <StatCard label="Weekly Avg" value={weeklyAvg} sub="per day" />
             <StatCard label="30-day Avg" value={dailyAvg} sub="per day" />
           </div>
-          <LineChart title="Daily Visitors (30 days)" data={dailyVisits} />
+          <LineChart title="Daily Visitors (30 days)" data={dailyVisits} period={period} />
           <BarChart title="Top Pages" data={pageMap} />
         </div>
       )}
@@ -162,7 +176,7 @@ export default function ERPDashboardClient({
             <StatCard label="New (7 days)" value={newUsers7} />
             <StatCard label="New (30 days)" value={newUsers30} />
           </div>
-          <LineChart title="Daily Signups (30 days)" data={dailySignups} />
+          <LineChart title="Daily Signups (30 days)" data={dailySignups} period={period} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <BarChart title="Nationality" data={nationalityMap} />
             <BarChart title="Gender" data={genderMap} color="#6366f1" />
