@@ -31,6 +31,12 @@ export default function EventCard({ event }: { event: any }) {
             📅 {new Date(event.starts_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </div>
           {event.venue_name && <div style={{ fontSize: 12, color: '#9A9A9A' }}>📍 {event.venue_name}</div>}
+          {(event.language || event.category) && (
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 2 }}>
+              {event.language && <span style={{ fontSize: 10, color: '#6B6B6B', background: '#F0F0EC', borderRadius: 4, padding: '2px 6px' }}>#{event.language}</span>}
+              {event.category && <span style={{ fontSize: 10, color: '#6B6B6B', background: '#F0F0EC', borderRadius: 4, padding: '2px 6px' }}>#{event.category}</span>}
+            </div>
+          )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 15, fontWeight: 700, color: '#E9C000' }}>

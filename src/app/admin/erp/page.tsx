@@ -81,12 +81,19 @@ export default async function ERPPage() {
 
   // 주문
   const { data: allOrders } = await admin.from('orders')
-    .select('*, events(id, title), profiles(display_name, email, real_name, nationality, gender, birth_date, phone)')
+    .select('*, events(id, title, price_krw), profiles(display_name, email, real_name, nationality, gender, birth_date, phone)')
     .order('created_at', { ascending: false })
 
   // 매출 계산
   const paidOrders = allOrders?.filter(o => o.status === 'paid') ?? []
-  const totalRevenue = paidOrders.reduce((s, o) => s + (o.amount_krw || 0), 0)
+  const totalRevenue = allOrders
+    .filter((o: any) => ['paid', 'free_confirmed'].includes(o.status))
+    .reduce((s: number, o: any) => {
+      if (o.status === 'paid') return s + (o.amount_krw || 0)
+      // free_confirmed: 관리자 무료초청 - 이벤트 가격 기준
+      const eventPrice = o.events?.price_krw || 0
+      return s + eventPrice
+    }, 0)
   const todayRevenue = paidOrders.filter(o => new Date(o.created_at) > todayStart).reduce((s, o) => s + (o.amount_krw || 0), 0)
   const monthRevenue = paidOrders.filter(o => new Date(o.created_at) > thirtyDaysAgo).reduce((s, o) => s + (o.amount_krw || 0), 0)
 

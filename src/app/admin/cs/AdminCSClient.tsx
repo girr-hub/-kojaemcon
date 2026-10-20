@@ -17,6 +17,12 @@ export default function AdminCSClient({ tickets }: { tickets: any[] }) {
     setSaving(true)
     const sb = supabase()
     await sb.from('cs_tickets').update({ admin_reply: reply, status: 'resolved', replied_at: new Date().toISOString() }).eq('id', selected.id)
+    // 이메일 발송
+    fetch('/api/admin/cs-reply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticket_id: selected.id, reply })
+    }).catch(console.error)
     setSaving(false)
     setList(prev => prev.map(t => t.id === selected.id ? { ...t, admin_reply: reply, status: 'resolved' } : t))
     setSelected((p: any) => ({ ...p, admin_reply: reply, status: 'resolved' }))

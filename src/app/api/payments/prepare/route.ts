@@ -13,6 +13,17 @@ export async function POST(req: Request) {
   const { data: event } = await admin.from('events').select('*').eq('id', event_id).single()
   if (!event) return NextResponse.json({ error: 'event not found' }, { status: 404 })
 
+  // 종료된 이벤트 체크
+  if (event.ends_at && new Date(event.ends_at) < new Date()) {
+    return NextResponse.json({ error: 'This event has already ended.' }, { status: 400 })
+  }
+  if (event.is_ended) {
+    return NextResponse.json({ error: 'This event has already ended.' }, { status: 400 })
+  }
+  if (event.status === 'ended' || event.status === 'cancelled') {
+    return NextResponse.json({ error: 'Registration is closed for this event.' }, { status: 400 })
+  }
+
   // 솔드아웃 체크
   if (event.capacity && event.capacity > 0) {
     const { data: soldOrders } = await admin.from('orders')

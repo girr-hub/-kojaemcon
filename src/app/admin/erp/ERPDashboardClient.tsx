@@ -39,14 +39,24 @@ function LineChart({ title, data }: { title: string; data: { date: string; count
   const max = Math.max(...data.map(d => d.count), 1)
   const w = 100 / (data.length - 1)
   const points = data.map((d, i) => `${i * w},${100 - (d.count / max) * 85}`).join(' ')
+  const yMid = Math.round(max / 2)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
       <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{title}</p>
-      <svg viewBox={`0 0 100 100`} style={{ width: '100%', height: 120, overflow: 'visible' }} preserveAspectRatio="none">
+      <svg viewBox={`0 0 110 110`} style={{ width: '100%', height: 120, overflow: 'visible' }} preserveAspectRatio="none">
+        {/* y축 수치 */}
+        <text x="8" y="18" fontSize="7" fill="#999" textAnchor="middle">{max}</text>
+        <text x="8" y="60" fontSize="7" fill="#999" textAnchor="middle">{yMid}</text>
+        <text x="8" y="100" fontSize="7" fill="#999" textAnchor="middle">0</text>
+        {/* 가이드라인 */}
+        <line x1="14" y1="15" x2="110" y2="15" stroke="#F0F0EC" strokeWidth="0.5" />
+        <line x1="14" y1="57" x2="110" y2="57" stroke="#F0F0EC" strokeWidth="0.5" />
+        <g transform="translate(14, 0) scale(0.87, 1)">
         <polyline points={points} fill="none" stroke="#E9C000" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
         {data.map((d, i) => (
           <circle key={i} cx={i * w} cy={100 - (d.count / max) * 85} r="1.5" fill="#E9C000" vectorEffect="non-scaling-stroke" />
         ))}
+        </g>
       </svg>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#9A9A9A', marginTop: 4 }}>
         <span>{data[0]?.date?.slice(5)}</span>

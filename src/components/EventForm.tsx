@@ -94,12 +94,23 @@ export default function EventForm({ mode, initial }: { mode: Mode; initial?: any
     // host는 official 전용 필드 못 씀
     if (mode === 'host') { payload.source = 'host'; delete payload.detail_page_html; delete payload.detail_video_url }
 
+    if (mode === 'admin') {
+      const res = await fetch('/api/admin/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: initial?.id ?? null, payload })
+      })
+      const json = await res.json()
+      if (!res.ok) { alert(json.error || 'Save failed'); return }
+      r.push('/admin/events')
+      return
+    }
     const q = initial
       ? sb.from('events').update(payload).eq('id', initial.id)
       : sb.from('events').insert(payload)
     const { error } = await q
     if (error) { alert(error.message); return }
-    r.push(mode === 'admin' ? '/admin/events' : '/my')
+    r.push('/my')
   }
 
   const input = "w-full bg-surface border border-ink/10 text-ink px-4 py-3 outline-none focus:border-primary sub-en"
