@@ -85,6 +85,15 @@ export default function ERPDashboardClient({
   events, allOrders, totalRevenue, todayRevenue, monthRevenue, revenueByEvent,
   csTickets, openCs, totalCs, experiences, expApplications
 }: any) {
+  const TABS = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'users', label: 'Users' },
+    { id: 'events', label: 'Events' },
+    { id: 'orders', label: 'Orders' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'survey', label: 'Survey' },
+    { id: 'cs', label: 'CS' },
+  ]
   const [tab, setTab] = useState('overview')
   const [period, setPeriod] = useState(30)
 
