@@ -60,6 +60,68 @@ export default async function ERPPage() {
     Object.entries(durationByPage).map(([k, v]) => [k, Math.round((v as any).total / (v as any).count)])
   )
   const totalVisits30 = pageVisitRaw?.length ?? 0
+  const { data: dailyUVRaw } = await admin
+    .from('page_visits')
+    .select('visited_at, session_id, user_id')
+    .gte('visited_at', ninetyDaysAgo.toISOString())
+
+  const dailyUVMapSet: Record<string, Set<string>> = {}
+  dailyUVRaw?.forEach((v: any) => {
+    const d = new Date(v.visited_at)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+    if (!dailyUVMapSet[key]) dailyUVMapSet[key] = new Set()
+    dailyUVMapSet[key].add(v.session_id || v.user_id || 'anon')
+  })
+  const dailyUV: { date: string; count: number }[] = []
+  for (let i = 89; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+    dailyUV.push({ date: key, count: dailyUVMapSet[key]?.size || 0 })
+  }
+
+  const todayUVSet = new Set<string>()
+  dailyUVRaw?.filter((v: any) => new Date(v.visited_at) >= todayStart).forEach((v: any) => {
+    todayUVSet.add(v.session_id || v.user_id || 'anon')
+  })
+  const todayUV = todayUVSet.size
+
+  const monthlyUVMapSet: Record<string, Set<string>> = {}
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`
+    monthlyUVMapSet[key] = new Set()
+  }
+  dailyUVRaw?.forEach((v: any) => {
+    const d = new Date(v.visited_at)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`
+    if (key in monthlyUVMapSet) monthlyUVMapSet[key].add(v.session_id || v.user_id || 'anon')
+  })
+  const monthlyUV: Record<string, number> = Object.fromEntries(
+    Object.entries(monthlyUVMapSet).map(([k, v]) => [k, (v as Set<string>).size])
+  )
+
+  const thirtyDayVisitsAll = dailyUVRaw?.filter((v: any) => new Date(v.visited_at) >= thirtyDaysAgo) ?? []
+  const loggedInVisits = thirtyDayVisitsAll.filter((v: any) => !!v.user_id).length
+  const anonVisits = thirtyDayVisitsAll.filter((v: any) => !v.user_id).length
+  const loginRatioMap = { loggedIn: loggedInVisits, anonymous: anonVisits }
+
+  const anonPageMap: Record<string, number> = {}
+  dailyUVRaw?.filter((v: any) => !v.user_id && new Date(v.visited_at) >= thirtyDaysAgo).forEach((v: any) => {
+    const p = (v as any).page || '/'
+    anonPageMap[p] = (anonPageMap[p] || 0) + 1
+  })
+
+  const uvSet30 = new Set<string>()
+  thirtyDayVisitsAll.forEach((v: any) => {
+    uvSet30.add(v.session_id || v.user_id || 'anon')
+  })
+  const funnelData = {
+    visitors: uvSet30.size,
+    signups: newUsers30,
+    paid: 0,
+    visitToSignup: uvSet30.size > 0 ? Math.round((newUsers30 / uvSet30.size) * 1000) / 10 : 0,
+    signupToPaid: 0,
+  }
 
   const { data: profiles } = await admin.from('profiles').select('*').order('created_at', { ascending: false })
   const nationalityMap: Record<string, number> = {}
@@ -204,6 +266,10 @@ export default async function ERPPage() {
   const totalOrderCount = (allOrders?.length ?? 0)
   const cancelRate = totalOrderCount > 0 ? Math.round((cancelledOrders.length / totalOrderCount) * 100) : 0
 
+  const funnelPaid30 = paidOrders.filter((o: any) => new Date(o.created_at) >= thirtyDaysAgo).length
+  funnelData.paid = funnelPaid30
+  funnelData.signupToPaid = newUsers30 > 0 ? Math.round((funnelPaid30 / newUsers30) * 1000) / 10 : 0
+
   const languageRevenueMap: Record<string, number> = {}
   paidOrders.forEach((o: any) => {
     const lang = o.events?.language || 'Unknown'
@@ -280,6 +346,12 @@ export default async function ERPPage() {
       experiences={experiences ?? []}
       expApplications={expApplications ?? []}
       referralMap={{}}
+      dailyUV={dailyUV}
+      todayUV={todayUV}
+      monthlyUV={monthlyUV}
+      loginRatioMap={loginRatioMap}
+      anonPageMap={anonPageMap}
+      funnelData={funnelData}
       surveys={surveys ?? []}
     />
   )

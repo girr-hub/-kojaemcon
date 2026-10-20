@@ -154,6 +154,7 @@ export default function ERPDashboardClient({
   todayVisits, dailyAvg, weeklyAvg, totalUsers, newUsers30, newUsers7,
   dailyVisits, dailySignups, nationalityMap, genderMap, ageMap, interestMap, pageMap,
   hourlyVisitMap, weekdayVisitMap, avgDurationByPage, totalVisits30,
+  dailyUV, todayUV, monthlyUV, loginRatioMap, anonPageMap, funnelData,
   events, allOrders, totalRevenue, todayRevenue, monthRevenue, revenueByEvent,
   avgOrderValue, weekdayOrderMap, hourlyOrderMap, monthlyRevenueMap,
   nationalityAvgOrder, genderPurchaseMap, avgDaysToFirstPurchase, repurchaseRate, cancelRate,
@@ -247,21 +248,108 @@ export default function ERPDashboardClient({
 
       {tab === 'visitors' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* 핵심 지표 */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-            <StatCard label="오늘 방문" value={todayVisits} sub="명" />
-            <StatCard label="주간 평균" value={weeklyAvg} sub="명/일" />
-            <StatCard label="30일 평균" value={dailyAvg} sub="명/일" />
-            <StatCard label="30일 총 방문" value={totalVisits30} sub="명" />
+            <StatCard label="오늘 방문 (PV)" value={todayVisits} sub={`UV ${todayUV ?? '-'}명`} />
+            <StatCard label="오늘 순방문자 (UV)" value={todayUV ?? '-'} sub="세션 기준 중복 제거" />
+            <StatCard label="30일 평균 (PV/일)" value={dailyAvg} sub="명/일" />
+            <StatCard label="30일 총 방문 (PV)" value={totalVisits30} sub="명" />
           </div>
-          <LineChart title="일별 방문자 추이" data={dailyVisits} period={period} yLabel="방문 수 (명)" />
+
+          {/* 전환 퍼널 */}
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>전환 퍼널 (최근 30일)</p>
+            <p style={{ fontSize: 10, color: '#BBB', marginBottom: 16 }}>방문 → 가입 → 결제 전환율</p>
+            {(() => {
+              const f = funnelData ?? { visitors: 0, signups: 0, paid: 0, visitToSignup: 0, signupToPaid: 0 }
+              const steps = [
+                { label: '방문자 (UV)', value: f.visitors, color: '#6366f1', rate: null },
+                { label: '신규 가입', value: f.signups, color: '#E9C000', rate: f.visitToSignup },
+                { label: '결제 완료', value: f.paid, color: '#15803D', rate: f.signupToPaid },
+              ]
+              const maxVal = Math.max(f.visitors, 1)
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {steps.map((s, i) => (
+                    <div key={s.label}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
+                        <span style={{ fontWeight: 700, color: s.color }}>{s.label}</span>
+                        <span style={{ color: '#555' }}>
+                          <b>{s.value.toLocaleString()}명</b>
+                          {s.rate !== null && <span style={{ marginLeft: 8, color: '#9A9A9A' }}>전환율 {s.rate}%</span>}
+                        </span>
+                      </div>
+                      <div style={{ height: 10, background: '#F0F0F0', borderRadius: 4, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${Math.round((s.value / maxVal) * 100)}%`, background: s.color, borderRadius: 4, transition: 'width 0.3s' }} />
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ display: 'flex', gap: 16, marginTop: 4, padding: '10px 12px', background: '#F7F7F7', borderRadius: 8 }}>
+                    <span style={{ fontSize: 12, color: '#555' }}>방문→가입: <b style={{ color: '#E9C000' }}>{f.visitToSignup}%</b></span>
+                    <span style={{ fontSize: 12, color: '#555' }}>가입→결제: <b style={{ color: '#15803D' }}>{f.signupToPaid}%</b></span>
+                    <span style={{ fontSize: 12, color: '#555' }}>전체 전환: <b style={{ color: '#6366f1' }}>{f.visitors > 0 ? Math.round((f.paid / f.visitors) * 1000) / 10 : 0}%</b></span>
+                  </div>
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* 로그인/비로그인 비율 */}
+          <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>로그인 vs 비로그인 방문 (최근 30일)</p>
+            <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>비로그인 = 링크 타고 들어온 미가입/미로그인 방문자</p>
+            {(() => {
+              const lr = loginRatioMap ?? { loggedIn: 0, anonymous: 0 }
+              const total = (lr.loggedIn + lr.anonymous) || 1
+              const anonRate = Math.round((lr.anonymous / total) * 100)
+              const loginRate = 100 - anonRate
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
+                      <span style={{ fontWeight: 600, color: '#9A9A9A' }}>비로그인 방문 (잠재 유저)</span>
+                      <span>{lr.anonymous.toLocaleString()}회 · <b>{anonRate}%</b></span>
+                    </div>
+                    <div style={{ height: 8, background: '#F0F0F0', borderRadius: 4, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${anonRate}%`, background: '#CBD5E1', borderRadius: 4 }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
+                      <span style={{ fontWeight: 600, color: '#6366f1' }}>로그인 방문 (회원)</span>
+                      <span>{lr.loggedIn.toLocaleString()}회 · <b>{loginRate}%</b></span>
+                    </div>
+                    <div style={{ height: 8, background: '#F0F0F0', borderRadius: 4, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${loginRate}%`, background: '#6366f1', borderRadius: 4 }} />
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 2 }}>총 {total.toLocaleString()}회 방문 중 비로그인 {lr.anonymous.toLocaleString()}회 — 가입 유도 기회</p>
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* PV vs UV 일별 추이 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <LineChart title="일별 PV 추이 (총 방문)" data={dailyVisits} period={period} yLabel="방문 수 (명)" />
+            <LineChart title="일별 UV 추이 (순방문자)" data={dailyUV ?? []} period={period} yLabel="순방문자 수 (명)" color="#6366f1" />
+          </div>
+
+          {/* 월별 UV */}
+          <MonthlyBarChart title="월별 순방문자 (UV, 최근 6개월)" data={monthlyUV ?? {}} yLabel="순방문자 수 (명)" color="#6366f1" />
+
+          {/* 시간대/요일 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <HeatmapChart title="시간대별 방문 (최근 30일)" data={hourlyVisitMap} xLabel="시간대 (0~23시)" yLabel="방문 수 (건)" />
             <WeekdayChart title="요일별 방문 (최근 30일)" data={weekdayVisitMap} xLabel="요일" yLabel="방문 수 (건)" />
           </div>
+
+          {/* 페이지별 분석 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <BarChart title="페이지별 방문 수 (Top 10)" data={pageMap} xLabel="페이지 경로" yLabel="방문 수 (건)" unit="건" />
-            <BarChart title="페이지별 평균 체류시간 (Top 10)" data={avgDurationByPage} color="#6366f1" xLabel="페이지 경로" yLabel="평균 체류시간 (초)" unit="초" />
+            <BarChart title="페이지별 방문 수 — 전체 (Top 10)" data={pageMap} xLabel="페이지 경로" yLabel="방문 수 (건)" unit="건" />
+            <BarChart title="페이지별 비로그인 방문 (Top 10)" data={anonPageMap ?? {}} color="#CBD5E1" xLabel="페이지 경로" yLabel="비로그인 방문 (건)" unit="건" />
           </div>
+          <BarChart title="페이지별 평균 체류시간 (Top 10)" data={avgDurationByPage} color="#f59e0b" xLabel="페이지 경로" yLabel="평균 체류시간 (초)" unit="초" />
         </div>
       )}
 
