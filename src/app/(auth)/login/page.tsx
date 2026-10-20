@@ -39,6 +39,9 @@ export default function Login() {
                 className="btn-primary" style={{ width:'100%', justifyContent:'center', padding:'14px' }}>
           {loading ? 'Logging in...' : 'Log in'}
         </button>
+        <p style={{ textAlign:'center', fontSize:13, color:'#888', marginTop:4 }}>
+          <a href="/forgot-password" style={{ color:'#888', textDecoration:'underline' }}>Forgot password?</a>
+        </p>
         <p >
           No account?{' '}
           <a href="/signup" className="text-primary hover:underline">Sign up</a>
