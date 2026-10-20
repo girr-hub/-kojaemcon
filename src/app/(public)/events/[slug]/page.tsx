@@ -37,18 +37,33 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       const admin = supabaseAdmin()
       const { data: att } = await admin
         .from('orders')
-        .select('user_id, profiles(display_name, nationality, avatar_url)')
+        .select('user_id, quantity, profiles(display_name, nationality, avatar_url)')
         .eq('event_id', e.id)
         .in('status', ['paid', 'free_confirmed'])
-      attendees = att ?? []
+      // quantity만큼 확장: 2개 구매면 구매자 + friend 1
+      const expanded: any[] = []
+      for (const o of (att ?? [])) {
+        expanded.push(o)
+        for (let i = 1; i < (o.quantity ?? 1); i++) {
+          expanded.push({ user_id: null, quantity: 1, profiles: { display_name: `${(o.profiles as any)?.display_name || 'Guest'}'s friend`, nationality: null, avatar_url: null } })
+        }
+      }
+      attendees = expanded
     } catch {
       try {
         const { data: att } = await sb
           .from('orders')
-          .select('user_id, profiles(display_name, nationality, avatar_url)')
+          .select('user_id, quantity, profiles(display_name, nationality, avatar_url)')
           .eq('event_id', e.id)
           .in('status', ['paid', 'free_confirmed'])
-        attendees = att ?? []
+        const expanded: any[] = []
+        for (const o of (att ?? [])) {
+          expanded.push(o)
+          for (let i = 1; i < (o.quantity ?? 1); i++) {
+            expanded.push({ user_id: null, quantity: 1, profiles: { display_name: `${(o.profiles as any)?.display_name || 'Guest'}'s friend`, nationality: null, avatar_url: null } })
+          }
+        }
+        attendees = expanded
       } catch {}
     }
 

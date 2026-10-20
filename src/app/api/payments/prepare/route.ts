@@ -125,7 +125,7 @@ export async function POST(req: Request) {
     }))
 
     try {
-      await admin.from('event_attendees').insert(friendRows)
+      await admin.from('attendances').insert(friendRows)
     } catch {}
   }
 
@@ -145,7 +145,7 @@ export async function POST(req: Request) {
       type: 'companion',
     }))
     try {
-      await admin.from('event_attendees').insert(friendRows)
+      await admin.from('attendances').insert(friendRows)
     } catch {}
   }
 
