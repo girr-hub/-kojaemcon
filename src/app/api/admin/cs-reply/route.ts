@@ -34,6 +34,7 @@ export async function POST(req: Request) {
             <p style="color:#3A3A3A;white-space:pre-wrap">${reply}</p>
           </div>
           <p style="color:#9A9A9A;font-size:12px">If you have any further questions, please don't hesitate to contact us again.</p>
+          <p style="color:#9A9A9A;font-size:12px">Reply to: <a href="mailto:girr.official@gmail.com">girr.official@gmail.com</a></p>
           <p style="color:#9A9A9A;font-size:12px">Best regards,<br/>KOGEMCON Team</p>
         </div>
       `
