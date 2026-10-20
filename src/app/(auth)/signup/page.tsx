@@ -18,7 +18,7 @@ const INTEREST_CATEGORIES = [
 export default function SignupPage() {
   const [step, setStep] = useState(1) // 1: basic, 2: profile, 3: interests
   const [f, setF] = useState({
-    display_name: '', real_name: '', email: '', password: '', nationality: '',
+    display_name: '', real_name: '', email: '', password: '', nationality: '', hide_gender: false, hide_age: false,
     birth_date: '', gender: 'undisclosed', referral_source: '', phone: '',
   })
   const [interests, setInterests] = useState<string[]>([])
@@ -79,6 +79,8 @@ export default function SignupPage() {
       display_name: f.display_name,
       phone: f.phone,
       real_name: f.real_name,
+      hide_gender: (f as any).hide_gender || false,
+      hide_age: (f as any).hide_age || false,
       nationality: f.nationality,
       birth_year: birthYear,
       gender: f.gender,
@@ -163,11 +165,11 @@ export default function SignupPage() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={labelStyle}>Date of birth *</label>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Date of birth *</label><label style={{fontSize:11,color:'#9A9A9A',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_age||false} onChange={e=>setF({...f,hide_age:e.target.checked} as any)} style={{cursor:'pointer'}}/>비공개</label></div>
                   <input style={inputStyle} type="date" required value={f.birth_date} onChange={e => setF({ ...f, birth_date: e.target.value })} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Gender *</label>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Gender *</label><label style={{fontSize:11,color:'#9A9A9A',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_gender||false} onChange={e=>setF({...f,hide_gender:e.target.checked} as any)} style={{cursor:'pointer'}}/>비공개</label></div>
                   <select style={inputStyle} required value={f.gender} onChange={e => setF({ ...f, gender: e.target.value })}>
                     <option value="undisclosed">Prefer not to say</option>
                     <option value="male">Male</option>
