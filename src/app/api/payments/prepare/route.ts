@@ -129,5 +129,25 @@ export async function POST(req: Request) {
     } catch {}
   }
 
+  // solo/returning 복수 구매 시 "구매자's friend" 자동 추가
+  if (ticket_type !== 'with_friends' && finalQty > 1 && newOrder) {
+    const { data: buyerProfile } = await admin
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .single()
+    const buyerName = buyerProfile?.display_name || 'Guest'
+    const friendRows = Array.from({ length: finalQty - 1 }, (_, i) => ({
+      event_id,
+      order_id: newOrder.id,
+      user_id: null,
+      display_name: `${buyerName}'s friend`,
+      type: 'companion',
+    }))
+    try {
+      await admin.from('event_attendees').insert(friendRows)
+    } catch {}
+  }
+
   return NextResponse.json({ free: false, payment_id: paymentId })
 }
