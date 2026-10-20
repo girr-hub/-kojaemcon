@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
-      from: 'KOGEMCON <hello@kojaemcon.com>',
+      from: 'KOGEMCON <onboarding@resend.dev>',
       to: ticket.email,
       subject: `Re: ${ticket.subject}`,
       html: `
