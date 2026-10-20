@@ -104,7 +104,6 @@ export async function POST(req: Request) {
 
   // Who's Coming 자동 추가 (with_friends + companion_info 있을 때)
   if (ticket_type === 'with_friends' && companion_info?.length > 0 && newOrder) {
-    // 구매자 프로필 조회
     const { data: buyerProfile } = await admin
       .from('profiles')
       .select('display_name')
@@ -125,8 +124,9 @@ export async function POST(req: Request) {
       type: 'companion',
     }))
 
-    // event_attendees 테이블에 동행자 추가 (없으면 조용히 스킵)
-    await admin.from('event_attendees').insert(friendRows).then(() => {}).catch(() => {})
+    try {
+      await admin.from('event_attendees').insert(friendRows)
+    } catch {}
   }
 
   return NextResponse.json({ free: false, payment_id: paymentId })
