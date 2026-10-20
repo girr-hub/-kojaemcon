@@ -11,7 +11,6 @@ export default async function ERPPage() {
   const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  // 방문자
   const { count: todayVisits } = await admin.from('page_visits').select('*', { count: 'exact', head: true }).gte('visited_at', todayStart.toISOString())
   const { data: dailyRaw } = await admin.from('page_visits').select('visited_at').gte('visited_at', ninetyDaysAgo.toISOString()).order('visited_at', { ascending: true })
   const dailyMap: Record<string, number> = {}
@@ -31,12 +30,37 @@ export default async function ERPPage() {
   const { count: weekTotal } = await admin.from('page_visits').select('*', { count: 'exact', head: true }).gte('visited_at', sevenDaysAgo.toISOString())
   const weeklyAvg = Math.round((weekTotal ?? 0) / 7)
 
-  // 페이지별 방문
   const { data: pageVisitRaw } = await admin.from('page_visits').select('page').gte('visited_at', thirtyDaysAgo.toISOString())
   const pageMap: Record<string, number> = {}
   pageVisitRaw?.forEach((v: any) => { const p = v.page || '/'; pageMap[p] = (pageMap[p] || 0) + 1 })
 
-  // 유저
+  const { data: hourlyVisitRaw } = await admin.from('page_visits').select('visited_at').gte('visited_at', thirtyDaysAgo.toISOString())
+  const hourlyVisitMap: Record<number, number> = {}
+  for (let h = 0; h < 24; h++) hourlyVisitMap[h] = 0
+  hourlyVisitRaw?.forEach((v: any) => {
+    const h = new Date(v.visited_at).getHours()
+    hourlyVisitMap[h] = (hourlyVisitMap[h] || 0) + 1
+  })
+
+  const weekdayNames = ['일', '월', '화', '수', '목', '금', '토']
+  const weekdayVisitMap: Record<string, number> = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 }
+  hourlyVisitRaw?.forEach((v: any) => {
+    const w = new Date(v.visited_at).getDay()
+    weekdayVisitMap[weekdayNames[w]] = (weekdayVisitMap[weekdayNames[w]] || 0) + 1
+  })
+
+  const { data: visitData } = await admin.from('page_visits').select('page, duration_seconds').gte('visited_at', thirtyDaysAgo.toISOString()).gt('duration_seconds', 0)
+  const durationByPage: Record<string, { total: number; count: number }> = {}
+  visitData?.forEach((v: any) => {
+    if (!durationByPage[v.page]) durationByPage[v.page] = { total: 0, count: 0 }
+    durationByPage[v.page].total += v.duration_seconds
+    durationByPage[v.page].count += 1
+  })
+  const avgDurationByPage = Object.fromEntries(
+    Object.entries(durationByPage).map(([k, v]) => [k, Math.round((v as any).total / (v as any).count)])
+  )
+  const totalVisits30 = pageVisitRaw?.length ?? 0
+
   const { data: profiles } = await admin.from('profiles').select('*').order('created_at', { ascending: false })
   const nationalityMap: Record<string, number> = {}
   profiles?.forEach((p: any) => { const n = p.nationality || 'Unknown'; nationalityMap[n] = (nationalityMap[n] || 0) + 1 })
@@ -59,11 +83,9 @@ export default async function ERPPage() {
     } catch {}
   })
 
-  // 신규 가입 (최근 30일)
   const newUsers30 = profiles?.filter(p => new Date(p.created_at) > thirtyDaysAgo).length ?? 0
   const newUsers7 = profiles?.filter(p => new Date(p.created_at) > sevenDaysAgo).length ?? 0
 
-  // 일별 가입자
   const signupMap: Record<string, number> = {}
   profiles?.forEach((p: any) => {
     const d = new Date(p.created_at)
@@ -77,64 +99,141 @@ export default async function ERPPage() {
     dailySignups.push({ date: key, count: signupMap[key] || 0 })
   }
 
-  // 이벤트
-  const { data: events } = await admin.from('events').select('id, title, starts_at, status, capacity, is_free, price_krw').order('starts_at', { ascending: false }).limit(50)
+  const { data: events } = await admin.from('events').select('id, title, starts_at, status, capacity, is_free, price_krw, language, category').order('starts_at', { ascending: false }).limit(50)
 
-  // 주문
   const { data: allOrders } = await admin.from('orders')
-    .select('*, events(id, title, price_krw), profiles(display_name, email, real_name, nationality, gender, birth_date, phone)')
+    .select('*, events(id, title, price_krw, language, category), profiles(id, display_name, email, real_name, nationality, gender, birth_date, phone, created_at)')
     .order('created_at', { ascending: false })
 
-  // 매출 계산
-  const paidOrders = allOrders?.filter(o => o.status === 'paid') ?? []
-  const totalRevenue = allOrders
+  const paidOrders = allOrders?.filter((o: any) => o.status === 'paid') ?? []
+  const freeOrders = allOrders?.filter((o: any) => o.status === 'free_confirmed') ?? []
+  const cancelledOrders = allOrders?.filter((o: any) => o.status === 'cancelled') ?? []
+
+  const totalRevenue = (allOrders ?? [])
     .filter((o: any) => ['paid', 'free_confirmed'].includes(o.status))
     .reduce((s: number, o: any) => {
       if (o.status === 'paid') return s + (o.amount_krw || 0)
-      // free_confirmed: 관리자 무료초청 - 이벤트 가격 기준
-      const eventPrice = o.events?.price_krw || 0
-      return s + eventPrice
+      return s + (o.events?.price_krw || 0)
     }, 0)
-  const todayRevenue = paidOrders.filter(o => new Date(o.created_at) > todayStart).reduce((s, o) => s + (o.amount_krw || 0), 0)
-  const monthRevenue = paidOrders.filter(o => new Date(o.created_at) > thirtyDaysAgo).reduce((s, o) => s + (o.amount_krw || 0), 0)
+  const todayRevenue = paidOrders.filter((o: any) => new Date(o.created_at) > todayStart).reduce((s: number, o: any) => s + (o.amount_krw || 0), 0)
+  const monthRevenue = paidOrders.filter((o: any) => new Date(o.created_at) > thirtyDaysAgo).reduce((s: number, o: any) => s + (o.amount_krw || 0), 0)
 
-  // 이벤트별 매출
   const revenueByEvent: Record<string, number> = {}
   paidOrders.forEach((o: any) => {
     const t = o.events?.title || 'Unknown'
     revenueByEvent[t] = (revenueByEvent[t] || 0) + (o.amount_krw || 0)
   })
 
-  // CS
+  const avgOrderValue = paidOrders.length > 0 ? Math.round(paidOrders.reduce((s: number, o: any) => s + (o.amount_krw || 0), 0) / paidOrders.length) : 0
+
+  const weekdayOrderMap: Record<string, number> = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 }
+  paidOrders.forEach((o: any) => {
+    const w = new Date(o.created_at).getDay()
+    weekdayOrderMap[weekdayNames[w]] = (weekdayOrderMap[weekdayNames[w]] || 0) + 1
+  })
+
+  const hourlyOrderMap: Record<number, number> = {}
+  for (let h = 0; h < 24; h++) hourlyOrderMap[h] = 0
+  paidOrders.forEach((o: any) => {
+    const h = new Date(o.created_at).getHours()
+    hourlyOrderMap[h] = (hourlyOrderMap[h] || 0) + 1
+  })
+
+  const monthlyRevenueMap: Record<string, number> = {}
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`
+    monthlyRevenueMap[key] = 0
+  }
+  paidOrders.forEach((o: any) => {
+    const d = new Date(o.created_at)
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`
+    if (key in monthlyRevenueMap) monthlyRevenueMap[key] = (monthlyRevenueMap[key] || 0) + (o.amount_krw || 0)
+  })
+
+  const nationalityRevMap: Record<string, { total: number; count: number }> = {}
+  paidOrders.forEach((o: any) => {
+    const nat = o.profiles?.nationality || 'Unknown'
+    if (!nationalityRevMap[nat]) nationalityRevMap[nat] = { total: 0, count: 0 }
+    nationalityRevMap[nat].total += o.amount_krw || 0
+    nationalityRevMap[nat].count += 1
+  })
+  const nationalityAvgOrder: Record<string, number> = Object.fromEntries(
+    Object.entries(nationalityRevMap).map(([k, v]) => [k, Math.round((v as any).total / (v as any).count)])
+  )
+
+  const genderPurchaseMap: Record<string, { total: number; purchased: number }> = {}
+  profiles?.forEach((p: any) => {
+    const g = p.gender || 'Unknown'
+    if (!genderPurchaseMap[g]) genderPurchaseMap[g] = { total: 0, purchased: 0 }
+    genderPurchaseMap[g].total += 1
+  })
+  paidOrders.forEach((o: any) => {
+    const g = o.profiles?.gender || 'Unknown'
+    if (!genderPurchaseMap[g]) genderPurchaseMap[g] = { total: 0, purchased: 0 }
+    genderPurchaseMap[g].purchased += 1
+  })
+
+  const profileFirstOrderMap: Record<string, string> = {}
+  paidOrders.forEach((o: any) => {
+    const pid = o.profiles?.id
+    if (!pid) return
+    if (!profileFirstOrderMap[pid] || o.created_at < profileFirstOrderMap[pid]) {
+      profileFirstOrderMap[pid] = o.created_at
+    }
+  })
+  const profileOrderDays: number[] = []
+  profiles?.forEach((p: any) => {
+    const firstOrder = profileFirstOrderMap[p.id]
+    if (!firstOrder) return
+    const days = Math.round((new Date(firstOrder).getTime() - new Date(p.created_at).getTime()) / (1000 * 60 * 60 * 24))
+    if (days >= 0 && days < 365) profileOrderDays.push(days)
+  })
+  const avgDaysToFirstPurchase = profileOrderDays.length > 0 ? Math.round(profileOrderDays.reduce((a, b) => a + b, 0) / profileOrderDays.length) : 0
+
+  const purchaseCountPerUser: Record<string, number> = {}
+  paidOrders.forEach((o: any) => {
+    const pid = o.profiles?.id
+    if (!pid) return
+    purchaseCountPerUser[pid] = (purchaseCountPerUser[pid] || 0) + 1
+  })
+  const repurchaseUsers = Object.values(purchaseCountPerUser).filter(c => c >= 2).length
+  const buyerCount = Object.keys(purchaseCountPerUser).length
+  const repurchaseRate = buyerCount > 0 ? Math.round((repurchaseUsers / buyerCount) * 100) : 0
+
+  const totalOrderCount = (allOrders?.length ?? 0)
+  const cancelRate = totalOrderCount > 0 ? Math.round((cancelledOrders.length / totalOrderCount) * 100) : 0
+
+  const languageRevenueMap: Record<string, number> = {}
+  paidOrders.forEach((o: any) => {
+    const lang = o.events?.language || 'Unknown'
+    languageRevenueMap[lang] = (languageRevenueMap[lang] || 0) + (o.amount_krw || 0)
+  })
+
+  const categoryRevenueMap: Record<string, number> = {}
+  paidOrders.forEach((o: any) => {
+    const cat = o.events?.category || 'Unknown'
+    categoryRevenueMap[cat] = (categoryRevenueMap[cat] || 0) + (o.amount_krw || 0)
+  })
+
   const { data: csTickets } = await admin.from('cs_tickets').select('*').order('created_at', { ascending: false }).limit(100)
-  const openCs = csTickets?.filter(c => c.status === 'open').length ?? 0
+  const openCs = csTickets?.filter((c: any) => c.status === 'open').length ?? 0
   const { count: totalCs } = await admin.from('cs_tickets').select('*', { count: 'exact', head: true })
 
-  // 체험단
+  const csCategoryMap: Record<string, number> = {}
+  csTickets?.forEach((c: any) => { const cat = c.category || 'Unknown'; csCategoryMap[cat] = (csCategoryMap[cat] || 0) + 1 })
+
+  const resolvedWithReply = csTickets?.filter((c: any) => c.replied_at && c.created_at) ?? []
+  const avgResponseHours = resolvedWithReply.length > 0
+    ? Math.round(resolvedWithReply.reduce((s: number, c: any) => {
+        const diff = (new Date(c.replied_at).getTime() - new Date(c.created_at).getTime()) / (1000 * 60 * 60)
+        return s + diff
+      }, 0) / resolvedWithReply.length * 10) / 10
+    : 0
+
   const { data: experiences } = await admin.from('experience_events').select('id, title, status, capacity, created_at').order('created_at', { ascending: false })
   const { data: expApplications } = await admin.from('experience_applications').select('*, experience_events(title)').order('created_at', { ascending: false })
-
-  // 만족도 조사 데이터
-  const { data: surveys } = await admin.from('satisfaction_surveys')
-    .select('*, events(title)')
-    .order('created_at', { ascending: false })
-    .limit(100)
-
-  // 체류시간 데이터 (페이지별 평균)
-  const { data: visitData } = await admin.from('page_visits')
-    .select('page, duration_seconds')
-    .gte('visited_at', thirtyDaysAgo.toISOString())
-    .gt('duration_seconds', 0)
-
-  const durationByPage: Record<string, { total: number; count: number }> = {}
-  visitData?.forEach((v: any) => {
-    if (!durationByPage[v.page]) durationByPage[v.page] = { total: 0, count: 0 }
-    durationByPage[v.page].total += v.duration_seconds
-    durationByPage[v.page].count += 1
-  })
-  const avgDurationByPage = Object.fromEntries(
-    Object.entries(durationByPage).map(([k, v]) => [k, Math.round((v as any).total / (v as any).count)])
-  )
+  const { data: surveys } = await admin.from('satisfaction_surveys').select('*, events(title)').order('created_at', { ascending: false }).limit(100)
 
   return (
     <ERPDashboardClient
@@ -152,20 +251,36 @@ export default async function ERPPage() {
       ageMap={ageMap}
       interestMap={interestMap}
       pageMap={pageMap}
+      hourlyVisitMap={hourlyVisitMap}
+      weekdayVisitMap={weekdayVisitMap}
+      avgDurationByPage={avgDurationByPage}
+      totalVisits30={totalVisits30}
       events={events ?? []}
       allOrders={allOrders ?? []}
       totalRevenue={totalRevenue}
       todayRevenue={todayRevenue}
       monthRevenue={monthRevenue}
       revenueByEvent={revenueByEvent}
+      avgOrderValue={avgOrderValue}
+      weekdayOrderMap={weekdayOrderMap}
+      hourlyOrderMap={hourlyOrderMap}
+      monthlyRevenueMap={monthlyRevenueMap}
+      nationalityAvgOrder={nationalityAvgOrder}
+      genderPurchaseMap={genderPurchaseMap}
+      avgDaysToFirstPurchase={avgDaysToFirstPurchase}
+      repurchaseRate={repurchaseRate}
+      cancelRate={cancelRate}
+      languageRevenueMap={languageRevenueMap}
+      categoryRevenueMap={categoryRevenueMap}
       csTickets={csTickets ?? []}
       openCs={openCs}
       totalCs={totalCs ?? 0}
+      csCategoryMap={csCategoryMap}
+      avgResponseHours={avgResponseHours}
       experiences={experiences ?? []}
       expApplications={expApplications ?? []}
       referralMap={{}}
       surveys={surveys ?? []}
-      avgDurationByPage={avgDurationByPage}
     />
   )
 }
