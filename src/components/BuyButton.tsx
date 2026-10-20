@@ -3,198 +3,174 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
 type TicketType = 'solo' | 'returning' | 'with_friends'
+type CompanionInfo = { name: string; gender: string; nationality: string; age: string }
 
 export default function BuyButton({ event, remaining }: { event: any; remaining: number }) {
   const [busy, setBusy] = useState(false)
   const [showNoshow, setShowNoshow] = useState(false)
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
-  const [friendsCount, setFriendsCount] = useState(1)
-  const [ticketQty, setTicketQty] = useState(1)
+  const [friendsCount, setFriendsCount] = useState(2)
+  const [companionInfo, setCompanionInfo] = useState<CompanionInfo[]>([])
   const [soloQty, setSoloQty] = useState(1)
   const [returningQty, setReturningQty] = useState(1)
-  const [subOption, setSubOption] = useState<string>('')
+  const [subOption, setSubOption] = useState<string | null>(null)
   const [subOptionPrice, setSubOptionPrice] = useState<number>(0)
-  const [bikeOption, setBikeOption] = useState<string>('')
+  const [bikeOption, setBikeOption] = useState<string | null>(null)
   const [discountCode, setDiscountCode] = useState('')
   const [discountApplied, setDiscountApplied] = useState(false)
   const [discountError, setDiscountError] = useState('')
 
-  const VALID_CODES: Record<string, number> = {
-    'KOGEMCON10': 10,
-    'WELCOME10': 10,
-    'FRIEND10': 10,
-  }
+  const TICKET_TYPES = [
+    { id: 'solo', label: event.solo_label || 'Solo', emoji: '🙋', desc: event.solo_desc || 'Coming alone', price: event.price_solo || event.price_krw },
+    { id: 'returning', label: event.returning_label || 'Returning', emoji: '🔄', desc: event.returning_desc || 'Visited before', price: event.price_returning || event.price_krw },
+    { id: 'with_friends', label: event.friends_label || 'With Friends', emoji: '🧑‍🤝‍🧑', desc: event.friends_desc || 'Coming with friends', price: event.price_with_friends || event.price_krw },
+  ].filter(t => {
+    if (t.id === 'solo') return true
+    if (t.id === 'returning') return event.price_returning || event.returning_label
+    if (t.id === 'with_friends') return event.price_with_friends || event.friends_label
+    return false
+  })
 
-  const applyDiscount = () => {
-    const code = discountCode.trim().toUpperCase()
-    if (VALID_CODES[code]) {
-      setDiscountApplied(true)
-      setDiscountError('')
-    } else {
-      setDiscountApplied(false)
-      setDiscountError('Invalid code')
-    }
+  // friendsCount 변경 시 companionInfo 동기화 (구매자 제외 나머지)
+  const handleFriendsCountChange = (n: number) => {
+    const newCount = Math.max(1, Math.min(event.friends_max || 10, n))
+    setFriendsCount(newCount)
+    setCompanionInfo(prev => {
+      const arr = [...prev]
+      while (arr.length < newCount - 1) arr.push({ name: '', gender: '', nationality: '', age: '' })
+      return arr.slice(0, newCount - 1)
+    })
   }
 
   const getDiscountRate = () => {
-    const code = discountCode.trim().toUpperCase()
-    return discountApplied ? (VALID_CODES[code] || 0) : 0
+    if (!discountApplied) return 0
+    return 10 // 예시: 10% 할인
   }
 
-  // 페이업 SDK 로드 (운영)
-  useEffect(() => {
-    if (event.is_free) return
-    if (document.getElementById('payup-sdk')) return
-    const s = document.createElement('script')
-    s.id = 'payup-sdk'
-    s.src = 'https://standard.payup.co.kr/assets/js/payup_standard-1.0.js'
-    document.head.appendChild(s)
-  }, [event.is_free])
-
-  // PC 콜백: 인증 완료 시 자동 호출됨
-  useEffect(() => {
-    (window as any).payupPaymentSubmit = (payForm: string) => {
-      // SDK가 만든 form을 승인 URL로 submit
-      const form = document.getElementById(payForm) as HTMLFormElement
-      if (form) {
-        form.action = '/api/payments/payup-confirm'
-        form.method = 'POST'
-        form.submit()
-      }
+  const applyDiscount = async () => {
+    if (!discountCode.trim()) { setDiscountError('Enter a discount code'); return }
+    const res = await fetch('/api/discount/check', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: discountCode, event_id: event.id }),
+    }).then(r => r.json())
+    if (res.valid) {
+      setDiscountApplied(true)
+      setDiscountError('')
+    } else {
+      setDiscountError(res.error || 'Invalid code')
+      setDiscountApplied(false)
     }
-    ;(window as any).payupPaymentClose = () => {
-      setBusy(false)
-    }
-  }, [])
+  }
 
   const getBasePrice = () => {
     if (event.is_free) return 0
-    // 서브옵션 선택됐으면 그 가격
-    if (subOptionPrice > 0) return subOptionPrice
-    // 서브옵션 있으면 option1(당일치기)이 기본
     if (!event.has_ticket_types) return event.price_krw * soloQty
-    if (ticketType === 'solo' && event.solo_option1_price) return event.solo_option1_price
-    if (ticketType === 'returning' && event.returning_option1_price) return event.returning_option1_price
-    if (ticketType === 'with_friends' && event.friends_option1_price) return event.friends_option1_price * friendsCount
-    if (ticketType === 'returning') return event.price_returning || event.price_krw
-    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * friendsCount
-    return event.price_solo || event.price_krw
+    if (ticketType === 'returning') return (event.price_returning || event.price_krw) * returningQty + (subOptionPrice || 0) * returningQty
+    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * friendsCount + (subOptionPrice || 0) * friendsCount
+    return (event.price_solo || event.price_krw) * soloQty + (subOptionPrice || 0) * soloQty
   }
 
   const getPrice = () => {
     const base = getBasePrice()
-    const discount = getDiscountRate()
-    return Math.floor(base * (1 - discount / 100))
+    if (discountApplied) return Math.floor(base * (1 - getDiscountRate() / 100))
+    return base
   }
 
   const handleClick = async () => {
-    // 나이 제한 체크
-    const { data: { user: currentUser } } = await supabase().auth.getUser()
-    const userAge = currentUser?.user_metadata?.birth_year
-      ? new Date().getFullYear() - currentUser.user_metadata.birth_year
-      : null
-    if (userAge && event.min_age && userAge < event.min_age) {
-      alert(`This event is for ages ${event.min_age}+. You don't meet the age requirement.`)
-      return
-    }
-    if (userAge && event.max_age && userAge > event.max_age) {
-      alert(`This event is for ages up to ${event.max_age}. You don't meet the age requirement.`)
-      return
-    }
     const sb = supabase()
-    const { data: { session } } = await sb.auth.getSession()
-    const user = session?.user
+    const { data: { user } } = await sb.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
-    if (remaining <= 0) { console.error('Sold out'); return }
+    if (remaining <= 0) { alert('Sold out'); return }
     if (event.is_free) { setShowNoshow(true); return }
-    await handlePaid(user)
+    await handlePaid()
   }
 
   const confirmJoin = async () => {
     setBusy(true)
     const sb = supabase()
-    const { data: { session } } = await sb.auth.getSession()
-    const user = session?.user
+    const { data: { user } } = await sb.auth.getUser()
     if (!user) return
+
     const prep = await fetch('/api/payments/prepare', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ event_id: event.id }),
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        event_id: event.id,
+        user_id: user.id,
+        ticket_type: 'free',
+        friends_count: 1,
+        quantity: 1,
+      }),
     }).then(r => r.json())
+
     if (prep.error) { alert(prep.error); setBusy(false); return }
     setShowNoshow(false)
     setBusy(false)
     setJoined(true)
   }
 
-  const handlePaid = async (user: any) => {
+  const handlePaid = async () => {
     setBusy(true)
-    const totalAmount = getPrice()
+    const sb = supabase()
+    const { data: { user } } = await sb.auth.getUser()
+    if (!user) return
 
-    // 주문 생성
+    const totalAmount = getPrice()
+    const qty = !event.has_ticket_types ? soloQty : ticketType === 'with_friends' ? friendsCount : ticketType === 'returning' ? returningQty : soloQty
+
     const prep = await fetch('/api/payments/prepare', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         event_id: event.id,
+        user_id: user.id,
         ticket_type: ticketType,
         friends_count: ticketType === 'with_friends' ? friendsCount : 1,
+        quantity: qty,
         amount: totalAmount,
+        sub_option: subOption || undefined,
+        sub_option_price: subOptionPrice || undefined,
+        bike_option: bikeOption || undefined,
+        discount_code: discountApplied ? discountCode : undefined,
+        companion_info: ticketType === 'with_friends' ? companionInfo : undefined,
       }),
     }).then(r => r.json())
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
-    // Meta Pixel - InitiateCheckout
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'InitiateCheckout', {
-        value: totalAmount, currency: 'KRW', content_name: event.title
-      })
-    }
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-    const ticketLabel = ticketType === 'solo' ? 'Solo' : ticketType === 'returning' ? 'Returning' : `With Friends x${friendsCount}`
+    const { PortOne } = await import('@portone/browser-sdk/v2')
+    const result = await PortOne.requestPayment({
+      storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
+      channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
+      paymentId: prep.payment_id,
+      orderName: event.title,
+      totalAmount,
+      currency: 'KRW' as any,
+      payMethod: 'CARD' as any,
+    })
 
-    // SDK 로드 대기
-    let t = 0
-    while (!(window as any).goPayupPay && t < 50) {
-      await new Promise(r => setTimeout(r, 100))
-      t++
-    }
-    if (!(window as any).goPayupPay) {
-      console.error('결제 모듈을 불러올 수 없어요. 새로고침 후 다시 시도해주세요.')
-      setBusy(false)
-      return
-    }
+    if (result?.code) { alert(result.message); setBusy(false); return }
 
-    const data: any = {
-      merchantId: 'girr0711',
-      itemName: `${event.title} (${ticketLabel})`,
-      amount: String(totalAmount),
-      userName: user.email ?? 'Guest',
-      orderNumber: prep.payment_id,
-      lang: 'en',
-    }
+    const verify = await fetch('/api/payments/verify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ payment_id: prep.payment_id }),
+    }).then(r => r.json())
 
-    if (isMobile) {
-      data.returnUrl = `${window.location.origin}/api/payments/payup-return`
-    }
-
-    ;(window as any).goPayupPay(data)
-    // PC는 payupPaymentSubmit 콜백에서 처리
-    // 모바일은 returnUrl로 리다이렉트됨
-    if (!isMobile) setBusy(false)
+    setBusy(false)
+    if (verify.ok) setJoined(true)
+    else alert('Payment verification failed')
   }
 
   if (remaining <= 0) return (
-    <button disabled style={{ width:'100%', background:'#F8F8F6', color:'#C4C4C0', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'14px', fontFamily:'Inter', fontWeight:700, fontSize:14 }}>
+    <button disabled style={{ width:'100%', background:'#F8F8F6', color:'#C4C4C0', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'14px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:'not-allowed' }}>
       Sold Out
     </button>
   )
 
-  const TICKET_TYPES = [
-    { id: 'solo', label: 'Solo', emoji: '🙋', desc: 'Coming alone', price: event.price_solo || event.price_krw },
-    { id: 'returning', label: 'Returning', emoji: '🔄', desc: 'Visited before', price: event.price_returning || event.price_krw },
-    { id: 'with_friends', label: 'With Friends', emoji: '🧑‍🤝‍🧑', desc: 'Coming with friend(s)', price: event.price_with_friends || event.price_krw },
-  ].sort((a, b) => b.price - a.price)
+  const companionIncomplete = ticketType === 'with_friends' && companionInfo.some(c => !c.name || !c.gender || !c.nationality || !c.age)
 
   return (
     <>
@@ -260,66 +236,106 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 </span>
               </button>
             ))}
-            {/* 서브옵션 - 필수 선택 */}
-        {ticketType === 'solo' && event.solo_option1_name && (
-          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
-            {[{name:event.solo_option1_name, price:event.solo_option1_price},{name:event.solo_option2_name, price:event.solo_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
-                  ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1N2D' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
-                  {o.name === 'DAY TRIP' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
-        {ticketType === 'returning' && event.returning_option1_name && (
-          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
-            {[{name:event.returning_option1_name, price:event.returning_option1_price},{name:event.returning_option2_name, price:event.returning_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
-                  ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1N2D' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
-                  {o.name === 'DAY TRIP' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
-        {ticketType === 'with_friends' && event.friends_option1_name && (
-          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
-            {[{name:event.friends_option1_name, price:event.friends_option1_price},{name:event.friends_option2_name, price:event.friends_option2_price}].filter(o=>o.name).map(o=>(
-              <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>
-                  ₩{Number(o.price).toLocaleString()}
-                  {o.name === '1N2D' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩35,000</span>}
-                  {o.name === 'DAY TRIP' && <span style={{fontSize:11, color:subOption===o.name?'rgba(233,192,0,0.8)':'#9A9A9A', marginLeft:4}}>+₩0</span>}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
-        {ticketType === 'with_friends' && (
+
+            {/* 서브옵션 - solo */}
+            {ticketType === 'solo' && event.solo_option1_name && (
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                {[{name:event.solo_option1_name, price:event.solo_option1_price},{name:event.solo_option2_name, price:event.solo_option2_price}].filter(o=>o.name).map(o=>(
+                  <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 서브옵션 - returning */}
+            {ticketType === 'returning' && event.returning_option1_name && (
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                {[{name:event.returning_option1_name, price:event.returning_option1_price},{name:event.returning_option2_name, price:event.returning_option2_price}].filter(o=>o.name).map(o=>(
+                  <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 서브옵션 - with_friends */}
+            {ticketType === 'with_friends' && event.friends_option1_name && (
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                {[{name:event.friends_option1_name, price:event.friends_option1_price},{name:event.friends_option2_name, price:event.friends_option2_price}].filter(o=>o.name).map(o=>(
+                  <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 인원수 선택 (with_friends) */}
+            {ticketType === 'with_friends' && (
               <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people?</p>
+                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many people? (including you)</p>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                  <button type="button" onClick={() => setFriendsCount(Math.max(1, friendsCount - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
+                  <button type="button" onClick={() => handleFriendsCountChange(friendsCount - 1)} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
                   <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
-                  <button type="button" onClick={() => setFriendsCount(Math.min(event.friends_max || 10, friendsCount + 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
+                  <button type="button" onClick={() => handleFriendsCountChange(friendsCount + 1)} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
                 </div>
                 <p style={{ fontSize:13, fontWeight:800, color:'#0A0A0A', marginTop:8 }}>
                   Total: ₩{(Number(event.price_with_friends || event.price_krw) * friendsCount).toLocaleString()}
                 </p>
+              </div>
+            )}
+
+            {/* 동행자 정보 입력 폼 (with_friends, 구매자 제외) */}
+            {ticketType === 'with_friends' && companionInfo.length > 0 && (
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A', margin:0 }}>
+                  COMPANION INFO <span style={{color:'#dc2626'}}>*Required</span>
+                </p>
+                {companionInfo.map((c, i) => (
+                  <div key={i} style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px', display:'flex', flexDirection:'column', gap:8 }}>
+                    <p style={{ fontSize:12, fontWeight:700, color:'#0A0A0A', margin:0 }}>Friend {i + 1}</p>
+                    <input
+                      placeholder="Full name *"
+                      value={c.name}
+                      onChange={e => { const a=[...companionInfo]; a[i]={...a[i],name:e.target.value}; setCompanionInfo(a) }}
+                      style={{ padding:'9px 12px', borderRadius:8, border:`1.5px solid ${c.name ? '#E8E8E4' : '#E8E8E4'}`, fontSize:13, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none', background:'#fff' }}
+                    />
+                    <div style={{ display:'flex', gap:8 }}>
+                      <select
+                        value={c.gender}
+                        onChange={e => { const a=[...companionInfo]; a[i]={...a[i],gender:e.target.value}; setCompanionInfo(a) }}
+                        style={{ flex:1, padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, background:'#fff', outline:'none', color: c.gender ? '#0A0A0A' : '#9A9A9A' }}>
+                        <option value="">Gender *</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <input
+                        placeholder="Age *"
+                        type="number"
+                        min="1" max="100"
+                        value={c.age}
+                        onChange={e => { const a=[...companionInfo]; a[i]={...a[i],age:e.target.value}; setCompanionInfo(a) }}
+                        style={{ width:80, padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, outline:'none', background:'#fff' }}
+                      />
+                    </div>
+                    <input
+                      placeholder="Nationality *"
+                      value={c.nationality}
+                      onChange={e => { const a=[...companionInfo]; a[i]={...a[i],nationality:e.target.value}; setCompanionInfo(a) }}
+                      style={{ padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none', background:'#fff' }}
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -339,7 +355,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
-        {/* 티켓 수량 */}
+        {/* 티켓 수량 (has_ticket_types 없을 때) */}
         {!event.is_free && !event.has_ticket_types && (
           <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
             <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many tickets?</p>
@@ -378,8 +394,15 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           </div>
         )}
 
-        <button onClick={handleClick} disabled={busy || (event.has_ticket_types && event.solo_option1_name && !subOption) || (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption)}
-          style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
+        <button
+          onClick={handleClick}
+          disabled={
+            busy ||
+            (event.has_ticket_types && event.solo_option1_name && !subOption) ||
+            (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption) ||
+            companionIncomplete
+          }
+          style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:(busy || (event.has_ticket_types && event.solo_option1_name && !subOption) || (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption) || companionIncomplete)?0.5:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : (
             <span>
               Buy — ₩{Number(getPrice()).toLocaleString()}

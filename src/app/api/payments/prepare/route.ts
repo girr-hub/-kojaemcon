@@ -3,7 +3,7 @@ import { sendAdminNotification } from '@/lib/email'
 import { supabaseServer, supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
-  const { event_id, quantity = 1, ticket_type, friends_count = 1, amount } = await req.json()
+  const { event_id, quantity = 1, ticket_type, friends_count = 1, amount, companion_info } = await req.json()
   const sb = await supabaseServer()
   const { data: { user } } = await sb.auth.getUser()
   if (!user) return NextResponse.json({ error: 'login required' }, { status: 401 })
@@ -83,15 +83,51 @@ export async function POST(req: Request) {
 
   // 유료 이벤트 - PortOne 결제 준비
   const paymentId = `pay_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-  const { error: pendingErr } = await admin.from('orders').insert({
+
+  // with_friends일 때 quantity = friends_count
+  const finalQty = ticket_type === 'with_friends' ? friends_count : quantity
+
+  const { data: newOrder, error: pendingErr } = await admin.from('orders').insert({
     event_id,
     user_id: user.id,
-    quantity,
-    amount_krw: amount ?? (event.price_krw * quantity),
+    quantity: finalQty,
+    ticket_type: ticket_type || 'solo',
+    amount_krw: amount ?? (event.price_krw * finalQty),
     status: 'pending',
     payment_id: paymentId,
-  })
+    companion_info: ticket_type === 'with_friends' && companion_info?.length > 0
+      ? companion_info
+      : null,
+  }).select('id').single()
+
   if (pendingErr) return NextResponse.json({ error: pendingErr.message }, { status: 500 })
+
+  // Who's Coming 자동 추가 (with_friends + companion_info 있을 때)
+  if (ticket_type === 'with_friends' && companion_info?.length > 0 && newOrder) {
+    // 구매자 프로필 조회
+    const { data: buyerProfile } = await admin
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .single()
+
+    const buyerName = buyerProfile?.display_name || 'Guest'
+
+    const friendRows = (companion_info as Array<{name:string; gender:string; nationality:string; age:string}>).map(f => ({
+      event_id,
+      order_id: newOrder.id,
+      user_id: null,
+      display_name: `${buyerName}'s friend`,
+      real_name: f.name,
+      gender: f.gender,
+      nationality: f.nationality,
+      age: Number(f.age) || null,
+      type: 'companion',
+    }))
+
+    // event_attendees 테이블에 동행자 추가 (없으면 조용히 스킵)
+    await admin.from('event_attendees').insert(friendRows).then(() => {}).catch(() => {})
+  }
 
   return NextResponse.json({ free: false, payment_id: paymentId })
 }
