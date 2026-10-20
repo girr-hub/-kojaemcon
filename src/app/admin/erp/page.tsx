@@ -115,11 +115,12 @@ export default async function ERPPage() {
   thirtyDayVisitsAll.forEach((v: any) => {
     uvSet30.add(v.session_id || v.user_id || 'anon')
   })
-  const funnelData = {
-    visitors: uvSet30.size,
-    signups: newUsers30,
+  const uvCount30 = uvSet30.size
+  const funnelData: { visitors: number; signups: number; paid: number; visitToSignup: number; signupToPaid: number } = {
+    visitors: uvCount30,
+    signups: 0,
     paid: 0,
-    visitToSignup: uvSet30.size > 0 ? Math.round((newUsers30 / uvSet30.size) * 1000) / 10 : 0,
+    visitToSignup: 0,
     signupToPaid: 0,
   }
 
@@ -267,6 +268,8 @@ export default async function ERPPage() {
   const cancelRate = totalOrderCount > 0 ? Math.round((cancelledOrders.length / totalOrderCount) * 100) : 0
 
   const funnelPaid30 = paidOrders.filter((o: any) => new Date(o.created_at) >= thirtyDaysAgo).length
+  funnelData.signups = newUsers30
+  funnelData.visitToSignup = uvCount30 > 0 ? Math.round((newUsers30 / uvCount30) * 1000) / 10 : 0
   funnelData.paid = funnelPaid30
   funnelData.signupToPaid = newUsers30 > 0 ? Math.round((funnelPaid30 / newUsers30) * 1000) / 10 : 0
 
