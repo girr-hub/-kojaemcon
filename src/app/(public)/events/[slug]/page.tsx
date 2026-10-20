@@ -18,11 +18,12 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
       </div>
     )
 
-    const { count: soldCount } = await sb.from('orders')
-      .select('*', { count: 'exact', head: true })
+    const { data: soldOrders } = await sb.from('orders')
+      .select('quantity')
       .eq('event_id', e.id)
       .in('status', ['paid', 'free_confirmed'])
-    const remaining = Math.max(0, (e.capacity ?? 0) - (soldCount ?? 0))
+    const soldCount = (soldOrders ?? []).reduce((sum, o) => sum + (o.quantity ?? 1), 0)
+    const remaining = Math.max(0, (e.capacity ?? 0) - soldCount)
 
     // pending ?몄썝 * 5 = 怨좊?以묒씤 ?щ엺??
     const { count: pendingCount } = await sb.from('orders')

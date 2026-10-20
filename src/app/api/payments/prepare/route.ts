@@ -13,6 +13,19 @@ export async function POST(req: Request) {
   const { data: event } = await admin.from('events').select('*').eq('id', event_id).single()
   if (!event) return NextResponse.json({ error: 'event not found' }, { status: 404 })
 
+  // 솔드아웃 체크
+  if (event.capacity && event.capacity > 0) {
+    const { data: soldOrders } = await admin.from('orders')
+      .select('quantity')
+      .eq('event_id', event_id)
+      .in('status', ['paid', 'free_confirmed'])
+    const soldCount = (soldOrders ?? []).reduce((sum: number, o: any) => sum + (o.quantity ?? 1), 0)
+    const requestedQty = ticket_type === 'with_friends' ? friends_count : (quantity ?? 1)
+    if (soldCount + requestedQty > event.capacity) {
+      return NextResponse.json({ error: 'Sorry, this event is sold out.' }, { status: 400 })
+    }
+  }
+
   // 중복 체크 (paid, free_confirmed만 막음 - pending은 재사용)
   const { data: existing } = await admin.from('orders')
     .select('id, status, payment_id')
