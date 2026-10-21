@@ -140,28 +140,35 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
-    const PortOne = await import('@portone/browser-sdk/v2')
-    const result = await PortOne.requestPayment({
-      storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
-      channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
-      paymentId: prep.payment_id,
-      orderName: event.title,
-      totalAmount,
-      currency: 'KRW' as any,
-      payMethod: 'CARD' as any,
+    // PayUp SDK 결제창 호출
+    const origin = window.location.origin
+    const confirmUrl = `${origin}/api/payments/payup-confirm`
+    const returnUrl = `${origin}/api/payments/payup-return`
+
+    // PayUp SDK 스크립트 동적 로드
+    await new Promise<void>((resolve, reject) => {
+      if ((window as any).PayUp) { resolve(); return }
+      const script = document.createElement('script')
+      script.src = 'https://standard.payup.co.kr/js/payup.js'
+      script.onload = () => resolve()
+      script.onerror = () => reject(new Error('PayUp SDK 로드 실패'))
+      document.head.appendChild(script)
     })
 
-    if (result?.code) { alert(result.message); setBusy(false); return }
+    const PayUp = (window as any).PayUp
+    if (!PayUp) { alert('결제 모듈을 불러오지 못했습니다. 다시 시도해주세요.'); setBusy(false); return }
 
-    const verify = await fetch('/api/payments/verify', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ payment_id: prep.payment_id }),
-    }).then(r => r.json())
-
-    setBusy(false)
-    if (verify.ok) setJoined(true)
-    else alert('Payment verification failed')
+    PayUp.payment({
+      merchantId: 'girr0711',
+      orderNumber: prep.payment_id,
+      productName: event.title,
+      amount: String(totalAmount),
+      buyerName: user.email || '',
+      buyerEmail: user.email || '',
+      confirmUrl,
+      returnUrl,
+    })
+    // 결제창이 열리면 페이지가 이동하므로 setBusy는 호출하지 않음
   }
 
   if (remaining <= 0) return (
