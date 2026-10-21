@@ -140,35 +140,44 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
     if (prep.error) { alert(prep.error); setBusy(false); return }
 
-    // PayUp SDK 결제창 호출
-    const origin = window.location.origin
-    const confirmUrl = `${origin}/api/payments/payup-confirm`
-    const returnUrl = `${origin}/api/payments/payup-return`
-
     // PayUp SDK 스크립트 동적 로드
     await new Promise<void>((resolve, reject) => {
-      if ((window as any).PayUp) { resolve(); return }
+      if ((window as any).goPayupPay) { resolve(); return }
       const script = document.createElement('script')
-      script.src = 'https://standard.payup.co.kr/js/payup.js'
+      script.src = 'https://standard.payup.co.kr/assets/js/payup_standard-1.0.js'
       script.onload = () => resolve()
-      script.onerror = () => reject(new Error('PayUp SDK 로드 실패'))
+      script.onerror = () => { alert('결제 모듈을 불러오지 못했습니다.'); setBusy(false); reject(new Error('SDK 로드 실패')) }
       document.head.appendChild(script)
     })
 
-    const PayUp = (window as any).PayUp
-    if (!PayUp) { alert('결제 모듈을 불러오지 못했습니다. 다시 시도해주세요.'); setBusy(false); return }
+    const origin = window.location.origin
+    const confirmUrl = `${origin}/api/payments/payup-confirm`
+    const returnUrl = `${origin}/api/payments/payup-return`
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent)
 
-    PayUp.payment({
+    // PC: 인증 완료 콜백 — SDK가 자동 생성한 form을 confirmUrl로 submit
+    ;(window as any).payupPaymentSubmit = (payForm: string) => {
+      const form = document.getElementById(payForm) as HTMLFormElement
+      if (form) {
+        form.action = confirmUrl
+        form.submit()
+      }
+    }
+    // 결제창 닫기(취소) 콜백
+    ;(window as any).payupPaymentClose = () => { setBusy(false) }
+
+    const payData: Record<string, string> = {
       merchantId: 'girr0711',
-      orderNumber: prep.payment_id,
-      productName: event.title,
+      itemName: event.title,
       amount: String(totalAmount),
-      buyerName: user.email || '',
-      buyerEmail: user.email || '',
-      confirmUrl,
-      returnUrl,
-    })
-    // 결제창이 열리면 페이지가 이동하므로 setBusy는 호출하지 않음
+      userName: user.email?.split('@')[0] || 'Guest',
+      orderNumber: prep.payment_id,
+      lang: 'en',
+    }
+    if (isMobile) payData.returnUrl = returnUrl
+
+    ;(window as any).goPayupPay(payData)
+    // 결제창이 열리면 페이지가 이동/팝업되므로 setBusy는 유지
   }
 
   if (remaining <= 0) return (
