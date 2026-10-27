@@ -11,6 +11,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
   const [companionInfo, setCompanionInfo] = useState<CompanionInfo[]>([{ name: '', gender: '', nationality: '', age: '' }])
+  const [withFriendsQty, setWithFriendsQty] = useState(1)
   const [soloQty, setSoloQty] = useState(1)
   const [returningQty, setReturningQty] = useState(1)
   const [subOption, setSubOption] = useState<string | null>(null)
@@ -66,7 +67,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (event.is_free) return 0
     if (!event.has_ticket_types) return event.price_krw * soloQty
     if (ticketType === 'returning') return (event.price_returning || event.price_krw) * returningQty + (subOptionPrice || 0) * returningQty
-    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * companionInfo.length + (subOptionPrice || 0) * companionInfo.length
+    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * withFriendsQty + (subOptionPrice || 0) * withFriendsQty
     return (event.price_solo || event.price_krw) * soloQty + (subOptionPrice || 0) * soloQty
   }
 
@@ -116,7 +117,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (!user) return
 
     const totalAmount = getPrice()
-    const qty = !event.has_ticket_types ? soloQty : ticketType === 'with_friends' ? companionInfo.length : ticketType === 'returning' ? returningQty : soloQty
+    const qty = !event.has_ticket_types ? soloQty : ticketType === 'with_friends' ? withFriendsQty : ticketType === 'returning' ? returningQty : soloQty
 
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST',
@@ -125,7 +126,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         event_id: event.id,
         user_id: user.id,
         ticket_type: ticketType,
-        friends_count: ticketType === 'with_friends' ? companionInfo.length : 1,
+        friends_count: ticketType === 'with_friends' ? withFriendsQty : 1,
         quantity: qty,
         amount: totalAmount,
         sub_option: subOption || undefined,
@@ -295,15 +296,23 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
 
 
-            {/* 동행자 정보 입력 폼 (with_friends) */}
+            {/* with_friends 티켓 수량 + 동행자 정보 */}
             {ticketType === 'with_friends' && (
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', margin:0 }}>Number of tickets (including you)</p>
+                  <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                    <button type="button" onClick={() => setWithFriendsQty(q => Math.max(1, q - 1))} style={{ width:28, height:28, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer', lineHeight:1 }}>−</button>
+                    <span style={{ fontWeight:800, fontSize:18, minWidth:20, textAlign:'center' }}>{withFriendsQty}</span>
+                    <button type="button" onClick={() => setWithFriendsQty(q => Math.min(event.friends_max || 10, q + 1))} style={{ width:28, height:28, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer', lineHeight:1 }}>+</button>
+                  </div>
+                </div>
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A', margin:0 }}>
                     COMPANION INFO <span style={{color:'#dc2626'}}>*Required</span>
                   </p>
                   <p style={{ fontSize:12, fontWeight:800, color:'#0A0A0A', margin:0 }}>
-                    Total: ₩{(Number(event.price_with_friends || event.price_krw) * companionInfo.length).toLocaleString()}
+                    Total: ₩{(Number(event.price_with_friends || event.price_krw) * withFriendsQty).toLocaleString()}
                   </p>
                 </div>
                 {companionInfo.map((c, i) => (
