@@ -10,8 +10,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
   const [showNoshow, setShowNoshow] = useState(false)
   const [joined, setJoined] = useState(false)
   const [ticketType, setTicketType] = useState<TicketType>('solo')
-  const [friendsCount, setFriendsCount] = useState(2)
-  const [companionInfo, setCompanionInfo] = useState<CompanionInfo[]>([])
+  const [companionInfo, setCompanionInfo] = useState<CompanionInfo[]>([{ name: '', gender: '', nationality: '', age: '' }])
   const [soloQty, setSoloQty] = useState(1)
   const [returningQty, setReturningQty] = useState(1)
   const [subOption, setSubOption] = useState<string | null>(null)
@@ -32,15 +31,14 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     return false
   })
 
-  // friendsCount 변경 시 companionInfo 동기화 (구매자 제외 나머지)
-  const handleFriendsCountChange = (n: number) => {
-    const newCount = Math.max(1, Math.min(event.friends_max || 10, n))
-    setFriendsCount(newCount)
-    setCompanionInfo(prev => {
-      const arr = [...prev]
-      while (arr.length < newCount) arr.push({ name: '', gender: '', nationality: '', age: '' })
-      return arr.slice(0, newCount)
-    })
+  const addCompanion = () => {
+    if (companionInfo.length >= (event.friends_max || 10)) return
+    setCompanionInfo(prev => [...prev, { name: '', gender: '', nationality: '', age: '' }])
+  }
+
+  const removeCompanion = (idx: number) => {
+    if (companionInfo.length <= 1) return
+    setCompanionInfo(prev => prev.filter((_, i) => i !== idx))
   }
 
   const getDiscountRate = () => {
@@ -68,7 +66,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (event.is_free) return 0
     if (!event.has_ticket_types) return event.price_krw * soloQty
     if (ticketType === 'returning') return (event.price_returning || event.price_krw) * returningQty + (subOptionPrice || 0) * returningQty
-    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * friendsCount + (subOptionPrice || 0) * friendsCount
+    if (ticketType === 'with_friends') return (event.price_with_friends || event.price_krw) * companionInfo.length + (subOptionPrice || 0) * companionInfo.length
     return (event.price_solo || event.price_krw) * soloQty + (subOptionPrice || 0) * soloQty
   }
 
@@ -118,7 +116,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
     if (!user) return
 
     const totalAmount = getPrice()
-    const qty = !event.has_ticket_types ? soloQty : ticketType === 'with_friends' ? friendsCount : ticketType === 'returning' ? returningQty : soloQty
+    const qty = !event.has_ticket_types ? soloQty : ticketType === 'with_friends' ? companionInfo.length : ticketType === 'returning' ? returningQty : soloQty
 
     const prep = await fetch('/api/payments/prepare', {
       method: 'POST',
@@ -127,7 +125,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         event_id: event.id,
         user_id: user.id,
         ticket_type: ticketType,
-        friends_count: ticketType === 'with_friends' ? friendsCount : 1,
+        friends_count: ticketType === 'with_friends' ? companionInfo.length : 1,
         quantity: qty,
         amount: totalAmount,
         sub_option: subOption || undefined,
@@ -295,35 +293,33 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
               </div>
             )}
 
-            {/* 인원수 선택 (with_friends) */}
-            {ticketType === 'with_friends' && (
-              <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-                <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many friends are coming? (not including you)</p>
-                <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                  <button type="button" onClick={() => handleFriendsCountChange(friendsCount - 1)} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
-                  <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{friendsCount}</span>
-                  <button type="button" onClick={() => handleFriendsCountChange(friendsCount + 1)} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>+</button>
-                </div>
-                <p style={{ fontSize:13, fontWeight:800, color:'#0A0A0A', marginTop:8 }}>
-                  Total: ₩{(Number(event.price_with_friends || event.price_krw) * friendsCount).toLocaleString()}
-                </p>
-              </div>
-            )}
 
-            {/* 동행자 정보 입력 폼 (with_friends, 구매자 제외) */}
-            {ticketType === 'with_friends' && companionInfo.length > 0 && (
+
+            {/* 동행자 정보 입력 폼 (with_friends) */}
+            {ticketType === 'with_friends' && (
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A', margin:0 }}>
-                  COMPANION INFO <span style={{color:'#dc2626'}}>*Required</span>
-                </p>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A', margin:0 }}>
+                    COMPANION INFO <span style={{color:'#dc2626'}}>*Required</span>
+                  </p>
+                  <p style={{ fontSize:12, fontWeight:800, color:'#0A0A0A', margin:0 }}>
+                    Total: ₩{(Number(event.price_with_friends || event.price_krw) * companionInfo.length).toLocaleString()}
+                  </p>
+                </div>
                 {companionInfo.map((c, i) => (
                   <div key={i} style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-                    <p style={{ fontSize:12, fontWeight:700, color:'#0A0A0A', margin:0 }}>Friend {i + 1}</p>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                      <p style={{ fontSize:12, fontWeight:700, color:'#0A0A0A', margin:0 }}>Friend {i + 1}</p>
+                      {companionInfo.length > 1 && (
+                        <button type="button" onClick={() => removeCompanion(i)}
+                          style={{ background:'none', border:'none', cursor:'pointer', fontSize:16, color:'#9A9A9A', padding:'0 2px', lineHeight:1 }}>✕</button>
+                      )}
+                    </div>
                     <input
                       placeholder="Full name *"
                       value={c.name}
                       onChange={e => { const a=[...companionInfo]; a[i]={...a[i],name:e.target.value}; setCompanionInfo(a) }}
-                      style={{ padding:'9px 12px', borderRadius:8, border:`1.5px solid ${c.name ? '#E8E8E4' : '#E8E8E4'}`, fontSize:13, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none', background:'#fff' }}
+                      style={{ padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none', background:'#fff' }}
                     />
                     <div style={{ display:'flex', gap:8 }}>
                       <select
@@ -352,6 +348,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                     />
                   </div>
                 ))}
+                {companionInfo.length < (event.friends_max || 10) && (
+                  <button type="button" onClick={addCompanion}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'10px', borderRadius:10, border:'1.5px dashed #C4C4C0', background:'transparent', cursor:'pointer', fontSize:13, fontWeight:600, color:'#6B6B6B' }}>
+                    + 친구 추가
+                  </button>
+                )}
               </div>
             )}
           </div>
