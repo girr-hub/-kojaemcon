@@ -122,36 +122,6 @@ export default function HomePage() {
       {/* ── 스폰서 배너 ── */}
       <SponsorBanner position="home" />
 
-      {/* ── 프로모 배너 ── */}
-      <div style={{ padding: '10px 14px 0' }}>
-        <div style={{
-          background: 'var(--gold)', borderRadius: 14, padding: '14px 16px',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute', right: -10, top: -20,
-            width: 90, height: 90, background: 'rgba(255,255,255,0.18)', borderRadius: '50%',
-          }} />
-          <div>
-            <p style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.06em', color: 'rgba(0,0,0,0.45)', marginBottom: 2, textTransform: 'uppercase', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-              이번 주 핫딜
-            </p>
-            <p style={{ fontSize: 14, fontWeight: 800, color: '#111', letterSpacing: '-0.04em', lineHeight: 1.3, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-              First-timers get 20% off — sign up now
-            </p>
-          </div>
-          <Link href="/events" style={{
-            width: 30, height: 30, background: 'rgba(0,0,0,0.1)', borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            textDecoration: 'none', flexShrink: 0,
-          }}>
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="#111">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-            </svg>
-          </Link>
-        </div>
-      </div>
 
       {/* ── 이번 주 추천 (2열 그리드) ── */}
       <div style={{ marginTop: 16 }}>
