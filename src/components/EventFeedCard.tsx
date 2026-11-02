@@ -32,9 +32,10 @@ export default function EventFeedCard({ event }: { event: any }) {
         alignItems: 'flex-start',
         borderBottom: '1px solid #F2F2F2',
         opacity: isClosed ? 0.55 : 1,
-      }}>
+        transition: 'background 0.15s',
+      }} onMouseEnter={e => (e.currentTarget.style.background='#FAFAFA')} onMouseLeave={e => (e.currentTarget.style.background='#FFFFFF')}>
         {/* 이미지 */}
-        <div style={{ width: 96, height: 96, flexShrink: 0, borderRadius: 8, overflow: 'hidden', background: '#EFEFEF', position: 'relative' }}>
+        <div style={{ width: 104, height: 104, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#EFEFEF', position: 'relative' }}>
           {event.cover_image_url
             ? <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <div style={{ width: '100%', height: '100%', background: '#E8E8E8' }} />
@@ -49,7 +50,7 @@ export default function EventFeedCard({ event }: { event: any }) {
         {/* 텍스트 */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {event.category && (
-            <span style={{ fontSize: 11, color: '#999', fontFamily: 'PretendardVariable, Pretendard, sans-serif', display: 'block', marginBottom: 3 }}>
+            <span style={{ fontSize: 10, color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif', display: 'inline-block', marginBottom: 4, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {event.category}
             </span>
           )}
@@ -87,7 +88,7 @@ export default function EventFeedCard({ event }: { event: any }) {
                 Sold out
               </span>
             ) : (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: '#1A1A1A', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '5px 12px', borderRadius: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '-0.01em' }}>
                 Join
               </span>
             )}

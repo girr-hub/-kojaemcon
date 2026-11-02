@@ -43,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}} />
         <noscript><img height="1" width="1" style={{display:'none'}} src="https://www.facebook.com/tr?id=1065020046258827&ev=PageView&noscript=1" /></noscript>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Righteous&display=swap" rel="stylesheet" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
