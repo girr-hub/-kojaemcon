@@ -38,22 +38,24 @@ def fetch_g2b():
 def fetch_kstartup():
     results = []
     try:
-        url = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=list&page=1&schStr="
-        headers = {"User-Agent": "Mozilla/5.0"}
-        res = requests.get(url, headers=headers, timeout=10)
-        soup = BeautifulSoup(res.text, "html.parser")
-        items = soup.select(".bizpbanc-list li") or soup.select(".list-group li")
-        for item in items[:20]:
-            title_tag = item.select_one("strong") or item.select_one(".tit")
-            if not title_tag:
-                continue
-            title = title_tag.get_text(strip=True)
+        import json
+        url = "https://www.k-startup.go.kr/common/selectBizPbanc.do"
+        headers = {
+            "User-Agent": "Mozilla/5.0",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Referer": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
+        }
+        data = "schM=list&page=1&pageUnit=20&pbancSttus=ing"
+        res = requests.post(url, headers=headers, data=data, timeout=15)
+        items = res.json().get("bizPbancList", [])
+        for item in items:
+            title = item.get("pbancNm", "")
             if is_relevant(title):
-                link_tag = item.select_one("a")
-                href = "https://www.k-startup.go.kr" + link_tag["href"] if link_tag else "https://www.k-startup.go.kr"
-                deadline_tag = item.select_one(".date") or item.select_one(".period")
-                deadline = deadline_tag.get_text(strip=True) if deadline_tag else "-"
+                pbanc_id = item.get("pbancSn", "")
+                href = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancSn={pbanc_id}"
+                deadline = item.get("pbancEndDt", "-")
                 results.append({"title": title, "link": href, "deadline": deadline, "source": "K-Startup"})
+        print(f"K-Startup: {len(items)}개 공고 중 {len(results)}개 매칭")
     except Exception as e:
         print(f"K-Startup error: {e}")
     return results
