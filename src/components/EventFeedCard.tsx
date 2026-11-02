@@ -58,27 +58,25 @@ export default function EventFeedCard({ event }: { event: any }) {
             position: 'absolute', top: 6, left: 6,
             display: 'flex', flexDirection: 'column', gap: 3,
           }}>
-            {event.language && (
+            <span style={{
+              fontSize: 9, fontWeight: 800,
+              background: 'rgba(0,0,0,0.62)', color: '#fff',
+              padding: '2px 6px', borderRadius: 4,
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+              letterSpacing: '0.03em', backdropFilter: 'blur(4px)',
+            }}>
+              🌐 {event.language || 'English'}
+            </span>
+            {!isClosed && (event.capacity ?? 0) > 0 && (
               <span style={{
                 fontSize: 9, fontWeight: 800,
-                background: 'rgba(0,0,0,0.62)', color: '#fff',
-                padding: '2px 6px', borderRadius: 4,
-                fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-                letterSpacing: '0.03em', backdropFilter: 'blur(4px)',
-              }}>
-                🌐 {event.language}
-              </span>
-            )}
-            {!isClosed && event.capacity > 0 && event.remaining > 0 && (
-              <span style={{
-                fontSize: 9, fontWeight: 800,
-                background: event.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)',
+                background: (event.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)',
                 color: '#fff',
                 padding: '2px 6px', borderRadius: 4,
                 fontFamily: 'PretendardVariable, Pretendard, sans-serif',
                 letterSpacing: '0.03em', backdropFilter: 'blur(4px)',
               }}>
-                {event.remaining <= 5 ? `⚡ ${event.remaining} left` : `${event.remaining} seats`}
+                {(event.remaining ?? 0) <= 0 ? '🔴 Sold out' : (event.remaining ?? 0) <= 5 ? `⚡ ${event.remaining} left` : `${event.remaining} seats`}
               </span>
             )}
           </div>
@@ -158,7 +156,7 @@ export default function EventFeedCard({ event }: { event: any }) {
                 background: 'var(--gold)', padding: '5px 14px', borderRadius: 20,
                 fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '-0.01em',
               }}>
-                Join
+                Register
               </span>
             )}
           </div>

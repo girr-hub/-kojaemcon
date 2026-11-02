@@ -5,7 +5,7 @@ import EventFeedCard from '@/components/EventFeedCard'
 import SponsorBanner from '@/components/SponsorBanner'
 
 const CATEGORIES = [
-  { label: '전체', value: 'all' },
+  { label: 'All', value: 'all' },
   { label: 'Party', value: 'party' },
   { label: 'Tour', value: 'tour' },
   { label: 'Meetup', value: 'meetup' },
@@ -127,9 +127,9 @@ export default function HomePage() {
       <div style={{ marginTop: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px 10px' }}>
           <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.04em' }}>
-            이번 주 추천
+            This Week
           </span>
-          <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>더보기</Link>
+          <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>See all</Link>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, padding: '0 14px' }}>
           {loading ? (
@@ -152,14 +152,12 @@ export default function HomePage() {
                     }
                     {/* 좌상단: 제공언어 + 잔여석 */}
                     <div style={{ position: 'absolute', top: 6, left: 6, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                      {e.language && (
-                        <span style={{ fontSize: 9, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
-                          🌐 {e.language}
-                        </span>
-                      )}
-                      {e.status !== 'closed' && e.capacity > 0 && e.remaining > 0 && (
-                        <span style={{ fontSize: 9, fontWeight: 800, background: e.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
-                          {e.remaining <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                      <span style={{ fontSize: 9, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
+                        🌐 {e.language || 'English'}
+                      </span>
+                      {e.status !== 'closed' && (e.capacity ?? 0) > 0 && (
+                        <span style={{ fontSize: 9, fontWeight: 800, background: (e.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
+                          {(e.remaining ?? 0) <= 0 ? '🔴 Sold out' : (e.remaining ?? 0) <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
                         </span>
                       )}
                     </div>
@@ -177,7 +175,7 @@ export default function HomePage() {
                       <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.04em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                         {e.is_free ? 'Free' : `₩${Number(minPrice).toLocaleString()}~`}
                       </span>
-                      <span style={{ fontSize: 10, fontWeight: 800, background: 'var(--gold)', color: '#111', padding: '4px 10px', borderRadius: 7 }}>참가</span>
+                      <span style={{ fontSize: 10, fontWeight: 800, background: 'var(--gold)', color: '#111', padding: '4px 10px', borderRadius: 7 }}>Join</span>
                     </div>
                   </div>
                 </Link>
@@ -192,9 +190,9 @@ export default function HomePage() {
         <div style={{ marginTop: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px 10px' }}>
             <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.04em' }}>
-              곧 마감
+              Closing Soon
             </span>
-            <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>더보기</Link>
+            <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>See all</Link>
           </div>
           <div style={{ overflowX: 'auto', scrollbarWidth: 'none', paddingLeft: 14 }}>
             <div style={{ display: 'flex', gap: 10, width: 'max-content', paddingRight: 14, paddingBottom: 4 }}>
@@ -211,14 +209,12 @@ export default function HomePage() {
                       {e.cover_image_url && <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                       {/* 좌상단: 제공언어 + 잔여석 */}
                       <div style={{ position: 'absolute', top: 5, left: 5, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        {e.language && (
-                          <span style={{ fontSize: 8, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                            🌐 {e.language}
-                          </span>
-                        )}
-                        {e.status !== 'closed' && e.capacity > 0 && e.remaining > 0 && (
-                          <span style={{ fontSize: 8, fontWeight: 800, background: e.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                            {e.remaining <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                        <span style={{ fontSize: 8, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                          🌐 {e.language || 'English'}
+                        </span>
+                        {e.status !== 'closed' && (e.capacity ?? 0) > 0 && (
+                          <span style={{ fontSize: 8, fontWeight: 800, background: (e.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                            {(e.remaining ?? 0) <= 0 ? '🔴 Sold out' : (e.remaining ?? 0) <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
                           </span>
                         )}
                       </div>
@@ -251,9 +247,9 @@ export default function HomePage() {
       <div style={{ marginTop: 16 }}>
         <div style={{ padding: '0 14px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.04em' }}>
-            전체 이벤트
+            All Events
           </span>
-          <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>필터</Link>
+          <Link href="/events" style={{ fontSize: 12, color: 'var(--text-4)', textDecoration: 'none', fontWeight: 600 }}>Filter</Link>
         </div>
         <div style={{ background: '#fff', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
           {loading ? (
@@ -272,11 +268,11 @@ export default function HomePage() {
       <div style={{ padding: '16px 14px 24px' }}>
         <div style={{ border: '1.5px solid var(--border-dk)', borderRadius: 14, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fff' }}>
           <div>
-            <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 14, color: 'var(--text)', marginBottom: 2, letterSpacing: '-0.03em' }}>이벤트 개설하기</p>
-            <p style={{ fontSize: 12, color: 'var(--text-4)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>외국인 커뮤니티에 알려보세요</p>
+            <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 14, color: 'var(--text)', marginBottom: 2, letterSpacing: '-0.03em' }}>Host an Event</p>
+            <p style={{ fontSize: 12, color: 'var(--text-4)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Share it with the Korea community</p>
           </div>
           <Link href="/host/new" style={{ background: '#111', color: '#fff', fontSize: 13, fontWeight: 700, padding: '9px 16px', borderRadius: 10, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-            시작하기
+            Get started
           </Link>
         </div>
       </div>
