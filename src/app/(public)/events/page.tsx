@@ -21,23 +21,35 @@ export default function EventsPage() {
   const filtered = cat === 'All' ? events : events.filter(e => e.category?.toLowerCase() === cat.toLowerCase())
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F7F7F7' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
 
       {/* 헤더 */}
-      <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
-        <div style={{ padding: '16px 16px 12px' }}>
-          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 12 }}>Events</h1>
-          <SearchBar placeholder="Search events..." />
+      <div style={{
+        background: 'rgba(248,248,248,0.94)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid var(--border)',
+        position: 'sticky', top: 0, zIndex: 100,
+      }}>
+        <div style={{ padding: '14px 16px 0' }}>
+          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 20, color: 'var(--text)', letterSpacing: '-0.05em', marginBottom: 10 }}>
+            Events
+          </h1>
+          <SearchBar placeholder="이벤트 검색..." />
         </div>
 
         {/* 카테고리 탭 */}
-        <div style={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' as any, borderTop: '1px solid #F0F0F0' }}>
+        <div style={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 0, borderTop: '1px solid var(--border)', marginTop: 10 }}>
           {CATEGORIES.map(c => (
-            <button key={c} onClick={() => setCat(c)}
-              style={{ padding: '12px 16px', fontSize: 13, fontWeight: cat === c ? 800 : 500, cursor: 'pointer', flexShrink: 0,
-                background: 'none', color: cat === c ? '#1A1A1A' : '#9A9A9A', border: 'none',
-                borderBottom: cat === c ? '2px solid #E9C000' : '2px solid transparent',
-                fontFamily: 'PretendardVariable, Pretendard, sans-serif', transition: 'all 0.15s' }}>
+            <button key={c} onClick={() => setCat(c)} style={{
+              padding: '11px 16px', fontSize: 12,
+              fontWeight: cat === c ? 800 : 500, cursor: 'pointer', flexShrink: 0,
+              background: 'none', color: cat === c ? 'var(--text)' : 'var(--text-4)',
+              border: 'none',
+              borderBottom: `2px solid ${cat === c ? 'var(--gold)' : 'transparent'}`,
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+              transition: 'all 0.12s', letterSpacing: '-0.01em',
+            }}>
               {c}
             </button>
           ))}
@@ -45,7 +57,7 @@ export default function EventsPage() {
       </div>
 
       {/* 이벤트 리스트 */}
-      <div style={{ background: '#FFFFFF', marginTop: 8 }}>
+      <div style={{ background: '#FFFFFF', marginTop: 8, borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         {loading ? <EventListSkeleton /> : filtered.length === 0 ? <NoEvents /> : (
           <div>{filtered.map(e => <EventFeedCard key={e.id} event={e} />)}</div>
         )}

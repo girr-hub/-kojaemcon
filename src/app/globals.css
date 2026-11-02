@@ -7,26 +7,29 @@
 
 /* ── CSS Variables ── */
 :root {
-  --bg: #FFFFFF;
-  --surface: #F7F7F7;
+  --bg: #F8F8F8;
+  --surface: #FFFFFF;
   --white: #FFFFFF;
-  --gold: #E9C000;
-  --gold-light: #FFFBEA;
-  --gold-grad: #E9C000;
-  --text: #1A1A1A;
-  --text-2: #3D3D3D;
-  --text-3: #6B6B6B;
-  --text-4: #9A9A9A;
-  --border: #F0F0F0;
+  --gold: #F5C400;
+  --gold-dark: #D4A900;
+  --gold-light: #FFF8D6;
+  --gold-grad: #F5C400;
+  --text: #111111;
+  --text-2: #333333;
+  --text-3: #666666;
+  --text-4: #999999;
+  --text-5: #BBBBBB;
+  --border: #EFEFEF;
   --border-dk: #E0E0E0;
   --red: #FF4141;
   --green: #00C471;
   --radius-sm: 10px;
   --radius: 14px;
   --radius-lg: 20px;
-  /* legacy */
-  --y: #E9C000; --bk: #1A1A1A; --wh: #FFFFFF;
-  --ink: #1A1A1A; --primary: #E9C000;
+  /* legacy compat */
+  --y: #F5C400; --bk: #111111; --wh: #FFFFFF;
+  --ink: #111111; --primary: #F5C400;
+  --E9C000: #F5C400;
 }
 
 /* ── Reset ── */
@@ -35,7 +38,7 @@ html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: 'PretendardVariable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #FFFFFF;
+  background: var(--bg);
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -60,17 +63,16 @@ img { max-width: 100%; display: block; }
 /* ── Buttons ── */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  background: #E9C000;
-  color: #1A1A1A;
+  background: var(--gold);
+  color: #111111;
   font-family: 'PretendardVariable', Pretendard, sans-serif;
   font-size: 15px; font-weight: 800;
   padding: 14px 24px; border-radius: var(--radius);
   border: none;
-  
   transition: all 0.15s ease;
   letter-spacing: -0.02em;
 }
-.btn-primary:hover { filter: brightness(1.05);  }
+.btn-primary:hover { filter: brightness(1.05); }
 .btn-primary:active { transform: scale(0.96); opacity: 0.9; }
 
 .btn-dark {

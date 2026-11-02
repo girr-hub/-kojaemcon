@@ -2,47 +2,76 @@ import Link from 'next/link'
 
 export default function EventFeedCard({ event }: { event: any }) {
   const isClosed = event.status === 'closed'
+
   const date = event.starts_at ? new Date(event.starts_at) : null
   const dateStr = date ? date.toLocaleString('en-US', {
-    month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC'
+    month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC',
   }) : ''
   const timeStr = date ? date.toLocaleString('en-US', {
-    hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC'
+    hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC',
   }) : ''
 
   const prices = [
-    event.solo_option1_price,
-    event.returning_option1_price,
-    event.friends_option1_price,
-    event.price_solo,
-    event.price_returning,
-    event.price_with_friends,
-    event.price_krw,
+    event.solo_option1_price, event.returning_option1_price, event.friends_option1_price,
+    event.price_solo, event.price_returning, event.price_with_friends, event.price_krw,
   ].filter((p: any) => p && p > 0)
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0
   const soldOut = event.capacity > 0 && event.remaining <= 0
 
+  // D-day 계산
+  let dday: string | null = null
+  if (date && !isClosed) {
+    const diff = Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    if (diff >= 0 && diff <= 7) dday = diff === 0 ? 'D-Day' : `D-${diff}`
+  }
+
   return (
-    <Link href={event.isExperience ? `/experience/${event.experience_id}` : `/events/${event.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link
+      href={event.isExperience ? `/experience/${event.experience_id}` : `/events/${event.slug}`}
+      style={{ textDecoration: 'none', display: 'block' }}
+    >
       <article style={{
         background: '#FFFFFF',
         padding: '14px 16px',
         display: 'flex',
         gap: 12,
         alignItems: 'flex-start',
-        borderBottom: '1px solid #F2F2F2',
-        opacity: isClosed ? 0.55 : 1,
-        transition: 'background 0.15s',
-      }} onMouseEnter={e => (e.currentTarget.style.background='#FAFAFA')} onMouseLeave={e => (e.currentTarget.style.background='#FFFFFF')}>
-        {/* 이미지 */}
-        <div style={{ width: 104, height: 104, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#EFEFEF', position: 'relative' }}>
+        borderBottom: '1px solid var(--border)',
+        opacity: isClosed ? 0.5 : 1,
+        transition: 'background 0.12s',
+      }}
+        onMouseEnter={e => (e.currentTarget.style.background = '#FAFAFA')}
+        onMouseLeave={e => (e.currentTarget.style.background = '#FFFFFF')}
+      >
+        {/* 썸네일 */}
+        <div style={{
+          width: 100, height: 100, flexShrink: 0,
+          borderRadius: 12, overflow: 'hidden',
+          background: '#EFEFEF', position: 'relative',
+        }}>
           {event.cover_image_url
             ? <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <div style={{ width: '100%', height: '100%', background: '#E8E8E8' }} />
+            : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(145deg, #2A2830, #3D3A4A)' }} />
           }
+          {dday && (
+            <div style={{
+              position: 'absolute', top: 6, left: 6,
+              background: 'var(--gold)', color: '#111',
+              fontSize: 9, fontWeight: 800,
+              padding: '2px 7px', borderRadius: 5,
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+              letterSpacing: '0.04em',
+            }}>
+              {dday}
+            </div>
+          )}
           {isClosed && (
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.08em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>CLOSED</span>
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'rgba(0,0,0,0.45)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.08em' }}>CLOSED</span>
             </div>
           )}
         </div>
@@ -50,45 +79,54 @@ export default function EventFeedCard({ event }: { event: any }) {
         {/* 텍스트 */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {event.category && (
-            <span style={{ fontSize: 10, color: '#E9C000', fontFamily: 'PretendardVariable, Pretendard, sans-serif', display: 'inline-block', marginBottom: 4, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span style={{
+              fontSize: 10, color: 'var(--gold-dark, #D4A900)',
+              fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+              display: 'inline-block', marginBottom: 3,
+              fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+            }}>
               {event.category}
             </span>
           )}
           <h3 style={{
             fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-            fontWeight: 700, fontSize: 15,
-            letterSpacing: '-0.02em', lineHeight: 1.35,
-            color: '#1A1A1A', marginBottom: 6,
+            fontWeight: 700, fontSize: 14,
+            letterSpacing: '-0.03em', lineHeight: 1.35,
+            color: 'var(--text)', marginBottom: 5,
             overflow: 'hidden', display: '-webkit-box',
-            WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any
+            WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any,
           }}>
             {event.title}
           </h3>
 
-          <p style={{ fontSize: 12, color: '#999', marginBottom: 2, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          <p style={{ fontSize: 11, color: 'var(--text-4)', marginBottom: 1, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '-0.01em' }}>
             {dateStr}{timeStr ? ` · ${timeStr}` : ''}
           </p>
           {event.venue_name && (
-            <p style={{ fontSize: 12, color: '#999', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+            <p style={{ fontSize: 11, color: 'var(--text-4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'PretendardVariable, Pretendard, sans-serif', marginBottom: 8 }}>
               {event.venue_name}
             </p>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-            <span style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A', letterSpacing: '-0.03em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-              {event.is_free ? 'Free' : `From ₩${Number(minPrice).toLocaleString()}`}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.04em', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              {event.is_free ? 'Free' : `₩${Number(minPrice).toLocaleString()}~`}
             </span>
 
             {isClosed ? (
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#999', background: '#F0F0F0', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-4)', background: '#F2F2F2', padding: '5px 10px', borderRadius: 7 }}>
                 Closed
               </span>
             ) : soldOut ? (
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#999', background: '#F0F0F0', padding: '5px 10px', borderRadius: 6, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-4)', background: '#F2F2F2', padding: '5px 10px', borderRadius: 7 }}>
                 Sold out
               </span>
             ) : (
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', background: '#E9C000', padding: '5px 12px', borderRadius: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '-0.01em' }}>
+              <span style={{
+                fontSize: 11, fontWeight: 800, color: '#111111',
+                background: 'var(--gold)', padding: '5px 14px', borderRadius: 20,
+                fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '-0.01em',
+              }}>
                 Join
               </span>
             )}
