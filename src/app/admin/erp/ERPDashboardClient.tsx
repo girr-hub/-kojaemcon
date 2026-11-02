@@ -4,19 +4,19 @@ import { useState, useEffect } from 'react'
 function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) {
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', marginBottom: 6, letterSpacing: '0.05em' }}>{label}</p>
-      <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.03em', color: color || '#1A1A1A' }}>{value}</p>
-      {sub && <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 4 }}>{sub}</p>}
+      <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-5)', marginBottom: 6, letterSpacing: '0.05em' }}>{label}</p>
+      <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.03em', color: color || 'var(--text)' }}>{value}</p>
+      {sub && <p style={{ fontSize: 11, color: 'var(--text-5)', marginTop: 4 }}>{sub}</p>}
     </div>
   )
 }
 
-function BarChart({ title, data, color = '#E9C000', xLabel = '', yLabel = '', unit = '' }: { title: string; data: Record<string, number>; color?: string; xLabel?: string; yLabel?: string; unit?: string }) {
+function BarChart({ title, data, color = 'var(--gold)', xLabel = '', yLabel = '', unit = '' }: { title: string; data: Record<string, number>; color?: string; xLabel?: string; yLabel?: string; unit?: string }) {
   const entries = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 10)
   const max = Math.max(...entries.map(([, v]) => v), 1)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>{title}</p>
+      <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{title}</p>
       {(xLabel || yLabel) && <p style={{ fontSize: 10, color: '#BBB', marginBottom: 10 }}>x: {xLabel} · y: {yLabel}</p>}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {entries.map(([key, val]) => (
@@ -30,13 +30,13 @@ function BarChart({ title, data, color = '#E9C000', xLabel = '', yLabel = '', un
             </div>
           </div>
         ))}
-        {entries.length === 0 && <p style={{ fontSize: 12, color: '#9A9A9A' }}>No data yet</p>}
+        {entries.length === 0 && <p style={{ fontSize: 12, color: 'var(--text-5)' }}>No data yet</p>}
       </div>
     </div>
   )
 }
 
-function LineChart({ title, data, period, yLabel = '건', color = '#E9C000' }: { title: string; data: { date: string; count: number }[]; period: number; yLabel?: string; color?: string }) {
+function LineChart({ title, data, period, yLabel = '건', color = 'var(--gold)' }: { title: string; data: { date: string; count: number }[]; period: number; yLabel?: string; color?: string }) {
   const sliced = data.slice(-period)
   if (sliced.length === 0) return null
   const max = Math.max(...sliced.map(d => d.count), 1)
@@ -51,7 +51,7 @@ function LineChart({ title, data, period, yLabel = '건', color = '#E9C000' }: {
   }).join(' ')
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 2 }}>{title}</p>
+      <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 2 }}>{title}</p>
       <p style={{ fontSize: 10, color: '#BBB', marginBottom: 8 }}>x: 날짜 · y: {yLabel}</p>
       <svg viewBox={`0 0 ${total_w} ${total_h}`} style={{ width: '100%', height: 110, overflow: 'visible' }}>
         <text x={PAD_L - 4} y={8} textAnchor="end" fontSize={8} fill="#999">{max.toLocaleString()}</text>
@@ -74,13 +74,13 @@ function HeatmapChart({ title, data, xLabel = '', yLabel = '' }: { title: string
   const hours = Array.from({ length: 24 }, (_, i) => i)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>{title}</p>
+      <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{title}</p>
       {(xLabel || yLabel) && <p style={{ fontSize: 10, color: '#BBB', marginBottom: 10 }}>x: {xLabel} · y: {yLabel}</p>}
       <div style={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
         {hours.map(h => {
           const count = data[h] || 0
           const intensity = count / max
-          const bg = intensity > 0.8 ? '#B45309' : intensity > 0.6 ? '#D97706' : intensity > 0.4 ? '#E9C000' : intensity > 0.2 ? '#FDE68A' : intensity > 0 ? '#FEF9C3' : '#F5F5F5'
+          const bg = intensity > 0.8 ? '#B45309' : intensity > 0.6 ? '#D97706' : intensity > 0.4 ? 'var(--gold)' : intensity > 0.2 ? '#FDE68A' : intensity > 0 ? '#FEF9C3' : '#F5F5F5'
           const barH = Math.max(4, Math.round(intensity * 60))
           return (
             <div key={h} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
@@ -92,23 +92,23 @@ function HeatmapChart({ title, data, xLabel = '', yLabel = '' }: { title: string
         })}
       </div>
       <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
-        <span style={{ fontSize: 9, color: '#9A9A9A' }}>적음</span>
-        {['#FEF9C3', '#FDE68A', '#E9C000', '#D97706', '#B45309'].map(c => (
+        <span style={{ fontSize: 9, color: 'var(--text-5)' }}>적음</span>
+        {['#FEF9C3', '#FDE68A', 'var(--gold)', '#D97706', '#B45309'].map(c => (
           <div key={c} style={{ width: 12, height: 8, background: c, borderRadius: 2 }} />
         ))}
-        <span style={{ fontSize: 9, color: '#9A9A9A' }}>많음</span>
+        <span style={{ fontSize: 9, color: 'var(--text-5)' }}>많음</span>
       </div>
     </div>
   )
 }
 
-function WeekdayChart({ title, data, xLabel = '요일', yLabel = '건', color = '#E9C000' }: { title: string; data: Record<string, number>; xLabel?: string; yLabel?: string; color?: string }) {
+function WeekdayChart({ title, data, xLabel = '요일', yLabel = '건', color = 'var(--gold)' }: { title: string; data: Record<string, number>; xLabel?: string; yLabel?: string; color?: string }) {
   const days = ['일', '월', '화', '수', '목', '금', '토']
   const vals = days.map(d => data[d] || 0)
   const max = Math.max(...vals, 1)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>{title}</p>
+      <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{title}</p>
       <p style={{ fontSize: 10, color: '#BBB', marginBottom: 10 }}>x: {xLabel} · y: {yLabel}</p>
       <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 80 }}>
         {days.map((d, i) => {
@@ -118,7 +118,7 @@ function WeekdayChart({ title, data, xLabel = '요일', yLabel = '건', color = 
             <div key={d} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
               <span style={{ fontSize: 9, color: '#666', fontWeight: 700 }}>{v}</span>
               <div style={{ width: '100%', height: h, background: color, borderRadius: 3, opacity: v === 0 ? 0.2 : 1 }} />
-              <span style={{ fontSize: 10, color: '#9A9A9A' }}>{d}</span>
+              <span style={{ fontSize: 10, color: 'var(--text-5)' }}>{d}</span>
             </div>
           )
         })}
@@ -132,7 +132,7 @@ function MonthlyBarChart({ title, data, yLabel = '원', color = '#15803D' }: { t
   const max = Math.max(...entries.map(([, v]) => v), 1)
   return (
     <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-      <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>{title}</p>
+      <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{title}</p>
       <p style={{ fontSize: 10, color: '#BBB', marginBottom: 10 }}>x: 연-월 · y: {yLabel}</p>
       <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 90 }}>
         {entries.map(([key, val]) => {
@@ -141,7 +141,7 @@ function MonthlyBarChart({ title, data, yLabel = '원', color = '#15803D' }: { t
             <div key={key} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
               <span style={{ fontSize: 8, color: '#666' }}>{val > 0 ? `${Math.round(val/1000)}K` : '0'}</span>
               <div style={{ width: '100%', height: h, background: color, borderRadius: 3, opacity: val === 0 ? 0.2 : 1 }} />
-              <span style={{ fontSize: 8, color: '#9A9A9A', textAlign: 'center' }}>{key.slice(5)}</span>
+              <span style={{ fontSize: 8, color: 'var(--text-5)', textAlign: 'center' }}>{key.slice(5)}</span>
             </div>
           )
         })}
@@ -197,14 +197,14 @@ export default function ERPDashboardClient({
   return (
     <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <h1 style={{ fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.04em' }}>ERP Dashboard</h1>
-        <span style={{ fontSize: 12, color: '#9A9A9A' }}>Auto-refresh: 60s</span>
+        <h1 style={{ fontWeight: 900, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.04em' }}>ERP Dashboard</h1>
+        <span style={{ fontSize: 12, color: 'var(--text-5)' }}>Auto-refresh: 60s</span>
       </div>
       <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap' }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             style={{ padding: '7px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: tab === t.id ? 700 : 500,
-              background: tab === t.id ? '#1A1A1A' : '#F0F0F0', color: tab === t.id ? '#E9C000' : '#555',
+              background: tab === t.id ? 'var(--text)' : '#F0F0F0', color: tab === t.id ? 'var(--gold)' : '#555',
               fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
             {t.label}
           </button>
@@ -214,7 +214,7 @@ export default function ERPDashboardClient({
         {[90, 30, 15, 7, 3].map(d => (
           <button key={d} onClick={() => setPeriod(d)} style={{
             padding: '5px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: period === d ? '#1A1A1A' : '#F5F5F5', color: period === d ? '#E9C000' : '#666',
+            background: period === d ? 'var(--text)' : '#F5F5F5', color: period === d ? 'var(--gold)' : '#666',
             border: period === d ? 'none' : '1px solid #E8E8E8'
           }}>{d}일</button>
         ))}
@@ -226,13 +226,13 @@ export default function ERPDashboardClient({
             <StatCard label="Today Visitors" value={todayVisits} sub={`평균 ${dailyAvg}명/일`} />
             <StatCard label="Total Users" value={totalUsers} sub={`+${newUsers7}명 이번주`} />
             <StatCard label="Total Revenue" value={`₩${Number(totalRevenue).toLocaleString()}`} sub={`₩${Number(monthRevenue).toLocaleString()} this month`} color="#15803D" />
-            <StatCard label="Open CS" value={openCs} sub={`총 ${totalCs}건`} color={openCs > 0 ? '#DC2626' : '#1A1A1A'} />
+            <StatCard label="Open CS" value={openCs} sub={`총 ${totalCs}건`} color={openCs > 0 ? '#DC2626' : 'var(--text)'} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             <StatCard label="Paid Orders" value={paidOrders.length} sub={`평균 ₩${Number(avgOrderValue).toLocaleString()}`} />
             <StatCard label="Free Orders" value={freeOrders.length} />
-            <StatCard label="Pending" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : '#1A1A1A'} />
-            <StatCard label="Cancel Rate" value={`${cancelRate}%`} sub={`${cancelledOrders.length}건 취소`} color={cancelRate > 10 ? '#DC2626' : '#1A1A1A'} />
+            <StatCard label="Pending" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : 'var(--text)'} />
+            <StatCard label="Cancel Rate" value={`${cancelRate}%`} sub={`${cancelledOrders.length}건 취소`} color={cancelRate > 10 ? '#DC2626' : 'var(--text)'} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <LineChart title="방문자 추이" data={dailyVisits} period={period} yLabel="방문 수 (명)" />
@@ -258,13 +258,13 @@ export default function ERPDashboardClient({
 
           {/* 전환 퍼널 */}
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>전환 퍼널 (최근 30일)</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>전환 퍼널 (최근 30일)</p>
             <p style={{ fontSize: 10, color: '#BBB', marginBottom: 16 }}>방문 → 가입 → 결제 전환율</p>
             {(() => {
               const f = funnelData ?? { visitors: 0, signups: 0, paid: 0, visitToSignup: 0, signupToPaid: 0 }
               const steps = [
                 { label: '방문자 (UV)', value: f.visitors, color: '#6366f1', rate: null },
-                { label: '신규 가입', value: f.signups, color: '#E9C000', rate: f.visitToSignup },
+                { label: '신규 가입', value: f.signups, color: 'var(--gold)', rate: f.visitToSignup },
                 { label: '결제 완료', value: f.paid, color: '#15803D', rate: f.signupToPaid },
               ]
               const maxVal = Math.max(f.visitors, 1)
@@ -276,7 +276,7 @@ export default function ERPDashboardClient({
                         <span style={{ fontWeight: 700, color: s.color }}>{s.label}</span>
                         <span style={{ color: '#555' }}>
                           <b>{s.value.toLocaleString()}명</b>
-                          {s.rate !== null && <span style={{ marginLeft: 8, color: '#9A9A9A' }}>전환율 {s.rate}%</span>}
+                          {s.rate !== null && <span style={{ marginLeft: 8, color: 'var(--text-5)' }}>전환율 {s.rate}%</span>}
                         </span>
                       </div>
                       <div style={{ height: 10, background: '#F0F0F0', borderRadius: 4, overflow: 'hidden' }}>
@@ -284,8 +284,8 @@ export default function ERPDashboardClient({
                       </div>
                     </div>
                   ))}
-                  <div style={{ display: 'flex', gap: 16, marginTop: 4, padding: '10px 12px', background: '#F7F7F7', borderRadius: 8 }}>
-                    <span style={{ fontSize: 12, color: '#555' }}>방문→가입: <b style={{ color: '#E9C000' }}>{f.visitToSignup}%</b></span>
+                  <div style={{ display: 'flex', gap: 16, marginTop: 4, padding: '10px 12px', background: 'var(--bg)', borderRadius: 8 }}>
+                    <span style={{ fontSize: 12, color: '#555' }}>방문→가입: <b style={{ color: 'var(--gold)' }}>{f.visitToSignup}%</b></span>
                     <span style={{ fontSize: 12, color: '#555' }}>가입→결제: <b style={{ color: '#15803D' }}>{f.signupToPaid}%</b></span>
                     <span style={{ fontSize: 12, color: '#555' }}>전체 전환: <b style={{ color: '#6366f1' }}>{f.visitors > 0 ? Math.round((f.paid / f.visitors) * 1000) / 10 : 0}%</b></span>
                   </div>
@@ -296,7 +296,7 @@ export default function ERPDashboardClient({
 
           {/* 로그인/비로그인 비율 */}
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>로그인 vs 비로그인 방문 (최근 30일)</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>로그인 vs 비로그인 방문 (최근 30일)</p>
             <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>비로그인 = 링크 타고 들어온 미가입/미로그인 방문자</p>
             {(() => {
               const lr = loginRatioMap ?? { loggedIn: 0, anonymous: 0 }
@@ -307,7 +307,7 @@ export default function ERPDashboardClient({
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
-                      <span style={{ fontWeight: 600, color: '#9A9A9A' }}>비로그인 방문 (잠재 유저)</span>
+                      <span style={{ fontWeight: 600, color: 'var(--text-5)' }}>비로그인 방문 (잠재 유저)</span>
                       <span>{lr.anonymous.toLocaleString()}회 · <b>{anonRate}%</b></span>
                     </div>
                     <div style={{ height: 8, background: '#F0F0F0', borderRadius: 4, overflow: 'hidden' }}>
@@ -323,7 +323,7 @@ export default function ERPDashboardClient({
                       <div style={{ height: '100%', width: `${loginRate}%`, background: '#6366f1', borderRadius: 4 }} />
                     </div>
                   </div>
-                  <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 2 }}>총 {total.toLocaleString()}회 방문 중 비로그인 {lr.anonymous.toLocaleString()}회 — 가입 유도 기회</p>
+                  <p style={{ fontSize: 11, color: 'var(--text-5)', marginTop: 2 }}>총 {total.toLocaleString()}회 방문 중 비로그인 {lr.anonymous.toLocaleString()}회 — 가입 유도 기회</p>
                 </div>
               )
             })()}
@@ -359,7 +359,7 @@ export default function ERPDashboardClient({
             <StatCard label="총 유저" value={totalUsers} sub="명" />
             <StatCard label="신규 (7일)" value={newUsers7} sub="명" />
             <StatCard label="신규 (30일)" value={newUsers30} sub="명" />
-            <StatCard label="재구매율" value={`${repurchaseRate}%`} sub="2회 이상 구매 유저" color={repurchaseRate > 20 ? '#15803D' : '#1A1A1A'} />
+            <StatCard label="재구매율" value={`${repurchaseRate}%`} sub="2회 이상 구매 유저" color={repurchaseRate > 20 ? '#15803D' : 'var(--text)'} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <StatCard label="가입→첫구매 평균" value={`${avgDaysToFirstPurchase}일`} sub="가입 후 첫 결제까지" />
@@ -375,7 +375,7 @@ export default function ERPDashboardClient({
             <BarChart title="관심사" data={interestMap} color="#f59e0b" xLabel="관심 카테고리" yLabel="선택 수 (건)" />
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>성별별 구매율</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>성별별 구매율</p>
             <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>x: 성별 · y: 구매 비율 (%)</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {Object.entries(genderPurchaseMap ?? {}).map(([g, v]: any) => {
@@ -403,13 +403,13 @@ export default function ERPDashboardClient({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             <StatCard label="총 매출" value={`₩${Number(totalRevenue).toLocaleString()}`} color="#15803D" />
             <StatCard label="평균 객단가" value={`₩${Number(avgOrderValue).toLocaleString()}`} sub="유료 주문 기준" />
-            <StatCard label="취소율" value={`${cancelRate}%`} sub={`${cancelledOrders.length}건 취소`} color={cancelRate > 10 ? '#DC2626' : '#1A1A1A'} />
+            <StatCard label="취소율" value={`${cancelRate}%`} sub={`${cancelledOrders.length}건 취소`} color={cancelRate > 10 ? '#DC2626' : 'var(--text)'} />
             <StatCard label="유료 vs 무료" value={`${paidOrders.length} : ${freeOrders.length}`} sub="유료 : 무료초청" />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <StatCard label="오늘 매출" value={`₩${Number(todayRevenue).toLocaleString()}`} />
             <StatCard label="30일 매출" value={`₩${Number(monthRevenue).toLocaleString()}`} />
-            <StatCard label="재구매율" value={`${repurchaseRate}%`} color={repurchaseRate > 20 ? '#15803D' : '#1A1A1A'} />
+            <StatCard label="재구매율" value={`${repurchaseRate}%`} color={repurchaseRate > 20 ? '#15803D' : 'var(--text)'} />
           </div>
           <MonthlyBarChart title="월별 매출 추이 (최근 6개월)" data={monthlyRevenueMap} yLabel="매출액 (원)" />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -417,7 +417,7 @@ export default function ERPDashboardClient({
             <HeatmapChart title="시간대별 결제 건수" data={hourlyOrderMap} xLabel="시간대 (0~23시)" yLabel="결제 건수 (건)" />
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>유료 vs 무료초청 비율</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>유료 vs 무료초청 비율</p>
             <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>x: 주문 유형 · y: 건수 (건) · 비율 (%)</p>
             {(() => {
               const total = paidOrders.length + freeOrders.length + cancelledOrders.length + pendingOrders.length || 1
@@ -446,12 +446,12 @@ export default function ERPDashboardClient({
           </div>
           <BarChart title="이벤트별 매출 (Top 10)" data={revenueByEvent} color="#15803D" xLabel="이벤트명" yLabel="매출액 (원)" unit="₩" />
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>최근 결제 내역</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 12 }}>최근 결제 내역</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#F7F7F7' }}>
+                <tr style={{ background: 'var(--bg)' }}>
                   {['이벤트', '유저', '금액', '상태', '날짜'].map(h => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-5)', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -459,7 +459,7 @@ export default function ERPDashboardClient({
                 {allOrders.slice(0, 30).map((o: any, i: number) => (
                   <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
                     <td style={{ padding: '8px 12px', fontWeight: 600, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{o.events?.title || '-'}</td>
-                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{o.profiles?.display_name || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{o.profiles?.display_name || '-'}</td>
                     <td style={{ padding: '8px 12px', color: '#15803D', fontWeight: 700 }}>₩{Number(o.amount_krw || 0).toLocaleString()}</td>
                     <td style={{ padding: '8px 12px' }}>
                       <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
@@ -467,7 +467,7 @@ export default function ERPDashboardClient({
                         color: o.status === 'paid' ? '#15803D' : o.status === 'cancelled' ? '#DC2626' : o.status === 'free_confirmed' ? '#1D4ED8' : '#D97706'
                       }}>{o.status}</span>
                     </td>
-                    <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(o.created_at).toLocaleDateString('ko-KR')}</td>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{new Date(o.created_at).toLocaleDateString('ko-KR')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -481,14 +481,14 @@ export default function ERPDashboardClient({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <StatCard label="총 이벤트" value={events.length} />
             <StatCard label="총 주문" value={allOrders?.length ?? 0} />
-            <StatCard label="대기 주문" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : '#1A1A1A'} />
+            <StatCard label="대기 주문" value={pendingOrders.length} color={pendingOrders.length > 0 ? '#D97706' : 'var(--text)'} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <BarChart title="언어별 매출" data={languageRevenueMap} color="#6366f1" xLabel="이벤트 언어" yLabel="매출액 (원)" unit="₩" />
             <BarChart title="카테고리별 매출" data={categoryRevenueMap} color="#10b981" xLabel="이벤트 카테고리" yLabel="매출액 (원)" unit="₩" />
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>이벤트별 정원 충족률</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>이벤트별 정원 충족률</p>
             <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>x: 이벤트명 · y: 충족률 (%) · 참가 확정 / 정원</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {eventFillRate.slice(0, 10).map((e: any) => (
@@ -498,20 +498,20 @@ export default function ERPDashboardClient({
                     <span style={{ color: '#555' }}>{e.filled}/{e.capacity}명 · <b style={{ color: e.rate >= 100 ? '#DC2626' : e.rate >= 80 ? '#D97706' : '#15803D' }}>{e.rate}%</b></span>
                   </div>
                   <div style={{ height: 6, background: '#F0F0F0', borderRadius: 3, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${Math.min(e.rate, 100)}%`, background: e.rate >= 100 ? '#DC2626' : e.rate >= 80 ? '#E9C000' : '#10b981', borderRadius: 3 }} />
+                    <div style={{ height: '100%', width: `${Math.min(e.rate, 100)}%`, background: e.rate >= 100 ? '#DC2626' : e.rate >= 80 ? 'var(--gold)' : '#10b981', borderRadius: 3 }} />
                   </div>
                 </div>
               ))}
-              {eventFillRate.length === 0 && <p style={{ fontSize: 12, color: '#9A9A9A' }}>정원 데이터 없음</p>}
+              {eventFillRate.length === 0 && <p style={{ fontSize: 12, color: 'var(--text-5)' }}>정원 데이터 없음</p>}
             </div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>이벤트 전체 목록</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 12 }}>이벤트 전체 목록</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#F7F7F7' }}>
+                <tr style={{ background: 'var(--bg)' }}>
                   {['Title', 'Date', 'Status', 'Paid', 'Free', 'Pending', '충족률', 'Revenue'].map(h => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-5)', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -528,13 +528,13 @@ export default function ERPDashboardClient({
                   return (
                     <tr key={e.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
                       <td style={{ padding: '8px 12px', fontWeight: 600, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{e.starts_at ? new Date(e.starts_at).toLocaleDateString('ko-KR') : '-'}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{e.starts_at ? new Date(e.starts_at).toLocaleDateString('ko-KR') : '-'}</td>
                       <td style={{ padding: '8px 12px' }}>
                         <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: e.status === 'published' ? '#DCFCE7' : '#F3F4F6', color: e.status === 'published' ? '#15803D' : '#6B7280' }}>{e.status}</span>
                       </td>
                       <td style={{ padding: '8px 12px', fontWeight: 700, color: '#15803D' }}>{ePaid.length}</td>
                       <td style={{ padding: '8px 12px', color: '#1D4ED8' }}>{eFree.length}</td>
-                      <td style={{ padding: '8px 12px', color: ePending.length > 0 ? '#D97706' : '#9A9A9A' }}>{ePending.length}</td>
+                      <td style={{ padding: '8px 12px', color: ePending.length > 0 ? '#D97706' : 'var(--text-5)' }}>{ePending.length}</td>
                       <td style={{ padding: '8px 12px', fontWeight: 700, color: typeof fillRate === 'number' && fillRate >= 100 ? '#DC2626' : '#555' }}>{typeof fillRate === 'number' ? `${fillRate}%` : '-'}</td>
                       <td style={{ padding: '8px 12px', fontWeight: 700, color: '#15803D' }}>₩{Number(eRevenue).toLocaleString()}</td>
                     </tr>
@@ -554,12 +554,12 @@ export default function ERPDashboardClient({
             <StatCard label="Published" value={experiences.filter((e: any) => e.status === 'published').length} />
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>체험단 이벤트</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 12 }}>체험단 이벤트</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#F7F7F7' }}>
+                <tr style={{ background: 'var(--bg)' }}>
                   {['Title', 'Status', 'Capacity', 'Applications', 'Created'].map(h => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-5)', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -572,9 +572,9 @@ export default function ERPDashboardClient({
                       <td style={{ padding: '8px 12px' }}>
                         <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: e.status === 'published' ? '#DCFCE7' : '#F3F4F6', color: e.status === 'published' ? '#15803D' : '#6B7280' }}>{e.status}</span>
                       </td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{e.capacity}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{e.capacity}</td>
                       <td style={{ padding: '8px 12px', fontWeight: 700, color: '#1D4ED8' }}>{apps.length}</td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{new Date(e.created_at).toLocaleDateString('ko-KR')}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{new Date(e.created_at).toLocaleDateString('ko-KR')}</td>
                     </tr>
                   )
                 })}
@@ -582,12 +582,12 @@ export default function ERPDashboardClient({
             </table>
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>최근 신청 내역</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 12 }}>최근 신청 내역</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#F7F7F7' }}>
+                <tr style={{ background: 'var(--bg)' }}>
                   {['Experience', 'Name', 'Phone', 'SNS', 'Date'].map(h => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-5)', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -596,9 +596,9 @@ export default function ERPDashboardClient({
                   <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
                     <td style={{ padding: '8px 12px', fontWeight: 600 }}>{(a.experience_events as any)?.title || '-'}</td>
                     <td style={{ padding: '8px 12px' }}>{a.real_name}</td>
-                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_phone || a.phone || '-'}</td>
-                    <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.sns_accounts || '-'}</td>
-                    <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.account_phone || a.phone || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.sns_accounts || '-'}</td>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -611,16 +611,16 @@ export default function ERPDashboardClient({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A' }}>만족도 조사 결과</p>
+              <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>만족도 조사 결과</p>
               <button onClick={async () => {
                 const res = await fetch('/api/send-surveys', { method: 'POST' }).then(r => r.json())
                 alert(`발송 완료: ${res.sent}명`)
               }}
-                style={{ padding: '7px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                style={{ padding: '7px 14px', borderRadius: 8, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
                 📧 만족도 조사 발송
               </button>
             </div>
-            <p style={{ fontSize: 13, color: '#9A9A9A' }}>종료된 이벤트 참가자에게 만족도 조사 이메일을 발송합니다.</p>
+            <p style={{ fontSize: 13, color: 'var(--text-5)' }}>종료된 이벤트 참가자에게 만족도 조사 이메일을 발송합니다.</p>
           </div>
         </div>
       )}
@@ -628,15 +628,15 @@ export default function ERPDashboardClient({
       {tab === 'cs' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-            <StatCard label="미처리 티켓" value={openCs} color={openCs > 0 ? '#DC2626' : '#1A1A1A'} sub="open 상태" />
+            <StatCard label="미처리 티켓" value={openCs} color={openCs > 0 ? '#DC2626' : 'var(--text)'} sub="open 상태" />
             <StatCard label="총 티켓" value={totalCs} />
             <StatCard label="해결된 티켓" value={totalCs - openCs} color="#15803D" />
-            <StatCard label="평균 응답시간" value={`${avgResponseHours}h`} sub="접수→답변 완료" color={avgResponseHours > 24 ? '#DC2626' : '#1A1A1A'} />
+            <StatCard label="평균 응답시간" value={`${avgResponseHours}h`} sub="접수→답변 완료" color={avgResponseHours > 24 ? '#DC2626' : 'var(--text)'} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <BarChart title="카테고리별 CS 건수" data={csCategoryMap} xLabel="CS 카테고리" yLabel="티켓 수 (건)" unit="건" />
             <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-              <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>CS 처리 현황</p>
+              <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>CS 처리 현황</p>
               <p style={{ fontSize: 10, color: '#BBB', marginBottom: 12 }}>x: 상태 · y: 티켓 수 (건)</p>
               {(() => {
                 const total = totalCs || 1
@@ -662,19 +662,19 @@ export default function ERPDashboardClient({
                         <div style={{ height: '100%', width: `${resolveRate}%`, background: '#15803D', borderRadius: 3 }} />
                       </div>
                     </div>
-                    <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 4 }}>평균 응답: <b style={{ color: avgResponseHours > 24 ? '#DC2626' : '#15803D' }}>{avgResponseHours}시간</b> · 총 {totalCs}건</p>
+                    <p style={{ fontSize: 12, color: 'var(--text-5)', marginTop: 4 }}>평균 응답: <b style={{ color: avgResponseHours > 24 ? '#DC2626' : '#15803D' }}>{avgResponseHours}시간</b> · 총 {totalCs}건</p>
                   </div>
                 )
               })()}
             </div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: 16 }}>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 12 }}>CS 티켓 목록</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 12 }}>CS 티켓 목록</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#F7F7F7' }}>
+                <tr style={{ background: 'var(--bg)' }}>
                   {['Subject', 'Name', 'Email', 'Category', 'Status', '응답시간', 'Date'].map(h => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A9A9A', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-5)', borderBottom: '1px solid #E8E8E8', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -687,13 +687,13 @@ export default function ERPDashboardClient({
                     <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
                       <td style={{ padding: '8px 12px', fontWeight: 600, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.subject}</td>
                       <td style={{ padding: '8px 12px' }}>{c.name}</td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{c.email}</td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{c.category}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{c.email}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{c.category}</td>
                       <td style={{ padding: '8px 12px' }}>
                         <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: c.status === 'open' ? '#FEE2E2' : '#DCFCE7', color: c.status === 'open' ? '#DC2626' : '#15803D' }}>{c.status}</span>
                       </td>
                       <td style={{ padding: '8px 12px', color: responseHours && responseHours > 24 ? '#DC2626' : '#15803D', fontWeight: responseHours ? 700 : 400 }}>{responseHours !== null ? `${responseHours}h` : '-'}</td>
-                      <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(c.created_at).toLocaleDateString('ko-KR')}</td>
+                      <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{new Date(c.created_at).toLocaleDateString('ko-KR')}</td>
                     </tr>
                   )
                 })}

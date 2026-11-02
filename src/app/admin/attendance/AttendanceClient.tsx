@@ -42,7 +42,7 @@ export default function AttendanceClient({ events }: { events: any[] }) {
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 24 }}>Attendance Check</h1>
+      <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 24 }}>Attendance Check</h1>
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
         <select className="input-base" style={{ maxWidth: 360 }} value={eventId}
@@ -65,7 +65,7 @@ export default function AttendanceClient({ events }: { events: any[] }) {
       )}
 
       {loading ? (
-        <p style={{ color: '#9A9A9A', fontSize: 14 }}>Loading...</p>
+        <p style={{ color: 'var(--text-5)', fontSize: 14 }}>Loading...</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {filtered.map((a: any) => {
@@ -80,27 +80,27 @@ export default function AttendanceClient({ events }: { events: any[] }) {
                 transition: 'all 0.15s',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', background: '#E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#9A9A9A', flexShrink: 0 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', background: '#E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'var(--text-5)', flexShrink: 0 }}>
                     {a.profiles?.avatar_url
                       ? <img src={a.profiles.avatar_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
                       : (a.profiles?.display_name?.[0] ?? '?').toUpperCase()
                     }
                   </div>
                   <div>
-                    <p style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 14, color: '#0A0A0A' }}>{a.profiles?.display_name || 'Unknown'}</p>
-                    <p style={{ fontSize: 11, color: '#9A9A9A' }}>{a.profiles?.nationality}</p>
+                    <p style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{a.profiles?.display_name || 'Unknown'}</p>
+                    <p style={{ fontSize: 11, color: 'var(--text-5)' }}>{a.profiles?.nationality}</p>
                   </div>
                 </div>
                 <button onClick={() => toggleAttendance(uid)}
                   style={{ padding: '8px 18px', borderRadius: 100, fontSize: 13, fontWeight: 700, cursor: 'pointer', minWidth: 110,
-                    background: isChecked ? '#15803d' : '#0A0A0A', color: '#fff', border: 'none', transition: 'all 0.15s' }}>
+                    background: isChecked ? '#15803d' : 'var(--text)', color: '#fff', border: 'none', transition: 'all 0.15s' }}>
                   {isChecked ? '✅ Present' : 'Check In'}
                 </button>
               </div>
             )
           })}
-          {filtered.length === 0 && attendees.length > 0 && <p style={{ fontSize: 13, color: '#9A9A9A' }}>No results</p>}
-          {attendees.length === 0 && eventId && !loading && <p style={{ fontSize: 13, color: '#9A9A9A' }}>No registered attendees</p>}
+          {filtered.length === 0 && attendees.length > 0 && <p style={{ fontSize: 13, color: 'var(--text-5)' }}>No results</p>}
+          {attendees.length === 0 && eventId && !loading && <p style={{ fontSize: 13, color: 'var(--text-5)' }}>No registered attendees</p>}
         </div>
       )}
     </div>

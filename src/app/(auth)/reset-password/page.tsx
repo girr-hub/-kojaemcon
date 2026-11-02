@@ -21,14 +21,14 @@ export default function ResetPassword() {
     setTimeout(() => { window.location.href = '/login' }, 2000)
   }
 
-  const inputStyle: React.CSSProperties = { width:'100%', border:'1.5px solid #E8E8E4', borderRadius:10, padding:'12px 14px', fontSize:14, fontFamily:'Inter', outline:'none', boxSizing:'border-box' }
-  const labelStyle: React.CSSProperties = { fontSize:12, fontWeight:600, color:'#0A0A0A', marginBottom:4, display:'block' }
+  const inputStyle: React.CSSProperties = { width:'100%', border:'1.5px solid var(--border)', borderRadius:10, padding:'12px 14px', fontSize:14, fontFamily:'Inter', outline:'none', boxSizing:'border-box' }
+  const labelStyle: React.CSSProperties = { fontSize:12, fontWeight:600, color:'var(--text)', marginBottom:4, display:'block' }
 
   return (
-    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#F8F8F6', padding:16 }}>
-      <div style={{ background:'#fff', border:'1.5px solid #E8E8E4', borderRadius:20, padding:32, maxWidth:400, width:'100%' }}>
-        <h1 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>Set new password</h1>
-        <p style={{ fontSize:13, color:'#6B6B6B', marginBottom:24 }}>Choose a new password for your account.</p>
+    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'var(--bg)', padding:16 }}>
+      <div style={{ background:'var(--surface, #fff)', border:'1.5px solid var(--border)', borderRadius:20, padding:32, maxWidth:400, width:'100%' }}>
+        <h1 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'var(--text)', marginBottom:8 }}>Set new password</h1>
+        <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:24 }}>Choose a new password for your account.</p>
 
         {done ? (
           <div style={{ background:'#F0FDF4', border:'1.5px solid #86EFAC', borderRadius:12, padding:20, textAlign:'center' }}>
@@ -45,7 +45,7 @@ export default function ResetPassword() {
               <label style={labelStyle}>Confirm password</label>
               <input style={inputStyle} type="password" placeholder="Repeat new password" value={confirm} onChange={e => setConfirm(e.target.value)} required />
             </div>
-            <button type="submit" disabled={busy} style={{ background:'#0A0A0A', color:'#fff', border:'none', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
+            <button type="submit" disabled={busy} style={{ background:'var(--text)', color:'#fff', border:'none', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:busy?0.6:1 }}>
               {busy ? 'Updating...' : 'Update password'}
             </button>
           </form>

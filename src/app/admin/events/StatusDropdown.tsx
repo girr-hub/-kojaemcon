@@ -6,7 +6,7 @@ const STATUSES = [
   { value: 'pending', label: '⏳ 검토중' },
   { value: 'published', label: '✅ 모집중' },
   { value: 'closed', label: '🔒 마감' },
-  { value: 'cancelled', label: '❌ 취소' },
+  { value: 'cancelled', label: '❌ Cancelled' },
 ]
 
 export default function StatusDropdown({ id, initialStatus }: { id: string; initialStatus: string }) {

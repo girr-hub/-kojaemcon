@@ -97,14 +97,14 @@ export default function SignupPage() {
   }
 
   const inputStyle = {
-    width: '100%', background: '#F8F8F6', border: '1.5px solid #E8E8E4',
-    color: '#0A0A0A', borderRadius: 12, padding: '12px 16px',
+    width: '100%', background: 'var(--bg)', border: '1.5px solid #E8E8E4',
+    color: 'var(--text)', borderRadius: 12, padding: '12px 16px',
     fontFamily: 'Inter, sans-serif', fontSize: 14, outline: 'none',
   }
 
   const labelStyle = {
     fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' as const,
-    color: '#9A9A9A', display: 'block', marginBottom: 6,
+    color: 'var(--text-5)', display: 'block', marginBottom: 6,
   }
 
   return (
@@ -112,7 +112,7 @@ export default function SignupPage() {
       <div style={{ width: '100%', maxWidth: 480 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: '#0A0A0A' }}>
+          <span style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, letterSpacing: '-0.04em', color: 'var(--text)' }}>
             Ko<em style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 28 }}>jaem</em>con
           </span>
         </div>
@@ -124,11 +124,11 @@ export default function SignupPage() {
               <div style={{
                 width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 12,
-                background: step >= s ? '#0A0A0A' : '#F8F8F6',
-                color: step >= s ? '#fff' : '#9A9A9A',
+                background: step >= s ? 'var(--text)' : 'var(--bg)',
+                color: step >= s ? '#fff' : 'var(--text-5)',
                 border: step >= s ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4',
               }}>{s}</div>
-              {s < 3 && <div style={{ width: 32, height: 1.5, background: step > s ? '#0A0A0A' : '#E8E8E4' }} />}
+              {s < 3 && <div style={{ width: 32, height: 1.5, background: step > s ? 'var(--text)' : 'var(--border)' }} />}
             </div>
           ))}
         </div>
@@ -136,8 +136,8 @@ export default function SignupPage() {
         {/* STEP 1: Basic info */}
         {step === 1 && (
           <div>
-            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Create account</h1>
-            <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 28 }}>Step 1 of 3 — Basic info</p>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 6 }}>Create account</h1>
+            <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 28 }}>Step 1 of 3 — Basic info</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
@@ -165,11 +165,11 @@ export default function SignupPage() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Date of birth *</label><label style={{fontSize:11,color:'#9A9A9A',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_age||false} onChange={e=>setF({...f,hide_age:e.target.checked} as any)} style={{cursor:'pointer'}}/>비공개</label></div>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Date of birth *</label><label style={{fontSize:11,color:'var(--text-5)',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_age||false} onChange={e=>setF({...f,hide_age:e.target.checked} as any)} style={{cursor:'pointer'}}/>Hide</label></div>
                   <input style={inputStyle} type="date" required value={f.birth_date} onChange={e => setF({ ...f, birth_date: e.target.value })} />
                 </div>
                 <div>
-                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Gender *</label><label style={{fontSize:11,color:'#9A9A9A',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_gender||false} onChange={e=>setF({...f,hide_gender:e.target.checked} as any)} style={{cursor:'pointer'}}/>비공개</label></div>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><label style={labelStyle}>Gender *</label><label style={{fontSize:11,color:'var(--text-5)',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={(f as any).hide_gender||false} onChange={e=>setF({...f,hide_gender:e.target.checked} as any)} style={{cursor:'pointer'}}/>Hide</label></div>
                   <select style={inputStyle} required value={f.gender} onChange={e => setF({ ...f, gender: e.target.value })}>
                     <option value="undisclosed">Prefer not to say</option>
                     <option value="male">Male</option>
@@ -199,13 +199,13 @@ export default function SignupPage() {
                 setErr('')
                 setStep(2)
               }}
-              style={{ width: '100%', background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 24 }}
+              style={{ width: '100%', background: 'var(--text)', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '14px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 24 }}
             >
               Next →
             </button>
 
-            <p style={{ textAlign: 'center', fontSize: 13, color: '#9A9A9A', marginTop: 16 }}>
-              Already have an account? <a href="/login" style={{ color: '#0A0A0A', fontWeight: 700 }}>Log in</a>
+            <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-5)', marginTop: 16 }}>
+              Already have an account? <a href="/login" style={{ color: 'var(--text)', fontWeight: 700 }}>Log in</a>
             </p>
           </div>
         )}
@@ -213,13 +213,13 @@ export default function SignupPage() {
         {/* STEP 2: Profile photo */}
         {step === 2 && (
           <div>
-            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Profile photo</h1>
-            <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 32 }}>Step 2 of 3 — Optional but recommended</p>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 6 }}>Profile photo</h1>
+            <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 32 }}>Step 2 of 3 — Optional but recommended</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginBottom: 32 }}>
               <div style={{
                 width: 120, height: 120, borderRadius: '50%', overflow: 'hidden',
-                background: '#F8F8F6', border: '1.5px solid #E8E8E4',
+                background: 'var(--bg)', border: '1.5px solid #E8E8E4',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {avatarPreview
@@ -231,20 +231,20 @@ export default function SignupPage() {
               <label style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer',
                 padding: '10px 24px', borderRadius: 100, fontSize: 13, fontWeight: 600,
-                background: '#F8F8F6', color: '#0A0A0A', border: '1.5px solid #E8E8E4',
+                background: 'var(--bg)', color: 'var(--text)', border: '1.5px solid #E8E8E4',
               }}>
                 {avatarPreview ? '📷 Change photo' : '📷 Upload photo'}
                 <input type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
               </label>
 
-              <p style={{ fontSize: 12, color: '#9A9A9A', textAlign: 'center' }}>
+              <p style={{ fontSize: 12, color: 'var(--text-5)', textAlign: 'center' }}>
                 JPG, PNG, WebP. Max 5MB.<br/>You can also add this later in your profile.
               </p>
             </div>
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setStep(1)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
-              <button onClick={() => setStep(3)} style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+              <button onClick={() => setStep(1)} style={{ flex: 1, background: 'var(--bg)', color: 'var(--text-3)', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
+              <button onClick={() => setStep(3)} style={{ flex: 2, background: 'var(--text)', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
                 {avatarPreview ? 'Next →' : 'Skip for now →'}
               </button>
             </div>
@@ -254,20 +254,20 @@ export default function SignupPage() {
         {/* STEP 3: Interests */}
         {step === 3 && (
           <div>
-            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>Your interests</h1>
-            <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 28 }}>Step 3 of 3 — Select all that apply. Helps us recommend events for you.</p>
+            <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 6 }}>Your interests</h1>
+            <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 28 }}>Step 3 of 3 — Select all that apply. Helps us recommend events for you.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 28, maxHeight: 400, overflowY: 'auto', paddingRight: 4 }}>
               {INTEREST_CATEGORIES.map(cat => (
                 <div key={cat.label}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: '#0A0A0A', marginBottom: 10 }}>{cat.label}</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>{cat.label}</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
                     {cat.items.map(item => (
                       <button key={item} type="button" onClick={() => toggleInterest(item)}
                         style={{
                           padding: '6px 12px', borderRadius: 100, fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                          background: interests.includes(item) ? '#D4B33A' : '#F8F8F6',
-                          color: '#0A0A0A',
+                          background: interests.includes(item) ? '#D4B33A' : 'var(--bg)',
+                          color: 'var(--text)',
                           border: interests.includes(item) ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4',
                           transition: 'all 0.15s',
                         }}>
@@ -279,14 +279,14 @@ export default function SignupPage() {
               ))}
             </div>
 
-            <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 16 }}>{interests.length} selected</p>
+            <p style={{ fontSize: 12, color: 'var(--text-5)', marginBottom: 16 }}>{interests.length} selected</p>
 
             {err && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>{err}</p>}
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setStep(2)} style={{ flex: 1, background: '#F8F8F6', color: '#6B6B6B', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
+              <button onClick={() => setStep(2)} style={{ flex: 1, background: 'var(--bg)', color: 'var(--text-3)', border: '1.5px solid #E8E8E4', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>← Back</button>
               <button onClick={submit} disabled={loading || uploading}
-                style={{ flex: 2, background: '#0A0A0A', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (loading || uploading) ? 0.6 : 1 }}>
+                style={{ flex: 2, background: 'var(--text)', color: '#fff', border: '1.5px solid #0A0A0A', borderRadius: 100, padding: '13px', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: (loading || uploading) ? 0.6 : 1 }}>
                 {loading ? 'Creating account...' : uploading ? 'Uploading photo...' : interests.length > 0 ? 'Create account →' : 'Skip & create account →'}
               </button>
             </div>

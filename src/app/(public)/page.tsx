@@ -138,7 +138,7 @@ export default function HomePage() {
               이번 주 핫딜
             </p>
             <p style={{ fontSize: 14, fontWeight: 800, color: '#111', letterSpacing: '-0.04em', lineHeight: 1.3, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-              첫 참가 20% 할인<br />지금 바로 신청하세요
+              First-timers get 20% off — sign up now
             </p>
           </div>
           <Link href="/events" style={{

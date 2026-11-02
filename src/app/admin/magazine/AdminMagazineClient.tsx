@@ -44,11 +44,11 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
     if (editing) {
       const { error } = await sb.from('magazine_posts').update(payload).eq('id', editing.id)
       if (!error) setPosts(prev => prev.map(p => p.id === editing.id ? { ...p, ...payload } : p))
-      else alert('저장 실패: ' + error.message)
+      else alert('Save failed: ' + error.message)
     } else {
       const { data, error } = await sb.from('magazine_posts').insert(payload).select().single()
       if (!error && data) setPosts(prev => [data, ...prev])
-      else alert('저장 실패: ' + (error?.message || ''))
+      else alert('Save failed: ' + (error?.message || ''))
     }
     setSaving(false)
     setShowForm(false)
@@ -62,7 +62,7 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
   }
 
   const deletePost = async (id: string) => {
-    if (!confirm('삭제하시겠어요?')) return
+    if (!confirm('Delete this post?')) return
     const sb = supabase()
     await sb.from('magazine_posts').delete().eq('id', id)
     setPosts(prev => prev.filter(p => p.id !== id))
@@ -71,23 +71,23 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: '#0A0A0A' }}>Magazine</h1>
+        <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, letterSpacing: '-0.04em', color: 'var(--text)' }}>Magazine</h1>
         <button onClick={openNew} className="btn-primary" style={{ padding: '10px 20px' }}>+ 새 글 작성</button>
       </div>
 
       {/* Form */}
       {showForm && (
         <div style={{ background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 16, padding: 28, marginBottom: 28 }}>
-          <h2 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 18, color: '#0A0A0A', marginBottom: 20 }}>
-            {editing ? '글 수정' : '새 글 작성'}
+          <h2 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 20 }}>
+            {editing ? 'Edit post' : 'New post'}
           </h2>
 
           <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
             {CATS.map(c => (
               <button key={c.id} type="button" onClick={() => setForm(f => ({ ...f, category: c.id }))}
                 style={{ padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                  background: form.category === c.id ? '#0A0A0A' : '#fff',
-                  color: form.category === c.id ? '#fff' : '#6B6B6B',
+                  background: form.category === c.id ? 'var(--text)' : '#fff',
+                  color: form.category === c.id ? '#fff' : 'var(--text-3)',
                   border: form.category === c.id ? '1.5px solid #0A0A0A' : '1.5px solid #E8E8E4' }}>
                 {c.label}
               </button>
@@ -101,7 +101,7 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
               onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} />
             <input className="input-base" placeholder="커버 이미지 URL" value={form.cover_image_url}
               onChange={e => setForm(f => ({ ...f, cover_image_url: e.target.value }))} />
-            <input className="input-base" placeholder="요약문 (목록에서 표시)" value={form.summary}
+            <input className="input-base" placeholder="Summary (shown in listing)" value={form.summary}
               onChange={e => setForm(f => ({ ...f, summary: e.target.value }))} />
             <textarea className="input-base" rows={10} style={{ resize: 'vertical' }}
               placeholder="본문 (HTML 가능)" value={form.content_html}
@@ -115,7 +115,7 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
 
           <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
             <button onClick={save} disabled={saving} className="btn-primary" style={{ padding: '11px 24px' }}>
-              {saving ? '저장 중...' : '저장'}
+              {saving ? "Saving..." : 'Save'}
             </button>
             <button onClick={() => setShowForm(false)} className="btn-outline" style={{ padding: '11px 20px' }}>취소</button>
           </div>
@@ -131,33 +131,33 @@ export default function AdminMagazineClient({ posts: initial }: { posts: any[] }
             )}
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9A9A9A' }}>{post.category}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-5)' }}>{post.category}</span>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 100,
                   background: post.is_published ? '#dcfce7' : '#F8F8F6',
-                  color: post.is_published ? '#15803d' : '#9A9A9A' }}>
+                  color: post.is_published ? '#15803d' : 'var(--text-5)' }}>
                   {post.is_published ? '게시됨' : '초안'}
                 </span>
               </div>
-              <p style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 15, color: '#0A0A0A', marginBottom: 2 }}>{post.title}</p>
-              <p style={{ fontSize: 11, color: '#9A9A9A' }}>{new Date(post.created_at).toLocaleDateString()}</p>
+              <p style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 15, color: 'var(--text)', marginBottom: 2 }}>{post.title}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-5)' }}>{new Date(post.created_at).toLocaleDateString()}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
               <button onClick={() => togglePublish(post)}
-                style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #E8E8E4', background: '#F8F8F6', color: '#0A0A0A' }}>
+                style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #E8E8E4', background: '#F8F8F6', color: 'var(--text)' }}>
                 {post.is_published ? '비공개' : '게시'}
               </button>
               <button onClick={() => openEdit(post)}
-                style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #0A0A0A', background: '#0A0A0A', color: '#fff' }}>
-                수정
+                style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #0A0A0A', background: 'var(--text)', color: '#fff' }}>
+                Edit
               </button>
               <button onClick={() => deletePost(post.id)}
                 style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #dc2626', background: '#fff', color: '#dc2626' }}>
-                삭제
+                Delete
               </button>
             </div>
           </div>
         ))}
-        {posts.length === 0 && <p style={{ fontSize: 14, color: '#9A9A9A', textAlign: 'center', padding: '40px 0' }}>아직 작성된 글이 없어요</p>}
+        {posts.length === 0 && <p style={{ fontSize: 14, color: 'var(--text-5)', textAlign: 'center', padding: '40px 0' }}>아직 작성된 글이 없어요</p>}
       </div>
     </div>
   )

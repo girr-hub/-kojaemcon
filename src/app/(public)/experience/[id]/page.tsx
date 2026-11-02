@@ -271,7 +271,7 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
         {event.location && <p style={{ fontSize: 13, color: '#999' }}>📍 {event.location}</p>}
         <div style={{ display: 'flex', gap: 16, marginTop: 10 }}>
           <span style={{ fontSize: 13, color: 'var(--text-3)', fontWeight: 600 }}>
-            신청 {event.applicant_count ?? 0}명
+            {event.applicant_count ?? 0} applicants
           </span>
           {event.capacity && (
             <span style={{ fontSize: 13, color: 'var(--text-4)' }}>/ 모집 {event.capacity}명</span>

@@ -40,12 +40,12 @@ export default function MobileMenu() {
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderBottom: '1px solid #F5F5F5', flexShrink: 0, paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#E9C000', display: 'flex', flexDirection: 'column', lineHeight: 0.88 }}>
+                <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: 'var(--gold)', display: 'flex', flexDirection: 'column', lineHeight: 0.88 }}>
                   <span style={{ fontSize: 13 }}>ㅋ</span>
                   <span style={{ fontSize: 16, marginLeft: 2 }}>ㅈ</span>
                   <span style={{ fontSize: 13 }}>ㅋ</span>
                 </div>
-                <span style={{ fontFamily: 'Righteous, sans-serif', fontSize: 17, color: '#E9C000' }}>KOGEMCON</span>
+                <span style={{ fontFamily: 'Righteous, sans-serif', fontSize: 17, color: 'var(--gold)' }}>KOGEMCON</span>
               </div>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close"
                 style={{ width: 36, height: 36, background: '#2a2f35', border: 'none', borderRadius: '50%', fontSize: 20, cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -58,7 +58,7 @@ export default function MobileMenu() {
                 <Link key={link.href} href={link.href} prefetch={true}
                   onClick={() => setOpen(false)}
                   onTouchStart={() => {}}
-                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: '#1A1A1A', textDecoration: 'none', borderBottom: '1px solid #F5F5F5', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
+                  style={{ padding: '17px 24px', fontSize: 16, fontWeight: 600, color: 'var(--text)', textDecoration: 'none', borderBottom: '1px solid #F5F5F5', display: 'block', fontFamily: 'PretendardVariable, Pretendard, sans-serif', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <span style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{link.icon}</span>
                     <span>{link.label}</span>
@@ -69,7 +69,7 @@ export default function MobileMenu() {
             {/* CTA */}
             <div style={{ padding: '20px', borderTop: '1px solid #F0F0F0', flexShrink: 0, paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
               <Link href="/host/new" onClick={() => setOpen(false)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E9C000', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--gold)', color: '#12161A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 14, fontWeight: 700, padding: '14px', borderRadius: 100, textDecoration: 'none' }}>
                 Host an Event →
               </Link>
             </div>

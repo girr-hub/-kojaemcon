@@ -48,7 +48,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
   }
 
   const deleteEvent = async (id: string) => {
-    if (!confirm('삭제할까요?')) return
+    if (!confirm('Delete this experience?')) return
     await fetch('/api/experience', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action: 'delete', id })
@@ -82,17 +82,17 @@ export default function ExperienceAdminClient({ events, applications }: { events
   }
 
   const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
-  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
+  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: 'var(--text-3)', display: 'block', marginBottom: 6 }
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 24 }}>체험단 관리</h1>
+      <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.04em', marginBottom: 24 }}>체험단 관리</h1>
 
       {/* 수정 모달 */}
       {editTarget && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
           <div style={{ background: '#fff', borderRadius: 16, padding: 24, width: '100%', maxWidth: 500, maxHeight: '80vh', overflowY: 'auto' }}>
-            <h2 style={{ fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>체험단 수정</h2>
+            <h2 style={{ fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>체험단 수정</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <label style={labelStyle}>사진</label>
@@ -104,7 +104,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
                         style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', background: '#DC2626', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12 }}>×</button>
                     </div>
                   ))}
-                  <label style={{ width: 72, height: 72, borderRadius: 8, border: '1.5px dashed #D0D0D0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 24, color: '#9A9A9A' }}>
+                  <label style={{ width: 72, height: 72, borderRadius: 8, border: '1.5px dashed #D0D0D0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 24, color: 'var(--text-5)' }}>
                     +<input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleImages} disabled={uploading} />
                   </label>
                 </div>
@@ -139,11 +139,11 @@ export default function ExperienceAdminClient({ events, applications }: { events
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={save} disabled={saving}
-                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
                   {saving ? '저장 중...' : '저장'}
                 </button>
                 <button onClick={() => setEditTarget(null)}
-                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: '#F0F0F0', color: '#6B6B6B', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '12px', borderRadius: 10, background: '#F0F0F0', color: 'var(--text-3)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                   취소
                 </button>
               </div>
@@ -154,21 +154,21 @@ export default function ExperienceAdminClient({ events, applications }: { events
 
       {/* 체험단 목록 */}
       <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontWeight: 700, fontSize: 16, color: '#1A1A1A', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>등록된 체험단 ({list.length})</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)', marginBottom: 12, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>등록된 체험단 ({list.length})</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {list.map(e => (
             <div key={e.id} style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 10, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</p>
-                <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>모집 {e.capacity}명 · {e.location}</p>
+                <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</p>
+                <p style={{ fontSize: 12, color: 'var(--text-5)', marginTop: 2 }}>모집 {e.capacity}명 · {e.location}</p>
               </div>
               <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
                 <button onClick={() => setEditTarget({...e})}
-                  style={{ padding: '6px 12px', borderRadius: 8, background: '#F0F0F0', color: '#1A1A1A', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>수정</button>
+                  style={{ padding: '6px 12px', borderRadius: 8, background: '#F0F0F0', color: 'var(--text)', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>수정</button>
                 <button onClick={() => toggleStatus(e.id, e.status)}
                   style={{ padding: '6px 12px', borderRadius: 8, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer',
                     background: e.status === 'published' ? '#DCFCE7' : e.status === 'closed' ? '#FEE2E2' : '#F0F0F0',
-                    color: e.status === 'published' ? '#15803D' : e.status === 'closed' ? '#DC2626' : '#9A9A9A' }}>
+                    color: e.status === 'published' ? '#15803D' : e.status === 'closed' ? '#DC2626' : 'var(--text-5)' }}>
                   {e.status === 'published' ? 'ON' : e.status === 'closed' ? 'CLOSED' : 'OFF'}
                 </button>
                 <button onClick={() => deleteEvent(e.id)}
@@ -181,19 +181,19 @@ export default function ExperienceAdminClient({ events, applications }: { events
 
       {/* 신청 목록 - 이벤트별 */}
       <div>
-        <h2 style={{ fontWeight: 700, fontSize: 16, color: '#1A1A1A', marginBottom: 16, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>신청 현황 ({applications.length})</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)', marginBottom: 16, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>신청 현황 ({applications.length})</h2>
         {list.map(e => {
           const apps = applications.filter((a: any) => a.event_id === e.id)
           if (apps.length === 0) return null
           return (
             <div key={e.id} style={{ marginBottom: 32 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, padding: '10px 14px', background: '#F7F7F7', borderRadius: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, padding: '10px 14px', background: 'var(--bg)', borderRadius: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, background: '#E9C000', color: '#1A1A1A', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
+                  <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{e.title}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--gold)', color: 'var(--text)', padding: '2px 8px', borderRadius: 6 }}>{apps.length}명 신청</span>
                 </div>
                 <button onClick={() => downloadCSV(e.id, e.title, apps)}
-                  style={{ padding: '6px 14px', borderRadius: 8, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                  style={{ padding: '6px 14px', borderRadius: 8, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
                   CSV 다운로드
                 </button>
               </div>
@@ -203,25 +203,25 @@ export default function ExperienceAdminClient({ events, applications }: { events
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
                       {['#', '실명', '이메일', '국적', '나이', '핸드폰', '인스타URL', '인스타팔로워', '틱톡URL', '틱톡팔로워', '댓글활성화', '선택시술', '신청일'].map(h => (
-                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--text-5)', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {apps.map((a: any, i: number) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
-                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-5)', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
                         <td style={{ padding: '8px 12px', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.real_name}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.profile_email || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_nationality || a.nationality || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.instagram_url || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.instagram_followers || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.tiktok_url || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.tiktok_followers || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.comment_activity || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.selected_treatment || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.profile_email || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.profile_nationality || a.nationality || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.instagram_url || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.instagram_followers || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.tiktok_url || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.tiktok_followers || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.comment_activity || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.selected_treatment || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -231,25 +231,25 @@ export default function ExperienceAdminClient({ events, applications }: { events
                   <thead>
                     <tr style={{ background: '#FAFAFA' }}>
                       {['#', '실명', '이메일', '국적', '나이', '핸드폰', '은행', '계좌번호', '계좌전화', '희망날짜', 'SNS', '동행인', '신청일'].map(h => (
-                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: '#9A9A9A', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
+                        <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--text-5)', fontSize: 11, whiteSpace: 'nowrap', borderBottom: '1px solid #E8E8E8' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {apps.map((a: any, i: number) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #F5F5F5' }}>
-                        <td style={{ padding: '8px 12px', color: '#9A9A9A', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-5)', fontSize: 11, fontWeight: 600 }}>{i + 1}</td>
                         <td style={{ padding: '8px 12px', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.real_name}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.profile_email || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_nationality || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.bank_name || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.account_number || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.account_phone || a.phone || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{a.preferred_date || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B' }}>{a.sns_accounts || '-'}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', textAlign: 'center' }}>{a.companions}</td>
-                        <td style={{ padding: '8px 12px', color: '#6B6B6B', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.profile_email || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.profile_nationality || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.profile_phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.bank_name || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.account_number || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.account_phone || a.phone || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{a.preferred_date || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)' }}>{a.sns_accounts || '-'}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', textAlign: 'center' }}>{a.companions}</td>
+                        <td style={{ padding: '8px 12px', color: 'var(--text-3)', whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -260,7 +260,7 @@ export default function ExperienceAdminClient({ events, applications }: { events
           )
         })}
         {applications.length === 0 && (
-          <p style={{ textAlign: 'center', padding: '32px', color: '#9A9A9A', fontSize: 14 }}>신청이 없어요</p>
+          <p style={{ textAlign: 'center', padding: '32px', color: 'var(--text-5)', fontSize: 14 }}>신청이 없어요</p>
         )}
       </div>
     </div>

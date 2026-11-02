@@ -33,7 +33,7 @@ export default function NotifyButton({ eventId, eventTitle }: { eventId: string;
   return (
     <button onClick={toggle} disabled={loading}
       style={{ width: '100%', padding: '12px', borderRadius: 10, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif',
-        background: subscribed ? '#F0F0F0' : '#E9C000', color: subscribed ? '#6B6B6B' : '#1A1A1A' }}>
+        background: subscribed ? '#F0F0F0' : 'var(--gold)', color: subscribed ? '#6B6B6B' : '#1A1A1A' }}>
       {loading ? '...' : subscribed ? '🔔 알림 신청됨 (취소하기)' : '🔔 오픈 알림 받기'}
     </button>
   )

@@ -16,7 +16,7 @@ export default async function NewHostEvent() {
         <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 17, color: 'var(--text)', letterSpacing: '-0.03em' }}>Host an Event</h1>
       </div>
 
-      {/* 안내 배너 */}
+      {/* Info banner */}
       <div style={{ margin: '16px 16px 0', background: '#FFFBEA', borderRadius: 14, padding: '14px 16px', border: '1px solid #F5E87C' }}>
         <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontSize: 13, color: '#7A6100', lineHeight: 1.6 }}>
           💡 Fill in the details below and our team will review your event within 24 hours.

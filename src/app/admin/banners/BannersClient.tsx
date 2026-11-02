@@ -9,8 +9,8 @@ export default function BannersClient({ banners }: { banners: any[] }) {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', background: '#fff', color: '#1A1A1A', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
-  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
+  const inputStyle: any = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E0E0E0', background: '#fff', color: 'var(--text)', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
+  const labelStyle: any = { fontSize: 12, fontWeight: 700, color: 'var(--text-3)', display: 'block', marginBottom: 6 }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -50,7 +50,7 @@ export default function BannersClient({ banners }: { banners: any[] }) {
   }
 
   const remove = async (id: string) => {
-    if (!confirm('삭제할까요?')) return
+    if (!confirm('Delete this banner?')) return
     await fetch('/api/admin/banners', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action: 'delete', id })
@@ -62,18 +62,18 @@ export default function BannersClient({ banners }: { banners: any[] }) {
     <div style={{ maxWidth: 700 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.04em' }}>스폰서 배너</h1>
-          <p style={{ fontSize: 13, color: '#9A9A9A', marginTop: 4 }}>권장 이미지: 1200×300px · 클릭 시 링크로 이동</p>
+          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.04em' }}>스폰서 배너</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-5)', marginTop: 4 }}>권장 이미지: 1200×300px · 클릭 시 링크로 이동</p>
         </div>
         <button onClick={() => setShowForm(!showForm)}
-          style={{ padding: '10px 20px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-          + 배너 추가
+          style={{ padding: '10px 20px', borderRadius: 10, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          + Add banner
         </button>
       </div>
 
       {showForm && (
-        <div style={{ background: '#F7F7F7', borderRadius: 14, padding: 20, marginBottom: 24, border: '1px solid #E8E8E8' }}>
-          <h3 style={{ fontWeight: 700, fontSize: 16, color: '#1A1A1A', marginBottom: 16, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>새 배너</h3>
+        <div style={{ background: 'var(--bg)', borderRadius: 14, padding: 20, marginBottom: 24, border: '1px solid #E8E8E8' }}>
+          <h3 style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)', marginBottom: 16, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>새 배너</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
               <label style={labelStyle}>제목 *</label>
@@ -86,7 +86,7 @@ export default function BannersClient({ banners }: { banners: any[] }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 8, border: '1.5px dashed #D0D0D0', cursor: 'pointer', background: '#fff' }}>
                   <span style={{ fontSize: 20 }}>🖼</span>
-                  <span style={{ fontSize: 14, color: uploading ? '#9A9A9A' : '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                  <span style={{ fontSize: 14, color: uploading ? 'var(--text-5)' : 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                     {uploading ? '업로드 중...' : form.image_url ? '이미지 변경' : '이미지 파일 선택 (JPG, PNG, WebP)'}
                   </span>
                   <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={uploading} />
@@ -102,7 +102,7 @@ export default function BannersClient({ banners }: { banners: any[] }) {
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ flex: 1, height: 1, background: '#E0E0E0' }} />
-                  <span style={{ fontSize: 11, color: '#9A9A9A' }}>또는 URL 직접 입력</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-5)' }}>또는 URL 직접 입력</span>
                   <div style={{ flex: 1, height: 1, background: '#E0E0E0' }} />
                 </div>
                 <input style={inputStyle} value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." />
@@ -119,7 +119,7 @@ export default function BannersClient({ banners }: { banners: any[] }) {
                 <label style={labelStyle}>노출 위치</label>
                 <select style={inputStyle} value={form.position} onChange={e => setForm({...form, position: e.target.value})}>
                   <option value="home">홈</option>
-                  <option value="events">이벤트 목록</option>
+                  <option value="events">Events</option>
                   <option value="community">커뮤니티</option>
                 </select>
               </div>
@@ -131,11 +131,11 @@ export default function BannersClient({ banners }: { banners: any[] }) {
 
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={save} disabled={saving || uploading}
-                style={{ padding: '11px 24px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: (saving || uploading) ? 0.6 : 1 }}>
-                {saving ? '저장 중...' : '저장'}
+                style={{ padding: '11px 24px', borderRadius: 10, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: (saving || uploading) ? 0.6 : 1 }}>
+                {saving ? "Saving..." : 'Save'}
               </button>
               <button onClick={() => setShowForm(false)}
-                style={{ padding: '11px 24px', borderRadius: 10, background: '#F0F0F0', color: '#6B6B6B', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+                style={{ padding: '11px 24px', borderRadius: 10, background: '#F0F0F0', color: 'var(--text-3)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                 취소
               </button>
             </div>
@@ -145,18 +145,18 @@ export default function BannersClient({ banners }: { banners: any[] }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {list.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9A9A9A', fontSize: 14 }}>배너가 없어요. 추가해보세요!</div>
+          <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-5)', fontSize: 14 }}>No banners yet. Add one!</div>
         )}
         {list.map(b => (
           <div key={b.id} style={{ background: '#fff', border: '1px solid #E8E8E8', borderRadius: 12, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
             {b.image_url ? (
               <img src={b.image_url} alt="" style={{ width: 120, height: 60, objectFit: 'cover', borderRadius: 8, flexShrink: 0, border: '1px solid #F0F0F0' }} />
             ) : (
-              <div style={{ width: 120, height: 60, borderRadius: 8, background: '#F5F5F5', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#9A9A9A' }}>No image</div>
+              <div style={{ width: 120, height: 60, borderRadius: 8, background: '#F5F5F5', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: 'var(--text-5)' }}>No image</div>
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 3, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{b.title}</p>
-              <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 3 }}>위치: {b.position} · 순서: {b.sort_order}</p>
+              <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 3, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{b.title}</p>
+              <p style={{ fontSize: 12, color: 'var(--text-5)', marginBottom: 3 }}>위치: {b.position} · 순서: {b.sort_order}</p>
               <a href={b.link_url} target="_blank" rel="noopener noreferrer"
                 style={{ fontSize: 12, color: '#555', textDecoration: 'underline', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                 {b.link_url}
@@ -165,12 +165,12 @@ export default function BannersClient({ banners }: { banners: any[] }) {
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
               <button onClick={() => toggle(b.id, b.is_active)}
                 style={{ padding: '6px 14px', borderRadius: 8, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer',
-                  background: b.is_active ? '#DCFCE7' : '#F0F0F0', color: b.is_active ? '#15803D' : '#9A9A9A' }}>
+                  background: b.is_active ? '#DCFCE7' : '#F0F0F0', color: b.is_active ? '#15803D' : 'var(--text-5)' }}>
                 {b.is_active ? 'ON' : 'OFF'}
               </button>
               <button onClick={() => remove(b.id)}
                 style={{ padding: '6px 14px', borderRadius: 8, background: '#FEE2E2', color: '#DC2626', border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
-                삭제
+                Delete
               </button>
             </div>
           </div>
