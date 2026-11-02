@@ -150,6 +150,19 @@ export default function HomePage() {
                       ? <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       : null
                     }
+                    {/* 좌상단: 제공언어 + 잔여석 */}
+                    <div style={{ position: 'absolute', top: 6, left: 6, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      {e.language && (
+                        <span style={{ fontSize: 9, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
+                          🌐 {e.language}
+                        </span>
+                      )}
+                      {e.status !== 'closed' && e.capacity > 0 && e.remaining > 0 && (
+                        <span style={{ fontSize: 9, fontWeight: 800, background: e.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
+                          {e.remaining <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                        </span>
+                      )}
+                    </div>
                     {e.status === 'closed' && (
                       <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(255,255,255,0.9)', padding: '2px 7px', borderRadius: 5, fontSize: 9, fontWeight: 700, color: '#666' }}>CLOSED</div>
                     )}
@@ -196,8 +209,22 @@ export default function HomePage() {
                     style={{ textDecoration: 'none', width: 158, background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', flexShrink: 0 }}>
                     <div style={{ height: 96, background: 'linear-gradient(145deg, #2A2830, #3D3A4A)', overflow: 'hidden', position: 'relative' }}>
                       {e.cover_image_url && <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                      {/* 좌상단: 제공언어 + 잔여석 */}
+                      <div style={{ position: 'absolute', top: 5, left: 5, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        {e.language && (
+                          <span style={{ fontSize: 8, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                            🌐 {e.language}
+                          </span>
+                        )}
+                        {e.status !== 'closed' && e.capacity > 0 && e.remaining > 0 && (
+                          <span style={{ fontSize: 8, fontWeight: 800, background: e.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                            {e.remaining <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                          </span>
+                        )}
+                      </div>
+                      {/* 우상단: D-day */}
                       {diff !== null && (
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'var(--gold)', padding: '2px 7px', borderRadius: 5, fontSize: 9, fontWeight: 800, color: '#111' }}>
+                        <div style={{ position: 'absolute', top: 5, right: 5, background: 'var(--gold)', padding: '2px 7px', borderRadius: 5, fontSize: 9, fontWeight: 800, color: '#111' }}>
                           {diff === 0 ? 'D-Day' : `D-${diff}`}
                         </div>
                       )}

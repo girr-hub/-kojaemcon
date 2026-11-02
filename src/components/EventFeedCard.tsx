@@ -53,9 +53,40 @@ export default function EventFeedCard({ event }: { event: any }) {
             ? <img src={event.cover_image_url} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(145deg, #2A2830, #3D3A4A)' }} />
           }
+          {/* 좌상단: 제공언어 + 잔여석 */}
+          <div style={{
+            position: 'absolute', top: 6, left: 6,
+            display: 'flex', flexDirection: 'column', gap: 3,
+          }}>
+            {event.language && (
+              <span style={{
+                fontSize: 9, fontWeight: 800,
+                background: 'rgba(0,0,0,0.62)', color: '#fff',
+                padding: '2px 6px', borderRadius: 4,
+                fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+                letterSpacing: '0.03em', backdropFilter: 'blur(4px)',
+              }}>
+                🌐 {event.language}
+              </span>
+            )}
+            {!isClosed && event.capacity > 0 && event.remaining > 0 && (
+              <span style={{
+                fontSize: 9, fontWeight: 800,
+                background: event.remaining <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)',
+                color: '#fff',
+                padding: '2px 6px', borderRadius: 4,
+                fontFamily: 'PretendardVariable, Pretendard, sans-serif',
+                letterSpacing: '0.03em', backdropFilter: 'blur(4px)',
+              }}>
+                {event.remaining <= 5 ? `⚡ ${event.remaining} left` : `${event.remaining} seats`}
+              </span>
+            )}
+          </div>
+
+          {/* 우상단: D-day */}
           {dday && (
             <div style={{
-              position: 'absolute', top: 6, left: 6,
+              position: 'absolute', top: 6, right: 6,
               background: 'var(--gold)', color: '#111',
               fontSize: 9, fontWeight: 800,
               padding: '2px 7px', borderRadius: 5,
