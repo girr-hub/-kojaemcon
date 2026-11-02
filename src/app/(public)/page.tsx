@@ -150,14 +150,14 @@ export default function HomePage() {
                       ? <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       : null
                     }
-                    {/* 좌상단: 제공언어 + 잔여석 */}
-                    <div style={{ position: 'absolute', top: 6, left: 6, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    {/* 우상단: 제공언어 + 잔여석 */}
+                    <div style={{ position: 'absolute', top: 6, right: 6, display: 'flex', gap: 3 }}>
                       <span style={{ fontSize: 9, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
                         🌐 {e.language || 'English'}
                       </span>
                       {e.status !== 'closed' && (e.capacity ?? 0) > 0 && (
                         <span style={{ fontSize: 9, fontWeight: 800, background: (e.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif', letterSpacing: '0.03em' }}>
-                          {(e.remaining ?? 0) <= 0 ? '🔴 Sold out' : (e.remaining ?? 0) <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                          {(e.remaining ?? 0) <= 0 ? 'Sold out' : `${e.remaining} left`}
                         </span>
                       )}
                     </div>
@@ -207,23 +207,24 @@ export default function HomePage() {
                     style={{ textDecoration: 'none', width: 158, background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', flexShrink: 0 }}>
                     <div style={{ height: 96, background: 'linear-gradient(145deg, #2A2830, #3D3A4A)', overflow: 'hidden', position: 'relative' }}>
                       {e.cover_image_url && <img src={e.cover_image_url} alt={e.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
-                      {/* 좌상단: 제공언어 + 잔여석 */}
-                      <div style={{ position: 'absolute', top: 5, left: 5, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <span style={{ fontSize: 8, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                          🌐 {e.language || 'English'}
-                        </span>
-                        {e.status !== 'closed' && (e.capacity ?? 0) > 0 && (
-                          <span style={{ fontSize: 8, fontWeight: 800, background: (e.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
-                            {(e.remaining ?? 0) <= 0 ? '🔴 Sold out' : (e.remaining ?? 0) <= 5 ? `⚡ ${e.remaining} left` : `${e.remaining} seats`}
+                      {/* 우상단: 제공언어 + 잔여석 + D-day */}
+                      <div style={{ position: 'absolute', top: 5, right: 5, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+                        <div style={{ display: 'flex', gap: 3 }}>
+                          <span style={{ fontSize: 8, fontWeight: 800, background: 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                            🌐 {e.language || 'English'}
+                          </span>
+                          {e.status !== 'closed' && (e.capacity ?? 0) > 0 && (
+                            <span style={{ fontSize: 8, fontWeight: 800, background: (e.remaining ?? 0) <= 5 ? 'rgba(220,38,38,0.82)' : 'rgba(0,0,0,0.62)', color: '#fff', padding: '2px 5px', borderRadius: 4, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                              {(e.remaining ?? 0) <= 0 ? 'Sold out' : `${e.remaining} left`}
+                            </span>
+                          )}
+                        </div>
+                        {diff !== null && (
+                          <span style={{ background: 'var(--gold)', padding: '2px 7px', borderRadius: 5, fontSize: 8, fontWeight: 800, color: '#111' }}>
+                            {diff === 0 ? 'D-Day' : `D-${diff}`}
                           </span>
                         )}
                       </div>
-                      {/* 우상단: D-day */}
-                      {diff !== null && (
-                        <div style={{ position: 'absolute', top: 5, right: 5, background: 'var(--gold)', padding: '2px 7px', borderRadius: 5, fontSize: 9, fontWeight: 800, color: '#111' }}>
-                          {diff === 0 ? 'D-Day' : `D-${diff}`}
-                        </div>
-                      )}
                     </div>
                     <div style={{ padding: '10px 10px 12px' }}>
                       <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-5)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 3 }}>{e.category || 'Event'}</div>
