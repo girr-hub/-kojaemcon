@@ -34,7 +34,7 @@ export default function SponsorBanner({ position = 'home' }: { position?: string
           <div style={{ display: 'flex', gap: 3 }}>
             {banners.map((_, i) => (
               <div key={i} onClick={() => setCurrent(i)}
-                style={{ width: i === current ? 12 : 4, height: 4, borderRadius: 2, background: i === current ? '#1A1A1A' : '#DDD', transition: 'all 0.3s', cursor: 'pointer' }} />
+                style={{ width: i === current ? 12 : 4, height: 4, borderRadius: 2, background: i === current ? 'var(--text)' : '#DDD', transition: 'all 0.3s', cursor: 'pointer' }} />
             ))}
           </div>
         )}

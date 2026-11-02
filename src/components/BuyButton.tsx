@@ -196,15 +196,15 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
           <div style={{ position:'relative', background:'#fff', borderRadius:20, padding:32, maxWidth:360, width:'100%', zIndex:10, textAlign:'center' }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:900, fontSize:22, color:'#0A0A0A', marginBottom:8 }}>You&apos;re in!</h3>
-            <p style={{ fontSize:14, color:'#6B6B6B', lineHeight:1.7, marginBottom:24 }}>
+            <p style={{ fontSize:14, color:'var(--text-3)', lineHeight:1.7, marginBottom:24 }}>
               Successfully joined <strong>{event.title}</strong>.<br/>
               Check the group chat for updates!
             </p>
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-              <a href={`/chat/${event.id}`} style={{ display:'block', background:'#0A0A0A', color:'#E9C000', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none' }}>
+              <a href={`/chat/${event.id}`} style={{ display:'block', background:'#0A0A0A', color:'var(--gold)', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:700, fontSize:14, textDecoration:'none' }}>
                 Go to Chat →
               </a>
-              <button onClick={() => setJoined(false)} style={{ background:'#F8F8F6', color:'#6B6B6B', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
+              <button onClick={() => setJoined(false)} style={{ background:'#F8F8F6', color:'var(--text-3)', border:'1.5px solid #E8E8E4', borderRadius:100, padding:'13px', fontFamily:'Inter', fontWeight:600, fontSize:14, cursor:'pointer' }}>
                 Stay on this page
               </button>
             </div>
@@ -217,9 +217,9 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
           <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)' }} onClick={() => setShowNoshow(false)} />
           <div style={{ position:'relative', background:'#fff', borderRadius:16, padding:28, maxWidth:380, width:'100%', zIndex:10 }}>
-            <div style={{ background:'#E9C000', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
+            <div style={{ background:'var(--gold)', borderRadius:'50%', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, marginBottom:14 }}>⚠️</div>
             <h3 style={{ fontFamily:'Inter', fontWeight:800, fontSize:18, color:'#0A0A0A', marginBottom:8 }}>No-show Policy</h3>
-            <p style={{ fontSize:13, color:'#6B6B6B', lineHeight:1.7, marginBottom:20 }}>
+            <p style={{ fontSize:13, color:'var(--text-3)', lineHeight:1.7, marginBottom:20 }}>
               This is a free event. Please only register if you plan to attend.
             </p>
             <div style={{ display:'flex', gap:8 }}>
@@ -243,10 +243,10 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                   <span style={{ fontSize:20 }}>{t.emoji}</span>
                   <div style={{ textAlign:'left' }}>
                     <p style={{ fontFamily:'Inter', fontWeight:700, fontSize:13, color: ticketType === t.id ? '#fff' : '#0A0A0A', margin:0 }}>{t.label}</p>
-                    <p style={{ fontSize:11, color: ticketType === t.id ? 'rgba(255,255,255,0.6)' : '#9A9A9A', margin:0 }}>{t.desc}</p>
+                    <p style={{ fontSize:11, color: ticketType === t.id ? 'rgba(255,255,255,0.6)' : 'var(--text-5)', margin:0 }}>{t.desc}</p>
                   </div>
                 </div>
-                <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:14, color: ticketType === t.id ? '#E9C000' : '#0A0A0A' }}>
+                <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:14, color: ticketType === t.id ? 'var(--gold)' : '#0A0A0A' }}>
                   ₩{Number(t.price).toLocaleString()}{t.id === 'with_friends' ? '/person' : ''}
                 </span>
               </button>
@@ -255,12 +255,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             {/* 서브옵션 - solo */}
             {ticketType === 'solo' && event.solo_option1_name && (
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-5)' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
                 {[{name:event.solo_option1_name, price:event.solo_option1_price},{name:event.solo_option2_name, price:event.solo_option2_price}].filter(o=>o.name).map(o=>(
                   <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'var(--text)':'#EBEBEB', background:subOption===o.name?'var(--text)':'var(--bg)', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'var(--text)' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'var(--gold)':'var(--text)' }}>₩{Number(o.price).toLocaleString()}</span>
                   </button>
                 ))}
               </div>
@@ -269,12 +269,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             {/* 서브옵션 - returning */}
             {ticketType === 'returning' && event.returning_option1_name && (
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-5)' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
                 {[{name:event.returning_option1_name, price:event.returning_option1_price},{name:event.returning_option2_name, price:event.returning_option2_price}].filter(o=>o.name).map(o=>(
                   <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'var(--text)':'#EBEBEB', background:subOption===o.name?'var(--text)':'var(--bg)', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'var(--text)' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'var(--gold)':'var(--text)' }}>₩{Number(o.price).toLocaleString()}</span>
                   </button>
                 ))}
               </div>
@@ -283,12 +283,12 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             {/* 서브옵션 - with_friends */}
             {ticketType === 'with_friends' && event.friends_option1_name && (
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-5)' }}>SELECT OPTION <span style={{color:'#dc2626'}}>*필수</span></p>
                 {[{name:event.friends_option1_name, price:event.friends_option1_price},{name:event.friends_option2_name, price:event.friends_option2_price}].filter(o=>o.name).map(o=>(
                   <button key={o.name} type="button" onClick={()=>{setSubOption(o.name);setSubOptionPrice(o.price)}}
-                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'#1A1A1A':'#EBEBEB', background:subOption===o.name?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'#1A1A1A' }}>{o.name}</span>
-                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'#E9C000':'#1A1A1A' }}>₩{Number(o.price).toLocaleString()}</span>
+                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:subOption===o.name?'var(--text)':'#EBEBEB', background:subOption===o.name?'var(--text)':'var(--bg)', cursor:'pointer' }}>
+                    <span style={{ fontSize:13, fontWeight:600, color:subOption===o.name?'#fff':'var(--text)' }}>{o.name}</span>
+                    <span style={{ fontSize:13, fontWeight:800, color:subOption===o.name?'var(--gold)':'var(--text)' }}>₩{Number(o.price).toLocaleString()}</span>
                   </button>
                 ))}
               </div>
@@ -300,7 +300,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             {ticketType === 'with_friends' && (
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', margin:0 }}>Number of tickets (including you)</p>
+                  <p style={{ fontSize:12, fontWeight:600, color:'var(--text-3)', margin:0 }}>Number of tickets (including you)</p>
                   <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                     <button type="button" onClick={() => setWithFriendsQty(q => Math.max(1, q - 1))} style={{ width:28, height:28, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer', lineHeight:1 }}>−</button>
                     <span style={{ fontWeight:800, fontSize:18, minWidth:20, textAlign:'center' }}>{withFriendsQty}</span>
@@ -308,7 +308,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                   </div>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A', margin:0 }}>
+                  <p style={{ fontSize:11, fontWeight:700, color:'var(--text-5)', margin:0 }}>
                     COMPANION INFO <span style={{color:'#dc2626'}}>*Required</span>
                   </p>
                   <p style={{ fontSize:12, fontWeight:800, color:'#0A0A0A', margin:0 }}>
@@ -321,7 +321,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                       <p style={{ fontSize:12, fontWeight:700, color:'#0A0A0A', margin:0 }}>Friend {i + 1}</p>
                       {companionInfo.length > 1 && (
                         <button type="button" onClick={() => removeCompanion(i)}
-                          style={{ background:'none', border:'none', cursor:'pointer', fontSize:16, color:'#9A9A9A', padding:'0 2px', lineHeight:1 }}>✕</button>
+                          style={{ background:'none', border:'none', cursor:'pointer', fontSize:16, color:'var(--text-5)', padding:'0 2px', lineHeight:1 }}>✕</button>
                       )}
                     </div>
                     <input
@@ -334,7 +334,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                       <select
                         value={c.gender}
                         onChange={e => { const a=[...companionInfo]; a[i]={...a[i],gender:e.target.value}; setCompanionInfo(a) }}
-                        style={{ flex:1, padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, background:'#fff', outline:'none', color: c.gender ? '#0A0A0A' : '#9A9A9A' }}>
+                        style={{ flex:1, padding:'9px 12px', borderRadius:8, border:'1.5px solid #E8E8E4', fontSize:13, background:'#fff', outline:'none', color: c.gender ? '#0A0A0A' : 'var(--text-5)' }}>
                         <option value="">Gender *</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -359,7 +359,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 ))}
                 {companionInfo.length < (event.friends_max || 10) && (
                   <button type="button" onClick={addCompanion}
-                    style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'10px', borderRadius:10, border:'1.5px dashed #C4C4C0', background:'transparent', cursor:'pointer', fontSize:13, fontWeight:600, color:'#6B6B6B' }}>
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'10px', borderRadius:10, border:'1.5px dashed #C4C4C0', background:'transparent', cursor:'pointer', fontSize:13, fontWeight:600, color:'var(--text-3)' }}>
                     + 친구 추가
                   </button>
                 )}
@@ -371,11 +371,11 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         {/* 자전거 옵션 - 부여트립 전용 */}
         {event.slug === 'day-trip-to-buyeo-mudhgtqw' && (
           <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-            <p style={{ fontSize:11, fontWeight:700, color:'#9A9A9A' }}>🚲 BICYCLE <span style={{color:'#dc2626'}}>*Required</span></p>
+            <p style={{ fontSize:11, fontWeight:700, color:'var(--text-5)' }}>🚲 BICYCLE <span style={{color:'#dc2626'}}>*Required</span></p>
             {["Yes, I'll ride a bike", "No, I'll skip the bike"].map(opt => (
               <button key={opt} type="button" onClick={() => setBikeOption(opt)}
-                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:bikeOption===opt?'#1A1A1A':'#EBEBEB', background:bikeOption===opt?'#1A1A1A':'#F7F7F7', cursor:'pointer' }}>
-                <span style={{ fontSize:13, fontWeight:600, color:bikeOption===opt?'#fff':'#1A1A1A' }}>{opt}</span>
+                style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 14px', borderRadius:10, border:'1.5px solid', borderColor:bikeOption===opt?'var(--text)':'#EBEBEB', background:bikeOption===opt?'var(--text)':'var(--bg)', cursor:'pointer' }}>
+                <span style={{ fontSize:13, fontWeight:600, color:bikeOption===opt?'#fff':'var(--text)' }}>{opt}</span>
                 {bikeOption===opt && <span style={{ fontSize:16 }}>✓</span>}
               </button>
             ))}
@@ -385,7 +385,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
         {/* 티켓 수량 (has_ticket_types 없을 때) */}
         {!event.is_free && !event.has_ticket_types && (
           <div style={{ background:'#F8F8F6', border:'1.5px solid #E8E8E4', borderRadius:12, padding:'12px 16px' }}>
-            <p style={{ fontSize:12, fontWeight:600, color:'#6B6B6B', marginBottom:8 }}>How many tickets?</p>
+            <p style={{ fontSize:12, fontWeight:600, color:'var(--text-3)', marginBottom:8 }}>How many tickets?</p>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <button type="button" onClick={() => setSoloQty(Math.max(1, soloQty - 1))} style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8E8E4', background:'#fff', fontWeight:700, fontSize:16, cursor:'pointer' }}>−</button>
               <span style={{ fontFamily:'Inter', fontWeight:800, fontSize:20, minWidth:32, textAlign:'center' }}>{soloQty}</span>
@@ -408,7 +408,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
                 style={{ flex:1, padding:'11px 14px', borderRadius:10, border:`1.5px solid ${discountApplied ? '#00C471' : discountError ? '#dc2626' : '#EBEBEB'}`, fontSize:14, fontFamily:'PretendardVariable,Pretendard,sans-serif', outline:'none' }}
               />
               <button type="button" onClick={applyDiscount}
-                style={{ padding:'11px 16px', borderRadius:10, background:'#1A1A1A', color:'#fff', border:'none', fontSize:13, fontWeight:700, cursor:'pointer', flexShrink:0 }}>
+                style={{ padding:'11px 16px', borderRadius:10, background:'var(--text)', color:'#fff', border:'none', fontSize:13, fontWeight:700, cursor:'pointer', flexShrink:0 }}>
                 Apply
               </button>
             </div>
@@ -429,7 +429,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
             (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption) ||
             companionIncomplete
           }
-          style={{ width:'100%', background:'#1A1A1A', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:(busy || (event.has_ticket_types && event.solo_option1_name && !subOption) || (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption) || companionIncomplete)?0.5:1 }}>
+          style={{ width:'100%', background:'var(--text)', color:'#fff', border:'none', borderRadius:14, padding:'15px 28px', fontFamily:'Inter', fontWeight:700, fontSize:14, cursor:busy?'not-allowed':'pointer', opacity:(busy || (event.has_ticket_types && event.solo_option1_name && !subOption) || (event.slug === 'day-trip-to-buyeo-mudhgtqw' && !bikeOption) || companionIncomplete)?0.5:1 }}>
           {busy ? 'Processing...' : event.is_free ? 'JOIN FREE' : (
             <span>
               Buy — ₩{Number(getPrice()).toLocaleString()}
@@ -444,7 +444,7 @@ export default function BuyButton({ event, remaining }: { event: any; remaining:
 
         {!event.is_free && (
           <div style={{ background:'#F8F8F6', border:'1px solid #E8E8E4', borderRadius:10, padding:'10px 14px' }}>
-            <p style={{ fontSize:11, color:'#6B6B6B', lineHeight:1.6, margin:0 }}>
+            <p style={{ fontSize:11, color:'var(--text-3)', lineHeight:1.6, margin:0 }}>
               💳 <strong>Korean-issued cards only</strong> (credit & debit)<br/>
               For international cards, <a href="/cs" style={{ color:'#0A0A0A', fontWeight:700 }}>contact CS →</a>
             </p>

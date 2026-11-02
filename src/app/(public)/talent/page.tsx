@@ -66,7 +66,7 @@ export default function TalentPage() {
         <h2 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 12 }}>
           You&apos;re in the roster!
         </h2>
-        <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65 }}>
+        <p style={{ fontSize: 14, color: 'var(--text-3)', lineHeight: 1.65 }}>
           We&apos;ll reach out when there&apos;s an opportunity that matches your skills. Thank you for joining the KOJAEMCON talent network!
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function TalentPage() {
           {' '}Roster
         </h1>
 
-        <p style={{ fontSize: 15, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 48, maxWidth: 480 }}>
+        <p style={{ fontSize: 15, color: 'var(--text-3)', lineHeight: 1.65, marginBottom: 48, maxWidth: 480 }}>
           Are you a photographer, DJ, tour guide, chef, or any other creative?
           Register and we&apos;ll connect you with KOJAEMCON events that need your skills.
         </p>
@@ -95,26 +95,26 @@ export default function TalentPage() {
           {/* Basic info */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Name *</label>
+              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Name *</label>
               <input className="input-base" placeholder="Your full name" required
                      value={f.name} onChange={e => setF({ ...f, name: e.target.value })} />
             </div>
             <div>
-              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Email *</label>
+              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Email *</label>
               <input className="input-base" type="email" placeholder="your@email.com" required
                      value={f.email} onChange={e => setF({ ...f, email: e.target.value })} />
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Nationality</label>
+            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Nationality</label>
             <input className="input-base" placeholder="e.g. American, French, Japanese..."
                    value={f.nationality} onChange={e => setF({ ...f, nationality: e.target.value })} />
           </div>
 
           {/* Categories */}
           <div>
-            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 12 }}>
+            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 12 }}>
               Skills / Categories * (select all that apply)
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -138,7 +138,7 @@ export default function TalentPage() {
           </div>
 
           <div>
-            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>About you *</label>
+            <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>About you *</label>
             <textarea
               className="input-base"
               placeholder="Tell us about your experience, what you do, and what makes you great..."
@@ -151,12 +151,12 @@ export default function TalentPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Instagram</label>
+              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Instagram</label>
               <input className="input-base" placeholder="@yourhandle"
                      value={f.instagram} onChange={e => setF({ ...f, instagram: e.target.value })} />
             </div>
             <div>
-              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Portfolio / Website</label>
+              <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Portfolio / Website</label>
               <input className="input-base" placeholder="https://yourportfolio.com"
                      value={f.portfolio} onChange={e => setF({ ...f, portfolio: e.target.value })} />
             </div>
@@ -173,7 +173,7 @@ export default function TalentPage() {
             {loading ? 'Submitting...' : 'Join the talent roster →'}
           </button>
 
-          <p style={{ fontSize: 12, color: '#9A9A9A', textAlign: 'center' }}>
+          <p style={{ fontSize: 12, color: 'var(--text-4)', textAlign: 'center' }}>
             We review all applications and reach out within 48 hours.
           </p>
         </form>

@@ -29,15 +29,15 @@ export default async function MagazinePostPage({ params }: { params: Promise<{ s
       )}
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: 'clamp(32px,5vw,64px) 24px' }}>
-        <Link href="/magazine" style={{ fontSize: 13, color: '#9A9A9A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 28 }}>
+        <Link href="/magazine" style={{ fontSize: 13, color: 'var(--text-4)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 28 }}>
           ← Magazine
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#E9C000', background: '#12161A', padding: '4px 10px', borderRadius: 100, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)', background: '#12161A', padding: '4px 10px', borderRadius: 100, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
             {CAT_LABELS[post.category] || post.category}
           </span>
-          <span style={{ fontSize: 12, color: '#9A9A9A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-4)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
             {new Date(post.published_at || post.created_at).toLocaleDateString('ko-KR')}
           </span>
         </div>
@@ -47,7 +47,7 @@ export default async function MagazinePostPage({ params }: { params: Promise<{ s
         </h1>
 
         {post.summary && (
-          <p style={{ fontSize: 16, color: '#6B6B6B', lineHeight: 1.7, marginBottom: 32, fontFamily: 'PretendardVariable, Pretendard, sans-serif', borderLeft: '3px solid #E9C000', paddingLeft: 16 }}>
+          <p style={{ fontSize: 16, color: 'var(--text-3)', lineHeight: 1.7, marginBottom: 32, fontFamily: 'PretendardVariable, Pretendard, sans-serif', borderLeft: '3px solid #E9C000', paddingLeft: 16 }}>
             {post.summary}
           </p>
         )}
@@ -57,7 +57,7 @@ export default async function MagazinePostPage({ params }: { params: Promise<{ s
         {post.content_html ? (
           <div className="prose-content" dangerouslySetInnerHTML={{ __html: post.content_html }} />
         ) : (
-          <p style={{ color: '#9A9A9A', fontSize: 14 }}>내용이 없어요</p>
+          <p style={{ color: 'var(--text-4)', fontSize: 14 }}>내용이 없어요</p>
         )}
 
         <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #E8E8E4', textAlign: 'center' }}>

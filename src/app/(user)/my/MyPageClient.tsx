@@ -33,31 +33,31 @@ function CSTab() {
 
   return (
     <div style={{ padding: '16px' }}>
-      <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 16, letterSpacing: '-0.03em' }}>My CS</h2>
+      <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 16, letterSpacing: '-0.03em' }}>My CS</h2>
       {tickets.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '48px 0', color: '#9A9A9A', fontSize: 14 }}>No CS tickets yet</div>
+        <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-5)', fontSize: 14 }}>No CS tickets yet</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {tickets.map(t => (
             <div key={t.id} onClick={() => setSelected(selected?.id === t.id ? null : t)}
-              style={{ background: '#fff', border: `1.5px solid ${selected?.id === t.id ? '#1A1A1A' : '#F0F0F0'}`, borderRadius: 12, padding: '14px 16px', cursor: 'pointer' }}>
+              style={{ background: '#fff', border: `1.5px solid ${selected?.id === t.id ? 'var(--text)' : '#F0F0F0'}`, borderRadius: 12, padding: '14px 16px', cursor: 'pointer' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{t.subject}</p>
+                <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{t.subject}</p>
                 <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
                   background: t.status === 'resolved' ? '#DCFCE7' : '#FEF9C3',
                   color: t.status === 'resolved' ? '#15803D' : '#854D0E' }}>
                   {t.status === 'resolved' ? 'Answered' : 'Pending'}
                 </span>
               </div>
-              <p style={{ fontSize: 12, color: '#9A9A9A' }}>{t.category} · {new Date(t.created_at).toLocaleDateString('ko-KR')}</p>
+              <p style={{ fontSize: 12, color: 'var(--text-5)' }}>{t.category} · {new Date(t.created_at).toLocaleDateString('ko-KR')}</p>
               {selected?.id === t.id && (
-                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #F0F0F0' }}>
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
                   <p style={{ fontSize: 13, color: '#555', lineHeight: 1.7, marginBottom: 12 }}>{t.message}</p>
                   {t.admin_reply ? (
                     <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, padding: '10px 12px' }}>
                       <p style={{ fontSize: 11, fontWeight: 700, color: '#15803D', marginBottom: 4 }}>KOGEMCON 답변</p>
-                      <p style={{ fontSize: 13, color: '#1A1A1A', lineHeight: 1.7 }}>{t.admin_reply}</p>
-                      {t.replied_at && <p style={{ fontSize: 11, color: '#9A9A9A', marginTop: 6 }}>{new Date(t.replied_at).toLocaleDateString('ko-KR')}</p>}
+                      <p style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.7 }}>{t.admin_reply}</p>
+                      {t.replied_at && <p style={{ fontSize: 11, color: 'var(--text-5)', marginTop: 6 }}>{new Date(t.replied_at).toLocaleDateString('ko-KR')}</p>}
                     </div>
                   ) : (
                     <div style={{ background: '#FFFBEA', border: '1px solid #FDE68A', borderRadius: 8, padding: '10px 12px' }}>
@@ -71,7 +71,7 @@ function CSTab() {
         </div>
       )}
       <div style={{ marginTop: 16, textAlign: 'center' }}>
-        <a href="/cs" style={{ fontSize: 13, color: '#1A1A1A', fontWeight: 700, textDecoration: 'underline' }}>새 문의하기 →</a>
+        <a href="/cs" style={{ fontSize: 13, color: 'var(--text)', fontWeight: 700, textDecoration: 'underline' }}>새 문의하기 →</a>
       </div>
     </div>
   )
@@ -135,7 +135,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
   const cancelledTickets = ticketList.filter(t => t.status === 'cancelled')
 
   return (
-    <div style={{ background: '#F7F7F7', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
       {/* 프로필 헤더 */}
       <div style={{ background: '#FFFFFF', padding: '20px 16px 0' }}>
@@ -144,28 +144,28 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             {avatarUrl ? (
               <img src={avatarUrl} alt="" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }} />
             ) : (
-              <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: '#1A1A1A' }}>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: 'var(--text)' }}>
                 {(profile?.display_name || user?.email || '?')[0].toUpperCase()}
               </div>
             )}
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 17, color: '#1A1A1A', letterSpacing: '-0.03em' }}>
+            <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 17, color: 'var(--text)', letterSpacing: '-0.03em' }}>
               {profile?.display_name || 'My Page'}
             </p>
-            <p style={{ fontSize: 13, color: '#9A9A9A', marginTop: 2 }}>{user?.email}</p>
+            <p style={{ fontSize: 13, color: 'var(--text-5)', marginTop: 2 }}>{user?.email}</p>
           </div>
           <button onClick={() => setActiveTab('profile')}
-            style={{ padding: '7px 14px', borderRadius: 8, background: '#F7F7F7', border: '1px solid #E8E8E4', fontSize: 13, fontWeight: 600, color: '#1A1A1A', cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+            style={{ padding: '7px 14px', borderRadius: 8, background: 'var(--bg)', border: '1px solid #E8E8E4', fontSize: 13, fontWeight: 600, color: 'var(--text)', cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
             Edit
           </button>
         </div>
 
         {/* 탭 */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #F0F0F0' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--border)' }}>
           {TABS.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
-              style={{ flex: 1, padding: '12px 0', fontSize: 13, fontWeight: activeTab === tab.id ? 800 : 500, color: activeTab === tab.id ? '#1A1A1A' : '#9A9A9A', background: 'none', border: 'none', cursor: 'pointer', borderBottom: activeTab === tab.id ? '2px solid #E9C000' : '2px solid transparent', fontFamily: 'PretendardVariable, Pretendard, sans-serif', transition: 'all 0.15s' }}>
+              style={{ flex: 1, padding: '12px 0', fontSize: 13, fontWeight: activeTab === tab.id ? 800 : 500, color: activeTab === tab.id ? 'var(--text)' : '#9A9A9A', background: 'none', border: 'none', cursor: 'pointer', borderBottom: activeTab === tab.id ? '2px solid #E9C000' : '2px solid transparent', fontFamily: 'PretendardVariable, Pretendard, sans-serif', transition: 'all 0.15s' }}>
               {tab.emoji} {tab.label}
             </button>
           ))}
@@ -181,19 +181,19 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             {activeTickets.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '48px 0' }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>🎫</div>
-                <p style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 6 }}>No tickets yet</p>
-                <p style={{ fontSize: 14, color: '#9A9A9A', marginBottom: 20 }}>Join an event and your tickets will appear here.</p>
-                <Link href="/events" style={{ background: '#E9C000', color: '#1A1A1A', padding: '12px 24px', borderRadius: 10, fontWeight: 800, fontSize: 14, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Find Events →</Link>
+                <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>No tickets yet</p>
+                <p style={{ fontSize: 14, color: 'var(--text-5)', marginBottom: 20 }}>Join an event and your tickets will appear here.</p>
+                <Link href="/events" style={{ background: 'var(--gold)', color: 'var(--text)', padding: '12px 24px', borderRadius: 10, fontWeight: 800, fontSize: 14, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Find Events →</Link>
               </div>
             ) : (
               activeTickets.map(ticket => (
-                <div key={ticket.id} style={{ background: '#FFFFFF', borderRadius: 14, overflow: 'hidden', border: '1px solid #F0F0F0' }}>
+                <div key={ticket.id} style={{ background: '#FFFFFF', borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)' }}>
                   {ticket.events?.cover_image_url && (
                     <img src={ticket.events.cover_image_url} alt="" style={{ width: '100%', height: 140, objectFit: 'cover' }} />
                   )}
                   <div style={{ padding: '14px 16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                      <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: '#1A1A1A', letterSpacing: '-0.03em', flex: 1, marginRight: 8 }}>
+                      <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.03em', flex: 1, marginRight: 8 }}>
                         {ticket.events?.title}
                       </h3>
                       <span style={{ padding: '3px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700, background: ticket.status === 'paid' ? '#DCFCE7' : '#DBEAFE', color: ticket.status === 'paid' ? '#15803D' : '#1D4ED8', flexShrink: 0 }}>
@@ -201,20 +201,20 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                       </span>
                     </div>
                     {ticket.events?.starts_at && (
-                      <p style={{ fontSize: 13, color: '#6B6B6B', marginBottom: 4 }}>
+                      <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 4 }}>
                         📅 {new Date(ticket.events.starts_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' })}
                       </p>
                     )}
                     {ticket.events?.venue_name && (
-                      <p style={{ fontSize: 13, color: '#6B6B6B', marginBottom: 12 }}>📍 {ticket.events.venue_name}</p>
+                      <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 12 }}>📍 {ticket.events.venue_name}</p>
                     )}
                     <div style={{ display: 'flex', gap: 8 }}>
                       <Link href={`/events/${ticket.events?.slug}`}
-                        style={{ flex: 1, display: 'block', textAlign: 'center', padding: '10px', borderRadius: 10, background: '#F7F7F7', color: '#1A1A1A', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                        style={{ flex: 1, display: 'block', textAlign: 'center', padding: '10px', borderRadius: 10, background: 'var(--bg)', color: 'var(--text)', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                         View Event
                       </Link>
                       <Link href={`/chat/${ticket.events?.id}`}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '10px 14px', borderRadius: 10, background: '#1A1A1A', color: '#E9C000', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '10px 14px', borderRadius: 10, background: 'var(--text)', color: 'var(--gold)', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                         💬 Chat
                       </Link>
                       <button onClick={() => setCancelTarget(ticket)}
@@ -230,10 +230,10 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             {/* 취소된 티켓 */}
             {cancelledTickets.length > 0 && (
               <div style={{ marginTop: 8 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#9A9A9A', marginBottom: 10, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Cancelled</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-5)', marginBottom: 10, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Cancelled</p>
                 {cancelledTickets.map(ticket => (
-                  <div key={ticket.id} style={{ background: '#FFFFFF', borderRadius: 14, padding: '14px 16px', border: '1px solid #F0F0F0', opacity: 0.6, marginBottom: 10 }}>
-                    <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#6B6B6B' }}>{ticket.events?.title}</p>
+                  <div key={ticket.id} style={{ background: '#FFFFFF', borderRadius: 14, padding: '14px 16px', border: '1px solid var(--border)', opacity: 0.6, marginBottom: 10 }}>
+                    <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--text-3)' }}>{ticket.events?.title}</p>
                     <span style={{ fontSize: 11, fontWeight: 700, color: '#DC2626', background: '#FEE2E2', padding: '2px 8px', borderRadius: 4 }}>Cancelled</span>
                   </div>
                 ))}
@@ -246,50 +246,50 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
         {activeTab === 'profile' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {/* 아바타 */}
-            <div style={{ background: '#FFFFFF', borderRadius: 14, padding: '20px 16px', border: '1px solid #F0F0F0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <div style={{ background: '#FFFFFF', borderRadius: 14, padding: '20px 16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
               <div style={{ position: 'relative' }}>
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }} />
                 ) : (
-                  <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 800, color: '#1A1A1A' }}>
+                  <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 800, color: 'var(--text)' }}>
                     {(profile?.display_name || '?')[0].toUpperCase()}
                   </div>
                 )}
               </div>
-              <label style={{ padding: '8px 20px', borderRadius: 8, background: '#F7F7F7', border: '1px solid #E8E8E4', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              <label style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--bg)', border: '1px solid #E8E8E4', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                 {uploading ? 'Uploading...' : 'Change Photo'}
                 <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
               </label>
             </div>
 
             {/* 정보 입력 */}
-            <div style={{ background: '#FFFFFF', borderRadius: 14, padding: '16px', border: '1px solid #F0F0F0', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ background: '#FFFFFF', borderRadius: 14, padding: '16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Display Name</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-5)', display: 'block', marginBottom: 6 }}>Display Name</label>
                 <input value={displayName} onChange={e => setDisplayName(e.target.value)}
                   className="input-base" placeholder="How others see you" />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Bio</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-5)', display: 'block', marginBottom: 6 }}>Bio</label>
                 <textarea value={bio} onChange={e => setBio(e.target.value)}
                   className="input-base" rows={3} style={{ resize: 'none' }} placeholder="Tell us about yourself..." />
               </div>
-              <div style={{ paddingTop: 4, borderTop: '1px solid #F0F0F0' }}>
-                <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 2 }}>Email</p>
-                <p style={{ fontSize: 14, color: '#1A1A1A', fontWeight: 600 }}>{user?.email}</p>
+              <div style={{ paddingTop: 4, borderTop: '1px solid var(--border)' }}>
+                <p style={{ fontSize: 12, color: 'var(--text-5)', marginBottom: 2 }}>Email</p>
+                <p style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600 }}>{user?.email}</p>
               </div>
-              <div style={{ paddingTop: 4, borderTop: '1px solid #F0F0F0' }}>
-                <p style={{ fontSize: 12, color: '#9A9A9A', marginBottom: 2 }}>Nationality</p>
-                <p style={{ fontSize: 14, color: '#1A1A1A', fontWeight: 600 }}>{profile?.nationality || '-'}</p>
+              <div style={{ paddingTop: 4, borderTop: '1px solid var(--border)' }}>
+                <p style={{ fontSize: 12, color: 'var(--text-5)', marginBottom: 2 }}>Nationality</p>
+                <p style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600 }}>{profile?.nationality || '-'}</p>
               </div>
               <button onClick={saveProfile} disabled={savingProfile}
-                style={{ width: '100%', padding: '13px', borderRadius: 12, background: '#E9C000', color: '#1A1A1A', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                style={{ width: '100%', padding: '13px', borderRadius: 12, background: 'var(--gold)', color: 'var(--text)', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                 {savedProfile ? 'Saved! ✓' : savingProfile ? 'Saving...' : 'Save Profile'}
               </button>
             </div>
 
             {/* 로그아웃 */}
-            <div style={{ background: '#FFFFFF', borderRadius: 14, border: '1px solid #F0F0F0', overflow: 'hidden' }}>
+            <div style={{ background: '#FFFFFF', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
               <button onClick={async () => { await supabase().auth.signOut(); window.location.href = '/' }}
                 style={{ width: '100%', padding: '16px', background: 'none', border: 'none', color: '#DC2626', fontWeight: 700, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', textAlign: 'left' }}>
                 Log out
@@ -304,19 +304,19 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             {hosted?.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '48px 0' }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>🎪</div>
-                <p style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 6 }}>No events hosted yet</p>
-                <p style={{ fontSize: 14, color: '#9A9A9A', marginBottom: 20 }}>Share your passion with the community!</p>
-                <Link href="/host/new" style={{ background: '#E9C000', color: '#1A1A1A', padding: '12px 24px', borderRadius: 10, fontWeight: 800, fontSize: 14, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Host an Event →</Link>
+                <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>No events hosted yet</p>
+                <p style={{ fontSize: 14, color: 'var(--text-5)', marginBottom: 20 }}>Share your passion with the community!</p>
+                <Link href="/host/new" style={{ background: 'var(--gold)', color: 'var(--text)', padding: '12px 24px', borderRadius: 10, fontWeight: 800, fontSize: 14, textDecoration: 'none', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Host an Event →</Link>
               </div>
             ) : (
               hosted?.map((event: any) => (
-                <div key={event.id} style={{ background: '#FFFFFF', borderRadius: 14, padding: '14px 16px', border: '1px solid #F0F0F0' }}>
+                <div key={event.id} style={{ background: '#FFFFFF', borderRadius: 14, padding: '14px 16px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', gap: 12 }}>
                     {event.cover_image_url && (
                       <img src={event.cover_image_url} alt="" style={{ width: 64, height: 64, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
                     )}
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4 }}>{event.title}</p>
+                      <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>{event.title}</p>
                       <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
                         background: event.status === 'published' ? '#DCFCE7' : event.status === 'closed' ? '#F3F4F6' : '#FEF9C3',
                         color: event.status === 'published' ? '#15803D' : event.status === 'closed' ? '#6B7280' : '#854D0E' }}>
@@ -337,13 +337,13 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} onClick={() => setCancelTarget(null)} />
           <div style={{ position: 'relative', background: '#fff', borderRadius: '20px 20px 0 0', padding: '24px 20px 40px', width: '100%', maxWidth: 430, zIndex: 10 }} className="sheet-enter">
             <div style={{ width: 36, height: 4, borderRadius: 2, background: '#E0E0E0', margin: '0 auto 20px' }} />
-            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 6 }}>Cancel Ticket</h3>
-            <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 16 }}>{cancelTarget.events?.title}</p>
-            <p style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', marginBottom: 10 }}>Why are you cancelling?</p>
+            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 6 }}>Cancel Ticket</h3>
+            <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 16 }}>{cancelTarget.events?.title}</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>Why are you cancelling?</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
               {CANCEL_REASONS.map(r => (
                 <button key={r} type="button" onClick={() => setCancelReason(r)}
-                  style={{ padding: '12px 14px', borderRadius: 10, border: `1.5px solid ${cancelReason === r ? '#1A1A1A' : '#F0F0F0'}`, background: cancelReason === r ? '#1A1A1A' : '#FFFFFF', color: cancelReason === r ? '#fff' : '#1A1A1A', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                  style={{ padding: '12px 14px', borderRadius: 10, border: `1.5px solid ${cancelReason === r ? 'var(--text)' : '#F0F0F0'}`, background: cancelReason === r ? 'var(--text)' : '#FFFFFF', color: cancelReason === r ? '#fff' : 'var(--text)', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                   {r}
                 </button>
               ))}
@@ -359,7 +359,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
-                style={{ flex: 1, padding: '13px', borderRadius: 12, border: '1.5px solid #E0E0E0', background: '#fff', color: '#1A1A1A', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                style={{ flex: 1, padding: '13px', borderRadius: 12, border: '1.5px solid #E0E0E0', background: '#fff', color: 'var(--text)', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
                 Keep ticket
               </button>
               <button onClick={submitCancel} disabled={cancelling || !cancelReason}

@@ -4,7 +4,7 @@ import AdminButton from '@/components/AdminButton'
 export default function Footer() {
   return (
     <footer style={{ background: '#12161A' }}>
-      <div style={{ height: 4, background: '#E9C000' }} />
+      <div style={{ height: 4, background: 'var(--gold)' }} />
 
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 24px 32px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32, marginBottom: 40 }}>
@@ -12,17 +12,17 @@ export default function Footer() {
           {/* Logo block */}
           <div style={{ gridColumn: 'span 1' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: '#E9C000', lineHeight: 0.85, display: 'flex', flexDirection: 'column', fontSize: 0 }}>
+              <div style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, color: 'var(--gold)', lineHeight: 0.85, display: 'flex', flexDirection: 'column', fontSize: 0 }}>
                 <span style={{ fontSize: 18 }}>ㅋ</span>
                 <span style={{ fontSize: 22, marginLeft: 3 }}>ㅈ</span>
                 <span style={{ fontSize: 18 }}>ㅋ</span>
               </div>
-              <span style={{ fontFamily: 'Righteous, sans-serif', fontSize: 22, color: '#E9C000', letterSpacing: '0.01em', lineHeight: 1 }}>
+              <span style={{ fontFamily: 'Righteous, sans-serif', fontSize: 22, color: 'var(--gold)', letterSpacing: '0.01em', lineHeight: 1 }}>
                 KOGEMCON
               </span>
             </div>
             <p style={{ fontSize: 12, color: '#888', lineHeight: 1.7, maxWidth: 200 }}>
-              Find your <span style={{ color: '#E9C000' }}>Gems</span> in Korea.<br />
+              Find your <span style={{ color: 'var(--gold)' }}>Gems</span> in Korea.<br />
               Events, tours & meetups<br />for foreigners.
             </p>
             <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>

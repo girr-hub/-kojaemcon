@@ -14,7 +14,7 @@ export default function FloatingCS() {
         transform: 'translateY(-50%)',
         zIndex: 8000,
         background: '#FAE100',
-        color: '#1A1A1A',
+        color: 'var(--text)',
         borderRadius: '12px 0 0 12px',
         padding: '12px 8px',
         textDecoration: 'none',

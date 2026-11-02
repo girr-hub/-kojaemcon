@@ -47,10 +47,10 @@ export default function GlobalChatPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', background: '#F5F5F5' }}>
       <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🌍</div>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🌍</div>
         <div>
-          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: '#1A1A1A' }}>Global Chat</p>
-          <p style={{ fontSize: 12, color: '#9A9A9A' }}>Everyone in KOGEMCON</p>
+          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)' }}>Global Chat</p>
+          <p style={{ fontSize: 12, color: 'var(--text-4)' }}>Everyone in KOGEMCON</p>
         </div>
       </div>
 
@@ -63,11 +63,11 @@ export default function GlobalChatPage() {
             <div key={m.id} style={{ display: 'flex', flexDirection: mine ? 'row-reverse' : 'row', alignItems: 'flex-end', gap: 8 }}>
               {!mine && (
                 avatar ? <img src={avatar} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} alt="" />
-                : <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#E9C000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: '#1A1A1A', flexShrink: 0 }}>{name[0]?.toUpperCase()}</div>
+                : <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: 'var(--text)', flexShrink: 0 }}>{name[0]?.toUpperCase()}</div>
               )}
               <div style={{ maxWidth: '70%', display: 'flex', flexDirection: 'column', alignItems: mine ? 'flex-end' : 'flex-start', gap: 3 }}>
-                {!mine && <span style={{ fontSize: 11, color: '#9A9A9A', marginLeft: 4 }}>{name} {m.profiles?.nationality ? `🏳️ ${m.profiles.nationality}` : ''}</span>}
-                <div style={{ background: mine ? '#1A1A1A' : '#FFFFFF', color: mine ? '#FFFFFF' : '#1A1A1A', borderRadius: mine ? '18px 18px 4px 18px' : '18px 18px 18px 4px', padding: '10px 14px', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', lineHeight: 1.5, boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
+                {!mine && <span style={{ fontSize: 11, color: 'var(--text-4)', marginLeft: 4 }}>{name} {m.profiles?.nationality ? `🏳️ ${m.profiles.nationality}` : ''}</span>}
+                <div style={{ background: mine ? 'var(--text)' : '#FFFFFF', color: mine ? '#FFFFFF' : 'var(--text)', borderRadius: mine ? '18px 18px 4px 18px' : '18px 18px 18px 4px', padding: '10px 14px', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', lineHeight: 1.5, boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
                   {m.body}
                 </div>
                 <span style={{ fontSize: 10, color: '#BBB' }}>{formatTime(m.created_at)}</span>
@@ -80,9 +80,9 @@ export default function GlobalChatPage() {
 
       <div style={{ background: '#FFFFFF', borderTop: '1px solid #F0F0F0', padding: '10px 16px', paddingBottom: 'calc(10px + env(safe-area-inset-bottom))', display: 'flex', gap: 10, alignItems: 'flex-end' }}>
         <textarea value={text} onChange={e => setText(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }}} placeholder="Message everyone..." rows={1}
-          style={{ flex: 1, padding: '10px 14px', borderRadius: 20, border: '1.5px solid #F0F0F0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', resize: 'none', outline: 'none', background: '#F7F7F7', lineHeight: 1.5 }} />
+          style={{ flex: 1, padding: '10px 14px', borderRadius: 20, border: '1.5px solid #F0F0F0', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', resize: 'none', outline: 'none', background: 'var(--bg)', lineHeight: 1.5 }} />
         <button onClick={send} disabled={!text.trim()}
-          style={{ width: 40, height: 40, borderRadius: '50%', border: 'none', background: text.trim() ? '#1A1A1A' : '#F0F0F0', color: text.trim() ? '#E9C000' : '#9A9A9A', cursor: text.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          style={{ width: 40, height: 40, borderRadius: '50%', border: 'none', background: text.trim() ? 'var(--text)' : 'var(--border)', color: text.trim() ? 'var(--gold)' : 'var(--text-4)', cursor: text.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
       </div>

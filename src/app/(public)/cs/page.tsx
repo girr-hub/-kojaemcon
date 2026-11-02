@@ -31,8 +31,8 @@ export default function CSPage() {
     <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 400 }}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-        <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', marginBottom: 8 }}>Message received!</h2>
-        <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65 }}>We typically respond within 24–48 hours.</p>
+        <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: 'var(--text)', marginBottom: 8 }}>Message received!</h2>
+        <p style={{ fontSize: 14, color: 'var(--text-3)', lineHeight: 1.65 }}>We typically respond within 24–48 hours.</p>
       </div>
     </div>
   )
@@ -41,31 +41,31 @@ export default function CSPage() {
     <div style={{ minHeight: '100vh', background: '#FFFFFF' }}>
       <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 16px 100px' }}>
         <div style={{ marginBottom: 24 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', marginBottom: 6 }}>Support</p>
-          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: '#1A1A1A', letterSpacing: '-0.03em', marginBottom: 6 }}>Contact Us</h1>
-          <p style={{ fontSize: 14, color: '#6B6B6B' }}>We usually reply within 24–48 hours.</p>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', marginBottom: 6 }}>Support</p>
+          <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 6 }}>Contact Us</h1>
+          <p style={{ fontSize: 14, color: 'var(--text-3)' }}>We usually reply within 24–48 hours.</p>
         </div>
 
         <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Name *</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', display: 'block', marginBottom: 6 }}>Name *</label>
               <input className="input-base" required placeholder="Your name" value={f.name} onChange={e => setF({ ...f, name: e.target.value })} />
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Email *</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', display: 'block', marginBottom: 6 }}>Email *</label>
               <input className="input-base" type="email" required placeholder="your@email.com" value={f.email} onChange={e => setF({ ...f, email: e.target.value })} />
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 8 }}>Category *</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>Category *</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {CATS.map(c => (
                 <button key={c.id} type="button" onClick={() => setF({ ...f, category: c.id })}
                   style={{ padding: '7px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                    background: f.category === c.id ? '#1A1A1A' : '#F7F7F7',
-                    color: f.category === c.id ? '#fff' : '#1A1A1A',
+                    background: f.category === c.id ? 'var(--text)' : 'var(--bg)',
+                    color: f.category === c.id ? '#fff' : 'var(--text)',
                     border: f.category === c.id ? '1.5px solid #1A1A1A' : '1.5px solid #EBEBEB' }}>
                   {c.label}
                 </button>
@@ -74,12 +74,12 @@ export default function CSPage() {
           </div>
 
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Subject *</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', display: 'block', marginBottom: 6 }}>Subject *</label>
             <input className="input-base" required placeholder="Brief description" value={f.subject} onChange={e => setF({ ...f, subject: e.target.value })} />
           </div>
 
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#9A9A9A', display: 'block', marginBottom: 6 }}>Message *</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', display: 'block', marginBottom: 6 }}>Message *</label>
             <textarea className="input-base" required rows={6} style={{ resize: 'none' }}
               placeholder="Describe your issue in detail..." value={f.message} onChange={e => setF({ ...f, message: e.target.value })} />
           </div>

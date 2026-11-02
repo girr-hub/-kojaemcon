@@ -50,7 +50,7 @@ export default function FomoPopup({ count }: { count: number }) {
         }}>
           <span style={{ fontSize: 16 }}>👀</span>
           <span>
-            <strong style={{ color: '#E9C000' }}>{count} people</strong> are considering this!
+            <strong style={{ color: 'var(--gold)' }}>{count} people</strong> are considering this!
           </span>
         </div>
       </div>

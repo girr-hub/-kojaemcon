@@ -9,7 +9,7 @@ const BANKS = ['KB Kookmin Bank', 'Shinhan Bank', 'Woori Bank', 'Hana Bank', 'IB
 
 
 const inputStyle: any = { width: '100%', padding: '11px 12px', borderRadius: 10, border: '1.5px solid #E8E8E8', fontSize: 14, fontFamily: 'PretendardVariable, Pretendard, sans-serif', outline: 'none', boxSizing: 'border-box' }
-const labelStyle: any = { fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6 }
+const labelStyle: any = { fontSize: 12, fontWeight: 700, color: 'var(--text-3)', display: 'block', marginBottom: 6 }
 
 function BeautyForm({ form, setForm }: { form: any, setForm: any }) {
   return (
@@ -55,11 +55,11 @@ function BeautyForm({ form, setForm }: { form: any, setForm: any }) {
             { value: 'hilowave', label: '① HiloWave 2cc', sub: 'Worth ₩880,000 · Facial Care' },
             { value: 'rarefit', label: '② Rare Fit Injection + Body Onda Lifting 100kJ', sub: 'Worth ₩2,090,000 · Body Care (Fat Dissolving + Lifting)' },
           ].map(opt => (
-            <label key={opt.value} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', borderRadius: 10, border: `1.5px solid ${form.selected_treatment === opt.value ? '#1A1A1A' : '#E8E8E8'}`, background: form.selected_treatment === opt.value ? '#F7F7F7' : '#fff', cursor: 'pointer' }}>
+            <label key={opt.value} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', borderRadius: 10, border: `1.5px solid ${form.selected_treatment === opt.value ? 'var(--text)' : '#E8E8E8'}`, background: form.selected_treatment === opt.value ? 'var(--bg)' : '#fff', cursor: 'pointer' }}>
               <input type="radio" name="treatment" value={opt.value} checked={form.selected_treatment === opt.value} onChange={e => setForm({...form, selected_treatment: e.target.value})} style={{ marginTop: 2, flexShrink: 0 }} />
               <div>
-                <p style={{ fontWeight: 700, fontSize: 13, color: '#1A1A1A', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{opt.label}</p>
-                <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>{opt.sub}</p>
+                <p style={{ fontWeight: 700, fontSize: 13, color: 'var(--text)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{opt.label}</p>
+                <p style={{ fontSize: 12, color: 'var(--text-4)', marginTop: 2 }}>{opt.sub}</p>
               </div>
             </label>
           ))}
@@ -135,8 +135,8 @@ function StandardForm({ form, setForm }: { form: any, setForm: any }) {
         <label style={labelStyle}>Email <span style={{ color: '#DC2626' }}>*</span></label>
         <input type="email" value={form.email || ''} onChange={e => setForm({...form, email: e.target.value})} placeholder="your@email.com" style={inputStyle} />
       </div>
-      <div style={{ background: '#F7F7F7', borderRadius: 12, padding: 14 }}>
-        <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
+      <div style={{ background: 'var(--bg)', borderRadius: 12, padding: 14 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-3)', marginBottom: 10 }}>Payback Account Info <span style={{ color: '#DC2626' }}>*</span></p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <select value={form.bank_name} onChange={e => setForm({...form, bank_name: e.target.value})} style={{ ...inputStyle, background: '#fff' }}>
             <option value="">Select Bank</option>
@@ -259,8 +259,8 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
       )}
 
       <div style={{ background: '#FFFFFF', padding: '20px 16px', marginBottom: 8 }}>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: '#1A1A1A', letterSpacing: '-0.04em', marginBottom: 8 }}>{event.title}</h1>
-        <div style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.7, marginBottom: 12 }}
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 22, color: 'var(--text)', letterSpacing: '-0.04em', marginBottom: 8 }}>{event.title}</h1>
+        <div style={{ fontSize: 14, color: 'var(--text-3)', lineHeight: 1.7, marginBottom: 12 }}
           dangerouslySetInnerHTML={{ __html: (event.description || '')
             .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -270,19 +270,19 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
           }} />
         {event.location && <p style={{ fontSize: 13, color: '#999' }}>📍 {event.location}</p>}
         <div style={{ display: 'flex', gap: 16, marginTop: 10 }}>
-          <span style={{ fontSize: 13, color: '#6B6B6B', fontWeight: 600 }}>
+          <span style={{ fontSize: 13, color: 'var(--text-3)', fontWeight: 600 }}>
             신청 {event.applicant_count ?? 0}명
           </span>
           {event.capacity && (
-            <span style={{ fontSize: 13, color: '#9A9A9A' }}>/ 모집 {event.capacity}명</span>
+            <span style={{ fontSize: 13, color: 'var(--text-4)' }}>/ 모집 {event.capacity}명</span>
           )}
         </div>
         {event.available_dates?.length > 0 && (
           <div style={{ marginTop: 12 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', marginBottom: 6 }}>Available Dates</p>
+            <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-3)', marginBottom: 6 }}>Available Dates</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {event.available_dates.map((d: string, i: number) => (
-                <span key={i} style={{ fontSize: 12, background: '#F7F7F7', border: '1px solid #E8E8E8', borderRadius: 6, padding: '4px 10px', color: '#555' }}>{d}</span>
+                <span key={i} style={{ fontSize: 12, background: 'var(--bg)', border: '1px solid #E8E8E8', borderRadius: 6, padding: '4px 10px', color: '#555' }}>{d}</span>
               ))}
             </div>
           </div>
@@ -293,17 +293,17 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
         <div style={{ background: '#FEE2E2', margin: '0 16px', borderRadius: 14, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
           <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#DC2626', marginBottom: 6 }}>Applications Closed</p>
-          <p style={{ fontSize: 14, color: '#6B6B6B' }}>This experience is no longer accepting applications.</p>
+          <p style={{ fontSize: 14, color: 'var(--text-3)' }}>This experience is no longer accepting applications.</p>
         </div>
       ) : submitted ? (
         <div style={{ background: '#FFFFFF', margin: '0 16px', borderRadius: 14, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🎉</div>
-          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 6 }}>Application Submitted!</p>
+          <p style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 6 }}>Application Submitted!</p>
           <p style={{ fontSize: 14, color: '#999' }}>We will review your application and get back to you soon.</p>
         </div>
       ) : (
         <div style={{ background: '#FFFFFF', padding: '20px 16px' }}>
-          <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: '#1A1A1A', marginBottom: 16, letterSpacing: '-0.03em' }}>Apply for Experience</h2>
+          <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 16, letterSpacing: '-0.03em' }}>Apply for Experience</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {id === ONHWA_ID ? (
               <OnhwaForm form={form} setForm={setForm} />
@@ -317,7 +317,7 @@ export default function ExperienceDetailPage({ params }: { params: Promise<{ id:
 
 
             <button onClick={submit} disabled={submitting}
-              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#1A1A1A', color: '#E9C000', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: submitting ? 0.6 : 1 }}>
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--text)', color: 'var(--gold)', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif', opacity: submitting ? 0.6 : 1 }}>
               {submitting ? 'Submitting...' : 'Apply Now'}
             </button>
           </div>

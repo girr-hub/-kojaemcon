@@ -45,7 +45,7 @@ export default function Hero({ data }: {
             <div style={{
               fontFamily: 'PretendardVariable, Pretendard, sans-serif',
               fontWeight: 900,
-              color: '#E9C000',
+              color: 'var(--gold)',
               lineHeight: 0.9,
               letterSpacing: '-0.04em',
               display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
@@ -62,7 +62,7 @@ export default function Hero({ data }: {
             <div style={{
               fontFamily: 'Righteous, sans-serif',
               fontSize: 'clamp(28px, 5vw, 56px)',
-              color: '#E9C000',
+              color: 'var(--gold)',
               lineHeight: 1.05,
               letterSpacing: '0.02em',
             }}>
@@ -80,7 +80,7 @@ export default function Hero({ data }: {
             lineHeight: 1.3,
             marginBottom: 10,
           }}>
-            Find your <span style={{ color: '#E9C000', fontWeight: 700 }}>Gems</span> in Korea
+            Find your <span style={{ color: 'var(--gold)', fontWeight: 700 }}>Gems</span> in Korea
           </h1>
 
           <p style={{
@@ -94,7 +94,7 @@ export default function Hero({ data }: {
 
           {/* CTA */}
           <Link href="/events" style={{
-            background: '#E9C000', color: '#12161A', border: 'none',
+            background: 'var(--gold)', color: '#12161A', border: 'none',
             fontFamily: 'PretendardVariable, Pretendard, sans-serif',
             fontSize: 16, fontWeight: 700,
             padding: '14px 40px', borderRadius: 100,
@@ -106,7 +106,7 @@ export default function Hero({ data }: {
         </div>
 
         {/* Yellow bottom bar */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 6, background: '#E9C000' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 6, background: 'var(--gold)' }} />
       </section>
 
       {/* Upcoming Events section - light */}

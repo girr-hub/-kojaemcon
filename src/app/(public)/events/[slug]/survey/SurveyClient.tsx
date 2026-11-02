@@ -28,7 +28,7 @@ export default function SurveyClient({ event }: { event: any }) {
       <div>
         <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
         <h2 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 24, color: '#0A0A0A', marginBottom: 8 }}>Thank you!</h2>
-        <p style={{ fontSize: 14, color: '#6B6B6B' }}>Your feedback helps us make better events.</p>
+        <p style={{ fontSize: 14, color: 'var(--text-3)' }}>Your feedback helps us make better events.</p>
       </div>
     </div>
   )
@@ -40,10 +40,10 @@ export default function SurveyClient({ event }: { event: any }) {
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '100px 24px 80px' }}>
         <div className="eyebrow">Feedback</div>
         <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 32, letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 6 }}>How was the event?</h1>
-        <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 32 }}>{event.title}</p>
+        <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 32 }}>{event.title}</p>
 
         <div style={{ marginBottom: 28 }}>
-          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 12 }}>Overall Rating *</label>
+          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 12 }}>Overall Rating *</label>
           <div style={{ display: 'flex', gap: 8 }}>
             {[1,2,3,4,5].map(s => (
               <button key={s} onClick={() => setRating(s)} type="button"
@@ -52,11 +52,11 @@ export default function SurveyClient({ event }: { event: any }) {
               </button>
             ))}
           </div>
-          {rating > 0 && <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 8 }}>{ratingLabels[rating]}</p>}
+          {rating > 0 && <p style={{ fontSize: 12, color: 'var(--text-4)', marginTop: 8 }}>{ratingLabels[rating]}</p>}
         </div>
 
         <div style={{ marginBottom: 28 }}>
-          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 12 }}>Would you recommend this?</label>
+          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 12 }}>Would you recommend this?</label>
           <div style={{ display: 'flex', gap: 8 }}>
             {[{ v: true, l: '👍 Yes' }, { v: false, l: '👎 No' }].map(({ v, l }) => (
               <button key={String(v)} onClick={() => setRecommend(v)} type="button"
@@ -70,12 +70,12 @@ export default function SurveyClient({ event }: { event: any }) {
         </div>
 
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>What did you enjoy most?</label>
+          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>What did you enjoy most?</label>
           <textarea className="input-base" rows={3} style={{ resize: 'none' }} placeholder="The people, the venue..." value={highlight} onChange={e => setHighlight(e.target.value)} />
         </div>
 
         <div style={{ marginBottom: 28 }}>
-          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9A9A', display: 'block', marginBottom: 8 }}>What could be improved?</label>
+          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-4)', display: 'block', marginBottom: 8 }}>What could be improved?</label>
           <textarea className="input-base" rows={3} style={{ resize: 'none' }} placeholder="Suggestions for next time..." value={improve} onChange={e => setImprove(e.target.value)} />
         </div>
 

@@ -12,7 +12,7 @@ export default function ExperienceBanner({ showAll = false }: { showAll?: boolea
   }, [])
 
   if (items.length === 0) return (
-    <div style={{ padding: '24px 16px', textAlign: 'center', color: '#9A9A9A', fontSize: 13 }}>
+    <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--text-4)', fontSize: 13 }}>
       No experiences yet
     </div>
   )
@@ -25,17 +25,17 @@ export default function ExperienceBanner({ showAll = false }: { showAll?: boolea
             {e.images?.[0] ? (
               <img src={e.images[0]} alt={e.title} style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />
             ) : (
-              <div style={{ width: 80, height: 80, borderRadius: 8, background: '#F0F0F0', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>🌟</div>
+              <div style={{ width: 80, height: 80, borderRadius: 8, background: 'var(--border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>🌟</div>
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: '#1A1A1A', marginBottom: 4, letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</h3>
+              <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 4, letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</h3>
               <p style={{ fontSize: 12, color: '#999', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any, lineHeight: 1.5 }}>{e.description}</p>
               {e.location && <p style={{ fontSize: 12, color: '#BBB', marginTop: 4 }}>📍 {e.location}</p>}
-              <p style={{ fontSize: 12, color: '#9A9A9A', marginTop: 4 }}>
+              <p style={{ fontSize: 12, color: 'var(--text-4)', marginTop: 4 }}>
                 신청 {e.applicant_count ?? 0}명{e.capacity ? ` / 모집 ${e.capacity}명` : ''}
               </p>
             </div>
-            <span style={{ fontSize: 11, fontWeight: 700, color: e.status === 'closed' ? '#fff' : '#1A1A1A', background: e.status === 'closed' ? '#DC2626' : '#E9C000', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: e.status === 'closed' ? '#fff' : 'var(--text)', background: e.status === 'closed' ? '#DC2626' : 'var(--gold)', padding: '4px 8px', borderRadius: 6, flexShrink: 0 }}>
               {e.status === 'closed' ? 'Closed' : 'Join'}
             </span>
           </div>

@@ -80,17 +80,17 @@ export default function PostDetailPage() {
     router.push('/community')
   }
 
-  if (loading) return <div style={{ padding: '120px 24px', textAlign: 'center', color: '#9A9A9A' }}>Loading...</div>
+  if (loading) return <div style={{ padding: '120px 24px', textAlign: 'center', color: 'var(--text-4)' }}>Loading...</div>
   if (!post) return <div style={{ padding: '120px 24px', textAlign: 'center' }}>Post not found</div>
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '100px 24px 80px' }}>
-        <Link href="/community" style={{ fontSize: 13, color: '#9A9A9A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32 }}>← Back to Board</Link>
+        <Link href="/community" style={{ fontSize: 13, color: 'var(--text-4)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32 }}>← Back to Board</Link>
 
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: '#9A9A9A', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{post.category}</span>
+            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{post.category}</span>
           </div>
           <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 'clamp(24px,4vw,36px)', letterSpacing: '-0.04em', color: '#0A0A0A', marginBottom: 16, lineHeight: 1.1 }}>{post.title}</h1>
 
@@ -98,11 +98,11 @@ export default function PostDetailPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               {post.profiles?.avatar_url
                 ? <img src={post.profiles.avatar_url} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} alt="" />
-                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#F8F8F6', border: '1.5px solid #E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#9A9A9A', fontSize: 14 }}>{(post.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
+                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#F8F8F6', border: '1.5px solid #E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'var(--text-4)', fontSize: 14 }}>{(post.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
               }
               <div>
                 <p style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 13, color: '#0A0A0A' }}>{post.profiles?.display_name ?? 'Unknown'}</p>
-                <p style={{ fontSize: 11, color: '#9A9A9A' }}>{post.profiles?.nationality} · {new Date(post.created_at).toLocaleDateString()}</p>
+                <p style={{ fontSize: 11, color: 'var(--text-4)' }}>{post.profiles?.nationality} · {new Date(post.created_at).toLocaleDateString()}</p>
               </div>
             </div>
             {user?.id === post.author_id && (
@@ -114,7 +114,7 @@ export default function PostDetailPage() {
 
           <button onClick={toggleLike} style={{
             display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', borderRadius: 100, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            background: liked ? '#fee2e2' : '#F8F8F6', color: liked ? '#dc2626' : '#6B6B6B',
+            background: liked ? '#fee2e2' : '#F8F8F6', color: liked ? '#dc2626' : 'var(--text-3)',
             border: liked ? '1.5px solid #fca5a5' : '1.5px solid #E8E8E4', transition: 'all 0.15s',
           }}>
             {liked ? '❤️' : '🤍'} {post.likes || 0} {post.likes === 1 ? 'like' : 'likes'}
@@ -132,13 +132,13 @@ export default function PostDetailPage() {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                   {c.profiles?.avatar_url
                     ? <img src={c.profiles.avatar_url} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginTop: 2 }} alt="" />
-                    : <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#F8F8F6', border: '1.5px solid #E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#9A9A9A', fontSize: 12, flexShrink: 0, marginTop: 2 }}>{(c.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
+                    : <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#F8F8F6', border: '1.5px solid #E8E8E4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'var(--text-4)', fontSize: 12, flexShrink: 0, marginTop: 2 }}>{(c.profiles?.display_name?.[0] ?? '?').toUpperCase()}</div>
                   }
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4, flexWrap: 'wrap', gap: 6 }}>
                       <div>
                         <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 13, color: '#0A0A0A' }}>{c.profiles?.display_name ?? 'Unknown'}</span>
-                        {c.profiles?.nationality && <span style={{ fontSize: 11, color: '#9A9A9A', marginLeft: 6 }}>· {c.profiles.nationality}</span>}
+                        {c.profiles?.nationality && <span style={{ fontSize: 11, color: 'var(--text-4)', marginLeft: 6 }}>· {c.profiles.nationality}</span>}
                         <span style={{ fontSize: 11, color: '#C4C4C0', marginLeft: 8 }}>{new Date(c.created_at).toLocaleDateString()}</span>
                       </div>
                       {user?.id === c.author_id && (
@@ -168,7 +168,7 @@ export default function PostDetailPage() {
             </div>
           ) : (
             <div style={{ background: '#F8F8F6', border: '1.5px solid #E8E8E4', borderRadius: 14, padding: 20, textAlign: 'center' }}>
-              <p style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 12 }}>Log in to leave a comment</p>
+              <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 12 }}>Log in to leave a comment</p>
               <Link href="/login" className="btn-primary" style={{ textDecoration: 'none', padding: '9px 20px', fontSize: 13 }}>Log in →</Link>
             </div>
           )}

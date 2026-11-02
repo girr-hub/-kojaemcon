@@ -16,10 +16,15 @@ export default function MagazinePage() {
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F7F7F7' }}>
-      <div style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0', padding: '16px 16px 0' }}>
-        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 900, fontSize: 20, letterSpacing: '-0.04em', color: '#1A1A1A', marginBottom: 4 }}>Magazine</h1>
-        <p style={{ fontSize: 13, color: '#9A9A9A', marginBottom: 16 }}>Notices · Newsletters · Updates</p>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <div style={{
+        background: 'rgba(248,248,248,0.94)',
+        backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid var(--border)',
+        padding: '14px 16px',
+        position: 'sticky', top: 0, zIndex: 100,
+      }}>
+        <h1 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '-0.05em', color: 'var(--text)' }}>Magazine</h1>
       </div>
       <div style={{ background: '#FFFFFF', marginTop: 8 }}>
         {posts.length > 0 ? (
@@ -32,15 +37,15 @@ export default function MagazinePage() {
                       <span style={{ fontSize: 11, fontWeight: 700, color: '#7A6100', background: '#FFFBEA', padding: '2px 8px', borderRadius: 6 }}>
                         {CAT_LABELS[post.category] || post.category}
                       </span>
-                      <span style={{ fontSize: 11, color: '#9A9A9A' }}>
+                      <span style={{ fontSize: 11, color: 'var(--text-4)' }}>
                         {new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-                    <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: '#1A1A1A', letterSpacing: '-0.03em', lineHeight: 1.35, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <h2 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.03em', lineHeight: 1.35, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {post.title}
                     </h2>
                     {post.summary && (
-                      <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
+                      <p style={{ fontSize: 13, color: 'var(--text-3)', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
                         {post.summary}
                       </p>
                     )}
@@ -55,8 +60,8 @@ export default function MagazinePage() {
         ) : (
           <div style={{ textAlign: 'center', padding: '64px 24px' }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>📮</div>
-            <p style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 6 }}>Nothing here yet</p>
-            <p style={{ fontSize: 14, color: '#9A9A9A' }}>Check back soon!</p>
+            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>Nothing here yet</p>
+            <p style={{ fontSize: 14, color: 'var(--text-4)' }}>Check back soon!</p>
           </div>
         )}
       </div>

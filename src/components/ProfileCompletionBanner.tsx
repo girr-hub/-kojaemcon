@@ -38,7 +38,7 @@ export default function ProfileCompletionBanner({ user, profile, onComplete }: {
       <p style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 14, color: '#0A0A0A', marginBottom: 4 }}>
         Complete your profile
       </p>
-      <p style={{ fontSize: 12, color: '#6B6B6B', marginBottom: 16 }}>
+      <p style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 16 }}>
         Help us recommend better events for you. This info stays private.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>

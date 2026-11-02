@@ -14,17 +14,17 @@ function PaymentFailInner() {
         <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: 28, color: '#0A0A0A', marginBottom: 10 }}>
           Payment Failed
         </h1>
-        <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.7, marginBottom: 8 }}>
+        <p style={{ fontSize: 14, color: 'var(--text-3)', lineHeight: 1.7, marginBottom: 8 }}>
           {decodeURIComponent(error)}
         </p>
-        <p style={{ fontSize: 13, color: '#9A9A9A', marginBottom: 28 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-4)', marginBottom: 28 }}>
           Please try again or contact CS for help.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <Link href="/events" style={{ display: 'block', background: '#0A0A0A', color: '#fff', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 700, fontSize: 14, textDecoration: 'none', textAlign: 'center' }}>
             Try Again
           </Link>
-          <Link href="/cs" style={{ display: 'block', background: '#F8F8F6', color: '#6B6B6B', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 600, fontSize: 14, textDecoration: 'none', textAlign: 'center' }}>
+          <Link href="/cs" style={{ display: 'block', background: '#F8F8F6', color: 'var(--text-3)', borderRadius: 100, padding: '13px', fontFamily: 'Inter', fontWeight: 600, fontSize: 14, textDecoration: 'none', textAlign: 'center' }}>
             Contact CS
           </Link>
         </div>
