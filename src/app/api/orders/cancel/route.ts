@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   const daysUntil = eventDate
     ? Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     : -1
-  const refundPct = daysUntil >= 10 ? 100 : daysUntil >= 7 ? 50 : 0
+  const refundPct = daysUntil >= 10 ? 100 : daysUntil >= 3 ? 30 : 0
   const refundAmt = Math.round((order.amount_krw || 0) * refundPct / 100)
 
   if (order.status === 'paid' && order.payment_id && refundAmt > 0) {

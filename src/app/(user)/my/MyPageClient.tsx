@@ -364,8 +364,8 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 {[
                   { label: '10일 이전 취소', pct: '100%', color: '#15803d' },
-                  { label: '7–9일 이전 취소', pct: '50%', color: '#92400e' },
-                  { label: '7일 미만 취소', pct: '0%', color: '#dc2626' },
+                  { label: '3–9일 이전 취소', pct: '30%', color: '#92400e' },
+                  { label: '3일 미만 취소', pct: '0%', color: '#dc2626' },
                 ].map(r => (
                   <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{r.label}</span>
@@ -408,8 +408,8 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
               <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.6, fontWeight: 600, marginBottom: 4 }}>Refund Policy</p>
               <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.7 }}>
                 10+ days before → 100% refund<br />
-                7–9 days before → 50% refund<br />
-                Under 7 days → No refund
+                3–9 days before → 30% refund<br />
+                Under 3 days → No refund
               </p>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
