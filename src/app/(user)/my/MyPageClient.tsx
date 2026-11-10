@@ -363,10 +363,10 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
               <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-3)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>환불 기준</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 {[
-                  { label: '10일 이전 취소', pct: '100%', color: '#15803d' },
-                  { label: '7–9일 이전 취소', pct: '50%', color: '#92400e' },
-                  { label: '3–6일 이전 취소', pct: '30%', color: '#b45309' },
-                  { label: '당일~2일 취소', pct: '0%', color: '#dc2626' },
+                  { label: '10일 이전', pct: '100%', color: '#15803d' },
+                  { label: '7–9일 이전', pct: '50%', color: '#92400e' },
+                  { label: '3–6일 이전', pct: '30%', color: '#b45309' },
+                  { label: '당일–2일', pct: '0%', color: '#dc2626' },
                 ].map(r => (
                   <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{r.label}</span>
@@ -406,11 +406,20 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                 style={{ resize: 'none', marginBottom: 16 }} value={customReason} onChange={e => setCustomReason(e.target.value)} />
             )}
             <div style={{ background: '#FFFBEA', borderRadius: 10, padding: '12px 14px', marginBottom: 20, border: '1px solid #F5E87C' }}>
-              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.6, fontWeight: 600, marginBottom: 4 }}>Refund Policy</p>
-              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.7 }}>
-                10+ days → 100% · 7–9 days → 50%<br />
-                3–6 days → 30% · Under 3 days → 0%
-              </p>
+              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.6, fontWeight: 700, marginBottom: 6 }}>Refund Policy</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {[
+                  { label: '10일 이전', pct: '100%' },
+                  { label: '7–9일 이전', pct: '50%' },
+                  { label: '3–6일 이전', pct: '30%' },
+                  { label: '당일–2일', pct: '0%' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: 12, color: '#7A6100' }}>{r.label}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#7A6100' }}>{r.pct}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => { setCancelTarget(null); setCancelReason(''); setCustomReason('') }}
