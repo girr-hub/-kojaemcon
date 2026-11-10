@@ -185,7 +185,7 @@ export default async function EventDetail({ params }: { params: Promise<{ slug: 
           <div style={{ background: '#FFFFFF', borderRadius: 16, padding: 16, border: '1px solid var(--border)' }}>
             <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 8 }}>Refund Policy</h3>
             <p style={{ fontSize: 13, color: 'var(--text-3)', lineHeight: 1.65 }}>
-              10+ days before: full refund · 3–9 days before: 30% refund · Under 3 days: no refund.
+              10+ days: 100% · 7–9 days: 50% · 3–6 days: 30% · Under 3 days: no refund.
               Questions? <Link href="/cs" style={{ color: 'var(--text)', fontWeight: 700, textDecoration: 'underline' }}>Contact CS</Link>
             </p>
           </div>
