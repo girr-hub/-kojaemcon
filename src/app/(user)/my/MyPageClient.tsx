@@ -86,6 +86,7 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
   const [cancelReason, setCancelReason] = useState('')
   const [customReason, setCustomReason] = useState('')
   const [cancelling, setCancelling] = useState(false)
+  const [cancelSuccess, setCancelSuccess] = useState<{ refundPct: number; refundAmt: number } | null>(null)
   const [displayName, setDisplayName] = useState(profile?.display_name ?? '')
   const [bio, setBio] = useState(profile?.bio ?? '')
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? '')
@@ -128,6 +129,8 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
     if (res.ok) {
       setTicketList(prev => prev.filter(t => t.id !== cancelTarget.id))
       setCancelTarget(null); setCancelReason(''); setCustomReason('')
+      setCancelSuccess({ refundPct: res.refundPct ?? 0, refundAmt: res.refundAmt ?? 0 })
+      setTimeout(() => setCancelSuccess(null), 6000)
     } else alert(res.error || 'Could not cancel')
   }
 
@@ -331,6 +334,27 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
         )}
       </div>
 
+      {/* 취소 성공 팝업 */}
+      {cancelSuccess && (
+        <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10000, maxWidth: 360, width: 'calc(100% - 32px)' }}>
+          <div style={{ background: '#111', color: '#fff', borderRadius: 14, padding: '16px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>✅</span>
+              <span style={{ fontWeight: 800, fontSize: 15, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Cancellation confirmed</span>
+            </div>
+            {cancelSuccess.refundAmt > 0 ? (
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontFamily: 'PretendardVariable, Pretendard, sans-serif', paddingLeft: 26 }}>
+                ₩{cancelSuccess.refundAmt.toLocaleString()} ({cancelSuccess.refundPct}%) will be refunded within 3–5 business days.
+              </p>
+            ) : (
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontFamily: 'PretendardVariable, Pretendard, sans-serif', paddingLeft: 26 }}>
+                This cancellation is not eligible for a refund per our policy.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 취소 모달 */}
       {cancelTarget && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -353,8 +377,11 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
                 style={{ resize: 'none', marginBottom: 16 }} value={customReason} onChange={e => setCustomReason(e.target.value)} />
             )}
             <div style={{ background: '#FFFBEA', borderRadius: 10, padding: '12px 14px', marginBottom: 20, border: '1px solid #F5E87C' }}>
-              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.6 }}>
-                Refunds: 100% (7+ days before), 50% (3–6 days), 0% (0–2 days or no-show)
+              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.6, fontWeight: 600, marginBottom: 4 }}>Refund Policy</p>
+              <p style={{ fontSize: 12, color: '#7A6100', lineHeight: 1.7 }}>
+                10+ days before → 100% refund<br />
+                7–9 days before → 50% refund<br />
+                Under 7 days → No refund
               </p>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>

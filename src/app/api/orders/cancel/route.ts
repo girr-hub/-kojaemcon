@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const admin = supabaseAdmin()
 
   const { data: order } = await admin.from('orders')
-    .select('id, user_id, event_id, status, payment_id, amount_krw')
+    .select('id, user_id, event_id, status, payment_id, amount_krw, events(starts_at)')
     .eq('id', order_id)
     .single()
 
@@ -25,7 +25,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Already cancelled' }, { status: 400 })
   }
 
-  if (order.status === 'paid' && order.payment_id && order.amount_krw > 0) {
+  // Calculate refund percentage based on days until event
+  const eventDate = order.events?.starts_at ? new Date(order.events.starts_at) : null
+  const now = new Date()
+  const daysUntil = eventDate
+    ? Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    : -1
+  const refundPct = daysUntil >= 10 ? 100 : daysUntil >= 7 ? 50 : 0
+  const refundAmt = Math.round((order.amount_krw || 0) * refundPct / 100)
+
+  if (order.status === 'paid' && order.payment_id && refundAmt > 0) {
     try {
       const payupRes = await fetch('https://api.payup.co.kr/cancel', {
         method: 'POST',
@@ -33,7 +42,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           mid: process.env.PAYUP_MID || 'girr0711',
           tid: order.payment_id,
-          cancelAmt: order.amount_krw,
+          cancelAmt: refundAmt,
         }),
       })
       const payupData = await payupRes.json()
@@ -72,17 +81,17 @@ export async function POST(req: Request) {
       from: 'KOGEMCON <onboarding@resend.dev>',
       to: 'girr.official@gmail.com',
       subject: `[취소완료] ${fullOrder.events?.title} - ${fullOrder.profiles?.display_name}`,
-      html: `<div style="font-family:sans-serif;"><h2>취소 처리 완료</h2><p><b>이벤트:</b> ${fullOrder.events?.title}</p><p><b>유저:</b> ${fullOrder.profiles?.display_name} (${fullOrder.profiles?.email})</p><p><b>금액:</b> ₩${(fullOrder.amount_krw || 0).toLocaleString()}</p><p><b>사유:</b> ${reason || '없음'}</p><p><b>tid:</b> ${order.payment_id || 'N/A'}</p>${order.payment_id && order.amount_krw > 0 ? '<p style="color:#16a34a;">✅ PayUp 자동 환불 완료</p>' : ''}</div>`
+      html: `<div style="font-family:sans-serif;"><h2>취소 처리 완료</h2><p><b>이벤트:</b> ${fullOrder.events?.title}</p><p><b>유저:</b> ${fullOrder.profiles?.display_name} (${fullOrder.profiles?.email})</p><p><b>결제금액:</b> ₩${(fullOrder.amount_krw || 0).toLocaleString()}</p><p><b>환불금액:</b> ₩${refundAmt.toLocaleString()} (${refundPct}%)</p><p><b>이벤트까지 D-${daysUntil < 0 ? '(지남)' : daysUntil}</b></p><p><b>사유:</b> ${reason || '없음'}</p><p><b>tid:</b> ${order.payment_id || 'N/A'}</p>${refundAmt > 0 ? '<p style="color:#16a34a;">✅ PayUp 자동 환불 완료</p>' : '<p style="color:#dc2626;">❌ 환불 없음 (7일 미만 취소)</p>'}</div>`
     }).catch(() => {})
     if (fullOrder.profiles?.email) {
       await resend.emails.send({
         from: 'KOGEMCON <onboarding@resend.dev>',
         to: fullOrder.profiles.email,
         subject: `Your booking has been cancelled — ${fullOrder.events?.title}`,
-        html: `<div style="font-family:sans-serif; max-width:480px;"><h2>Booking Cancelled</h2><p>Hi ${fullOrder.profiles.display_name},</p><p>Your booking for <b>${fullOrder.events?.title}</b> has been cancelled.</p>${order.payment_id && order.amount_krw > 0 ? '<p>A refund has been processed and will appear within 3–5 business days.</p>' : ''}<p style="font-size:13px; color:#6B6B6B;">Questions? <a href="mailto:girr.official@gmail.com">girr.official@gmail.com</a></p></div>`
+        html: `<div style="font-family:sans-serif; max-width:480px;"><h2>Booking Cancelled</h2><p>Hi ${fullOrder.profiles.display_name},</p><p>Your booking for <b>${fullOrder.events?.title}</b> has been cancelled.</p><table style="width:100%;border-collapse:collapse;margin:16px 0;"><tr><td style="padding:8px;color:#6B6B6B;font-size:13px;">Paid Amount</td><td style="padding:8px;font-weight:600;font-size:13px;">₩${(fullOrder.amount_krw || 0).toLocaleString()}</td></tr><tr style="background:#F9F9F9;"><td style="padding:8px;color:#6B6B6B;font-size:13px;">Refund Amount</td><td style="padding:8px;font-weight:600;font-size:13px;">₩${refundAmt.toLocaleString()} (${refundPct}%)</td></tr></table>${refundAmt > 0 ? '<p>Your refund will be processed within 3–5 business days.</p>' : '<p>As per our refund policy, cancellations made less than 7 days before the event are not eligible for a refund.</p>'}<p style="font-size:13px; color:#6B6B6B;">Questions? <a href="mailto:girr.official@gmail.com">girr.official@gmail.com</a></p></div>`
       }).catch(() => {})
     }
   }
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ ok: true, refundPct, refundAmt })
 }

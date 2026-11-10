@@ -19,9 +19,9 @@ export default function RefundPolicyPage() {
         {/* Refund tiers */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 48 }}>
           {[
-            { label: '7+ days before event', pct: '100%', color: '#15803d', bg: '#dcfce7', border: '#86efac', desc: 'Full refund. No questions asked.' },
-            { label: '3–6 days before event', pct: '50%', color: '#92400e', bg: '#fef3c7', border: '#fcd34d', desc: 'Partial refund. Processing fee applies.' },
-            { label: '0–2 days before event', pct: '0%', color: '#dc2626', bg: '#fee2e2', border: '#fca5a5', desc: 'No refund. Same-day cancellations are not eligible.' },
+            { label: '10+ days before event', pct: '100%', color: '#15803d', bg: '#dcfce7', border: '#86efac', desc: 'Full refund. No questions asked.' },
+            { label: '7–9 days before event', pct: '50%', color: '#92400e', bg: '#fef3c7', border: '#fcd34d', desc: 'Partial refund. 50% of paid amount returned.' },
+            { label: 'Under 7 days before event', pct: '0%', color: '#dc2626', bg: '#fee2e2', border: '#fca5a5', desc: 'No refund. Late cancellations are not eligible.' },
             { label: 'No-show', pct: '0%', color: '#dc2626', bg: '#fee2e2', border: '#fca5a5', desc: 'No refund. Account warning issued.' },
           ].map(tier => (
             <div key={tier.label} style={{
