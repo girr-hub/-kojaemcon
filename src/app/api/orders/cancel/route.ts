@@ -26,7 +26,8 @@ export async function POST(req: Request) {
   }
 
   // Calculate refund percentage based on days until event
-  const eventDate = order.events?.starts_at ? new Date(order.events.starts_at) : null
+  const eventInfo = Array.isArray(order.events) ? order.events[0] : order.events
+  const eventDate = eventInfo?.starts_at ? new Date(eventInfo.starts_at) : null
   const now = new Date()
   const daysUntil = eventDate
     ? Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
