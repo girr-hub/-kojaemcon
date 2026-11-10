@@ -130,7 +130,6 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
       setTicketList(prev => prev.filter(t => t.id !== cancelTarget.id))
       setCancelTarget(null); setCancelReason(''); setCustomReason('')
       setCancelSuccess({ refundPct: res.refundPct ?? 0, refundAmt: res.refundAmt ?? 0 })
-      setTimeout(() => setCancelSuccess(null), 6000)
     } else alert(res.error || 'Could not cancel')
   }
 
@@ -336,21 +335,50 @@ export default function MyPageClient({ user, tickets, hosted, profile }: {
 
       {/* 취소 성공 팝업 */}
       {cancelSuccess && (
-        <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10000, maxWidth: 360, width: 'calc(100% - 32px)' }}>
-          <div style={{ background: '#111', color: '#fff', borderRadius: 14, padding: '16px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18 }}>✅</span>
-              <span style={{ fontWeight: 800, fontSize: 15, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>Cancellation confirmed</span>
-            </div>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 20px' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} onClick={() => setCancelSuccess(null)} />
+          <div style={{ position: 'relative', background: '#fff', borderRadius: 20, padding: '32px 24px', width: '100%', maxWidth: 360, zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+            {/* 아이콘 */}
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, marginBottom: 16 }}>✅</div>
+
+            <h3 style={{ fontFamily: 'PretendardVariable, Pretendard, sans-serif', fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 8, textAlign: 'center' }}>
+              환불 신청 완료!
+            </h3>
+
             {cancelSuccess.refundAmt > 0 ? (
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontFamily: 'PretendardVariable, Pretendard, sans-serif', paddingLeft: 26 }}>
-                ₩{cancelSuccess.refundAmt.toLocaleString()} ({cancelSuccess.refundPct}%) will be refunded within 3–5 business days.
+              <p style={{ fontSize: 14, color: 'var(--text-3)', textAlign: 'center', lineHeight: 1.65, marginBottom: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                <strong style={{ color: 'var(--text)' }}>₩{cancelSuccess.refundAmt.toLocaleString()}</strong> ({cancelSuccess.refundPct}%)가<br />
+                영업일 기준 <strong style={{ color: 'var(--text)' }}>3일 이내</strong>에<br />
+                결제하신 수단으로 환불됩니다.
               </p>
             ) : (
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontFamily: 'PretendardVariable, Pretendard, sans-serif', paddingLeft: 26 }}>
-                This cancellation is not eligible for a refund per our policy.
+              <p style={{ fontSize: 14, color: 'var(--text-3)', textAlign: 'center', lineHeight: 1.65, marginBottom: 20, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+                취소는 완료됐어요.<br />
+                이벤트 7일 미만 취소는 환불 정책상<br />환불이 어렵습니다.
               </p>
             )}
+
+            {/* 환불 기준 요약 */}
+            <div style={{ background: '#F8F8F8', borderRadius: 12, padding: '14px 16px', width: '100%', marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-3)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>환불 기준</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {[
+                  { label: '10일 이전 취소', pct: '100%', color: '#15803d' },
+                  { label: '7–9일 이전 취소', pct: '50%', color: '#92400e' },
+                  { label: '7일 미만 취소', pct: '0%', color: '#dc2626' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{r.label}</span>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: r.color, fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>{r.pct}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button onClick={() => setCancelSuccess(null)}
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--text)', color: '#fff', border: 'none', fontWeight: 700, fontSize: 15, cursor: 'pointer', fontFamily: 'PretendardVariable, Pretendard, sans-serif' }}>
+              확인
+            </button>
           </div>
         </div>
       )}
