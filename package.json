@@ -15,7 +15,6 @@
     "@capacitor/ios": "^8.5.0",
     "@portone/browser-sdk": "^0.0.22",
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.49.4",
     "@tiptap/extension-image": "^2.11.5",
     "@tiptap/extension-link": "^2.11.5",
     "@tiptap/pm": "^2.11.5",
@@ -35,6 +34,7 @@
     "zod": "^3.25.30"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.119.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
