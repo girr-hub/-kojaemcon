@@ -1,0 +1,91 @@
+name: Nov21 땅굴투어 무료초대 추가
+
+on:
+  workflow_dispatch:  # GitHub에서 수동 실행
+
+jobs:
+  invite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 11/21 땅굴투어 무료 초대 11명 추가
+        run: |
+          cat << 'SCRIPT' > run.py
+          import urllib.request
+          import urllib.error
+          import json
+          import sys
+
+          SUPABASE_URL = "https://qbacbmyffpkiipngccpa.supabase.co"
+          SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiYWNibXlmZnBraWlwbmdjY3BhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTAzMTA3MCwiZXhwIjoyMDk2NjA3MDcwfQ.UAAiiQhLuRyoQg-pgVG3uMZD_iJV1aKBXUhBC5XhCYY"
+          GUESTS = ["Amisha", "Aya", "Javokhir", "Lyubava", "Raveena", "Shavira", "Shohidullo", "Jasper", "Sophia", "Daisy", "Ethan"]
+
+          headers = {
+              "apikey": SERVICE_KEY,
+              "Authorization": f"Bearer {SERVICE_KEY}",
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+          }
+
+          def supabase_get(path):
+              req = urllib.request.Request(f"{SUPABASE_URL}/rest/v1/{path}", headers=headers)
+              with urllib.request.urlopen(req) as r:
+                  return json.loads(r.read())
+
+          def supabase_post(path, data):
+              body = json.dumps(data).encode()
+              req = urllib.request.Request(f"{SUPABASE_URL}/rest/v1/{path}", data=body, headers=headers, method="POST")
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      return json.loads(r.read()), None
+              except urllib.error.HTTPError as e:
+                  return None, e.read().decode()
+
+          # 1. Nov 21 땅굴 이벤트 찾기
+          events = supabase_get("events?select=id,title,starts_at&starts_at=gte.2026-11-21T00:00:00&starts_at=lt.2026-11-22T00:00:00")
+          print("Nov 21 이벤트:", [(e["id"], e["title"]) for e in events])
+
+          tunnel_event = next((e for e in events if "땅굴" in e.get("title", "")), None)
+          if not tunnel_event:
+              print("❌ 땅굴투어 이벤트 없음. 전체 목록:")
+              all_events = supabase_get("events?select=id,title,starts_at&order=starts_at.desc&limit=10")
+              for e in all_events:
+                  print(f"  {e['starts_at'][:10]} | {e['title']} | {e['id']}")
+              sys.exit(1)
+
+          event_id = tunnel_event["id"]
+          print(f"\n✅ 이벤트: {tunnel_event['title']} ({event_id})")
+
+          # 2. 프로필 로드
+          profiles = supabase_get("profiles?select=id,display_name,email")
+          print(f"전체 프로필: {len(profiles)}명\n")
+
+          # 3. 각 게스트 처리
+          for name in GUESTS:
+              profile = next((p for p in profiles if name.lower() in (p.get("display_name") or "").lower()), None)
+              if not profile:
+                  print(f"⚠️  {name} — 프로필 없음 (미가입)")
+                  continue
+
+              # 중복 체크
+              existing = supabase_get(f"orders?select=id&event_id=eq.{event_id}&user_id=eq.{profile['id']}&limit=1")
+              if existing:
+                  print(f"⏭️  {name} — 이미 등록됨")
+                  continue
+
+              order_data = {
+                  "event_id": event_id,
+                  "user_id": profile["id"],
+                  "status": "free_confirmed",
+                  "amount_krw": 0,
+                  "quantity": 1,
+                  "note": "Free invite – staff added Nov 21 땅굴투어"
+              }
+              result, err = supabase_post("orders", order_data)
+              if err:
+                  print(f"❌ {name} — 오류: {err}")
+              else:
+                  order_id = result[0]["id"] if result else "?"
+                  print(f"✅ {name} ({profile.get('email', '')}) → {order_id}")
+
+          SCRIPT
+          python3 run.py
