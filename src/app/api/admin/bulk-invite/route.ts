@@ -10,8 +10,38 @@ export async function POST(req: Request) {
 
   const admin = supabaseAdmin()
 
-  // 1. 이벤트 확인
-  const { data: event } = await admin.from('events').select('id, title, starts_at').eq('id', event_id).single()
+  // 1. 이벤트 확인 — event_id 없으면 11/21 땅굴 포함 이벤트 자동 검색
+  let event: { id: string; title: string; starts_at: string } | null = null
+
+  if (event_id) {
+    const { data } = await admin.from('events').select('id, title, starts_at').eq('id', event_id).single()
+    event = data
+  } else {
+    // Nov 21 이벤트 중 제목에 땅굴 포함된 것 자동 검색
+    const { data } = await admin
+      .from('events')
+      .select('id, title, starts_at')
+      .gte('starts_at', '2026-11-21')
+      .lt('starts_at', '2026-11-22')
+      .ilike('title', '%땅굴%')
+      .limit(1)
+      .single()
+    event = data
+
+    // 땅굴 없으면 Nov 21 전체 이벤트 목록 반환
+    if (!event) {
+      const { data: all } = await admin
+        .from('events')
+        .select('id, title, starts_at')
+        .gte('starts_at', '2026-11-21')
+        .lt('starts_at', '2026-11-22')
+      return NextResponse.json({
+        error: '땅굴투어 이벤트를 찾지 못했습니다. event_id를 직접 지정해주세요.',
+        nov21_events: all ?? []
+      }, { status: 404 })
+    }
+  }
+
   if (!event) return NextResponse.json({ error: 'Event not found' }, { status: 404 })
 
   // 2. 전체 프로필 로드
@@ -51,5 +81,5 @@ export async function POST(req: Request) {
     else results.push({ name, status: 'created', detail: order.id })
   }
 
-  return NextResponse.json({ event: event.title, results })
+  return NextResponse.json({ event: event.title, event_id: event.id, results })
 }
