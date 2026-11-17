@@ -12,6 +12,7 @@ jobs:
           cat << 'SCRIPT' > run.py
           import urllib.request
           import urllib.error
+          import urllib.parse
           import json
           import sys
 
@@ -98,8 +99,32 @@ jobs:
                           dummy_id = auth_user["id"]
                           print(f"👤 {name} — auth 유저 생성 ({dummy_id})")
                   except urllib.error.HTTPError as e:
-                      print(f"❌ {name} — auth 유저 생성 실패: {e.read().decode()}")
-                      continue
+                      err_body = e.read().decode()
+                      if "email_exists" in err_body:
+                          # 이미 존재 → 이메일로 기존 프로필 조회
+                          existing = supabase_get(f"profiles?email=eq.{urllib.parse.quote(dummy_email)}&select=id,display_name,email&limit=1")
+                          if existing:
+                              profile = existing[0]
+                              print(f"♻️  {name} — 기존 더미 계정 재사용 ({profile['id']})")
+                          else:
+                              # auth user는 있으나 profile 없음 → auth API로 조회
+                              list_req = urllib.request.Request(
+                                  f"{SUPABASE_URL}/auth/v1/admin/users?email={urllib.parse.quote(dummy_email)}",
+                                  headers=headers
+                              )
+                              with urllib.request.urlopen(list_req) as r2:
+                                  users_data = json.loads(r2.read())
+                                  users_list = users_data.get("users", users_data) if isinstance(users_data, dict) else users_data
+                                  auth_match = next((u for u in users_list if u.get("email") == dummy_email), None)
+                              if auth_match:
+                                  dummy_id = auth_match["id"]
+                                  print(f"♻️  {name} — auth 기존 계정 프로필 생성 ({dummy_id})")
+                              else:
+                                  print(f"❌ {name} — 기존 auth 계정도 못 찾음")
+                                  continue
+                      else:
+                          print(f"❌ {name} — auth 유저 생성 실패: {err_body}")
+                          continue
                   # 2. profiles upsert (트리거로 자동생성 안됐을 경우 대비)
                   prof_data = json.dumps([{
                       "id": dummy_id,
