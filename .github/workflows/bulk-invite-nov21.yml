@@ -44,12 +44,11 @@ jobs:
           events = supabase_get("events?select=id,title,starts_at&starts_at=gte.2026-11-21T00:00:00&starts_at=lt.2026-11-22T00:00:00")
           print("Nov 21 이벤트:", [(e["id"], e["title"]) for e in events])
 
-          tunnel_event = next((e for e in events if "땅굴" in e.get("title", "")), None)
+          # Nov 21 땅굴 = THE 2ND INFILTRATION TUNNEL
+          EVENT_ID = "2b66bfe6-0e76-47a4-b7e5-98ed5b4be59a"
+          tunnel_event = next((e for e in events if e["id"] == EVENT_ID), None)
           if not tunnel_event:
-              print("❌ 땅굴투어 이벤트 없음. 전체 목록:")
-              all_events = supabase_get("events?select=id,title,starts_at&order=starts_at.desc&limit=10")
-              for e in all_events:
-                  print(f"  {e['starts_at'][:10]} | {e['title']} | {e['id']}")
+              print("❌ 이벤트를 찾지 못했습니다.")
               sys.exit(1)
 
           event_id = tunnel_event["id"]
