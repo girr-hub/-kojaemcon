@@ -75,12 +75,13 @@ jobs:
           print(f"전체 프로필: {len(profiles)}명\n")
 
           # 3. 각 게스트 처리
+          import uuid
           for name in GUESTS:
               profile = None if name in FORCE_NEW else next((p for p in profiles if name.lower() in (p.get("display_name") or "").lower()), None)
               if not profile:
-                  import uuid
                   dummy_email = f"{name.lower().replace(' ', '.')}@kojaemcon.guest"
-                  # 1. Supabase Auth admin API로 더미 유저 생성
+                  dummy_id = None
+                  # 1. Supabase Auth admin API로 더미 유저 생성 (이미 있으면 기존 재사용)
                   auth_data = json.dumps({
                       "email": dummy_email,
                       "password": str(uuid.uuid4()),
@@ -101,53 +102,40 @@ jobs:
                   except urllib.error.HTTPError as e:
                       err_body = e.read().decode()
                       if "email_exists" in err_body:
-                          # 이미 존재 → 이메일로 기존 프로필 조회
-                          existing = supabase_get(f"profiles?email=eq.{urllib.parse.quote(dummy_email)}&select=id,display_name,email&limit=1")
-                          if existing:
-                              profile = existing[0]
+                          # 이미 존재 → 프로필 조회
+                          existing_prof = supabase_get(f"profiles?email=eq.{urllib.parse.quote(dummy_email)}&select=id,display_name,email&limit=1")
+                          if existing_prof:
+                              profile = existing_prof[0]
                               print(f"♻️  {name} — 기존 더미 계정 재사용 ({profile['id']})")
                           else:
-                              # auth user는 있으나 profile 없음 → auth API로 조회
-                              list_req = urllib.request.Request(
-                                  f"{SUPABASE_URL}/auth/v1/admin/users?email={urllib.parse.quote(dummy_email)}",
-                                  headers=headers
-                              )
-                              with urllib.request.urlopen(list_req) as r2:
-                                  users_data = json.loads(r2.read())
-                                  users_list = users_data.get("users", users_data) if isinstance(users_data, dict) else users_data
-                                  auth_match = next((u for u in users_list if u.get("email") == dummy_email), None)
-                              if auth_match:
-                                  dummy_id = auth_match["id"]
-                                  print(f"♻️  {name} — auth 기존 계정 프로필 생성 ({dummy_id})")
-                              else:
-                                  print(f"❌ {name} — 기존 auth 계정도 못 찾음")
-                                  continue
+                              print(f"❌ {name} — 기존 프로필 조회 실패")
+                              continue
                       else:
                           print(f"❌ {name} — auth 유저 생성 실패: {err_body}")
                           continue
-                  # 2. profiles upsert (트리거로 자동생성 안됐을 경우 대비)
-                  prof_data = json.dumps([{
-                      "id": dummy_id,
-                      "display_name": name,
-                      "email": dummy_email
-                  }]).encode()
-                  prof_req = urllib.request.Request(
-                      f"{SUPABASE_URL}/rest/v1/profiles",
-                      data=prof_data,
-                      headers={**headers, "Prefer": "resolution=merge-duplicates,return=representation"},
-                      method="POST"
-                  )
-                  try:
-                      with urllib.request.urlopen(prof_req) as r:
-                          profile = json.loads(r.read())[0]
-                  except urllib.error.HTTPError as e:
-                      # 트리거로 이미 생성됐을 수도 있으니 조회 시도
-                      existing_prof = supabase_get(f"profiles?id=eq.{dummy_id}&select=id,display_name,email&limit=1")
-                      if existing_prof:
-                          profile = existing_prof[0]
-                      else:
-                          print(f"❌ {name} — 프로필 확인 실패: {e.read().decode()}")
-                          continue
+                  # 2. profile이 아직 없으면 upsert (트리거 미적용 대비)
+                  if not profile and dummy_id:
+                      prof_data = json.dumps([{
+                          "id": dummy_id,
+                          "display_name": name,
+                          "email": dummy_email
+                      }]).encode()
+                      prof_req = urllib.request.Request(
+                          f"{SUPABASE_URL}/rest/v1/profiles",
+                          data=prof_data,
+                          headers={**headers, "Prefer": "resolution=merge-duplicates,return=representation"},
+                          method="POST"
+                      )
+                      try:
+                          with urllib.request.urlopen(prof_req) as r:
+                              profile = json.loads(r.read())[0]
+                      except urllib.error.HTTPError as e:
+                          existing_prof2 = supabase_get(f"profiles?id=eq.{dummy_id}&select=id,display_name,email&limit=1")
+                          if existing_prof2:
+                              profile = existing_prof2[0]
+                          else:
+                              print(f"❌ {name} — 프로필 확인 실패: {e.read().decode()}")
+                              continue
 
               # 중복 체크
               existing = supabase_get(f"orders?select=id&event_id=eq.{event_id}&user_id=eq.{profile['id']}&limit=1")
