@@ -19,7 +19,7 @@ jobs:
           SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiYWNibXlmZnBraWlwbmdjY3BhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTAzMTA3MCwiZXhwIjoyMDk2NjA3MDcwfQ.UAAiiQhLuRyoQg-pgVG3uMZD_iJV1aKBXUhBC5XhCYY"
           GUESTS = ["Amisha", "Aya", "Javokhir", "Lyubava", "Raveena", "Shavira", "Shohidullo", "Jasper", "Sophia", "Daisy", "Ethan"]
           # 기존 가입자 매칭 없이 무조건 새 더미 계정으로 만들 이름
-          FORCE_NEW = ["Sophia", "Daisy"]
+          FORCE_NEW = ["Sophia", "Daisy", "Aya"]
 
           headers = {
               "apikey": SERVICE_KEY,
@@ -49,7 +49,7 @@ jobs:
           EVENT_ID = "2b66bfe6-0e76-47a4-b7e5-98ed5b4be59a"
 
           # 잘못 매칭된 Sophia/Daisy order 먼저 삭제
-          WRONG_EMAILS = ["sophia.kramer@girr.local", "maiduyen1001@gmail.com"]
+          WRONG_EMAILS = ["sophia.kramer@girr.local", "maiduyen1001@gmail.com", "ay.christian19@gmail.com"]
           all_profiles = supabase_get("profiles?select=id,display_name,email")
           for wrong_email in WRONG_EMAILS:
               wrong_prof = next((p for p in all_profiles if p.get("email") == wrong_email), None)
