@@ -73,8 +73,7 @@ export async function POST(req: Request) {
       user_id: profile.id,
       status: 'free_confirmed',
       amount_krw: 0,
-      quantity: 1,
-      note: 'Free invite – staff added Nov 21 땅굴투어'
+      quantity: 1
     }).select('id').single()
 
     if (error) results.push({ name, status: 'error', detail: error.message })

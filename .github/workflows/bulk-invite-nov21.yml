@@ -76,8 +76,7 @@ jobs:
                   "user_id": profile["id"],
                   "status": "free_confirmed",
                   "amount_krw": 0,
-                  "quantity": 1,
-                  "note": "Free invite – staff added Nov 21 땅굴투어"
+                  "quantity": 1
               }
               result, err = supabase_post("orders", order_data)
               if err:
