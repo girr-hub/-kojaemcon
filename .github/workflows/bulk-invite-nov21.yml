@@ -62,8 +62,29 @@ jobs:
           for name in GUESTS:
               profile = next((p for p in profiles if name.lower() in (p.get("display_name") or "").lower()), None)
               if not profile:
-                  print(f"⚠️  {name} — 프로필 없음 (미가입)")
-                  continue
+                  # 더미 auth user 없이 profiles에 직접 삽입 (display_name만)
+                  import uuid
+                  dummy_id = str(uuid.uuid4())
+                  dummy_data = [{
+                      "id": dummy_id,
+                      "display_name": name,
+                      "email": f"{name.lower()}@kojaemcon.guest"
+                  }]
+                  body = json.dumps(dummy_data).encode()
+                  req = urllib.request.Request(
+                      f"{SUPABASE_URL}/rest/v1/profiles",
+                      data=body,
+                      headers={**headers, "Prefer": "return=representation"},
+                      method="POST"
+                  )
+                  try:
+                      with urllib.request.urlopen(req) as r:
+                          created = json.loads(r.read())
+                          profile = created[0]
+                          print(f"👤 {name} — 더미 프로필 생성 ({dummy_id})")
+                  except urllib.error.HTTPError as e:
+                      print(f"❌ {name} — 프로필 생성 실패: {e.read().decode()}")
+                      continue
 
               # 중복 체크
               existing = supabase_get(f"orders?select=id&event_id=eq.{event_id}&user_id=eq.{profile['id']}&limit=1")
