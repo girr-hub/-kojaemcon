@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
-const GUESTS = ['Amisha', 'Aya', 'Corinna', 'Javokhir', 'Lyubava', 'Raveena', 'Shavira', 'Wioletta']
+const GUESTS = ['Amisha', 'Aya', 'Javokhir', 'Lyubava', 'Raveena', 'Shavira', 'Shohidullo', 'Jasper', 'Sophia', 'Daisy', 'Ethan']
 const SECRET = process.env.ADMIN_BULK_SECRET || 'kojaemcon-bulk-2026'
 
 export async function POST(req: Request) {
@@ -41,10 +41,10 @@ export async function POST(req: Request) {
     const { data: order, error } = await admin.from('orders').insert({
       event_id: event.id,
       user_id: profile.id,
-      status: 'paid',
+      status: 'free_confirmed',
       amount_krw: 0,
       quantity: 1,
-      note: 'Free invite – staff added Nov 21 DMZ'
+      note: 'Free invite – staff added Nov 21 땅굴투어'
     }).select('id').single()
 
     if (error) results.push({ name, status: 'error', detail: error.message })
