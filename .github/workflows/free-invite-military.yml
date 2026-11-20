@@ -21,10 +21,13 @@ jobs:
           SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiYWNibXlmZnBraWlwbmdjY3BhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTAzMTA3MCwiZXhwIjoyMDk2NjA3MDcwfQ.UAAiiQhLuRyoQg-pgVG3uMZD_iJV1aKBXUhBC5XhCYY"
 
           GUESTS = ["Sophia", "Jasper", "Daisy", "Eden"]
-          # 기존 가입자 매칭 없이 무조건 새 더미 계정으로 만들 이름 (Sophia, Jasper, Daisy는 이미 kojaemcon.guest 계정 있음)
-          FORCE_NEW = []
+          # 기존 가입자 매칭 없이 무조건 새 더미 계정으로 (한국인 Sophia·Daisy는 기존 가입자와 다른 사람)
+          FORCE_NEW = ["Sophia", "Daisy"]
 
           EVENT_SLUG = "k-military-experience-overnight-camp-in-cheorwon-expert-ver-mwd1r6n4"
+
+          # 잘못 매칭된 order 삭제 대상
+          WRONG_EMAILS = ["sophia.kramer@girr.local", "maiduyen1001@gmail.com"]
 
           headers = {
               "apikey": SERVICE_KEY,
@@ -55,6 +58,19 @@ jobs:
           event = events[0]
           event_id = event["id"]
           print(f"✅ 이벤트: {event['title']} ({event_id})")
+
+          # 1-b. 잘못 매칭된 order 삭제
+          all_profiles = supabase_get("profiles?select=id,display_name,email")
+          for wrong_email in WRONG_EMAILS:
+              wrong_prof = next((p for p in all_profiles if p.get("email") == wrong_email), None)
+              if wrong_prof:
+                  del_req = urllib.request.Request(
+                      f"{SUPABASE_URL}/rest/v1/orders?event_id=eq.{event_id}&user_id=eq.{wrong_prof['id']}",
+                      headers=headers,
+                      method="DELETE"
+                  )
+                  urllib.request.urlopen(del_req)
+                  print(f"🗑  {wrong_prof['display_name']} ({wrong_email}) order 삭제")
 
           # 2. 프로필 로드
           profiles = supabase_get("profiles?select=id,display_name,email")
