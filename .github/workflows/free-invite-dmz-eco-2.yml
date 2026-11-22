@@ -1,0 +1,169 @@
+name: DMZ 에코피스 무료초대 2차
+
+on:
+  workflow_dispatch:
+
+jobs:
+  invite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DMZ 에코피스 무료초대 2차
+        run: |
+          cat << 'SCRIPT' > run.py
+          import urllib.request
+          import urllib.error
+          import urllib.parse
+          import json
+          import uuid
+          import sys
+
+          SUPABASE_URL = "https://qbacbmyffpkiipngccpa.supabase.co"
+          SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiYWNibXlmZnBraWlwbmdjY3BhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTAzMTA3MCwiZXhwIjoyMDk2NjA3MDcwfQ.UAAiiQhLuRyoQg-pgVG3uMZD_iJV1aKBXUhBC5XhCYY"
+
+          EVENT_SLUG = "dmz-eco-peace-tour-cheorwon-day-trip-mwlk3pdf"
+
+          # 이름으로 매칭 (부분 매칭)
+          GUESTS = [
+              "Alex",
+              "Amisha",
+              "Anne Majette",
+              "Cata Albasini",
+              "Corinna",
+              "Lau H",
+              "Miguelo",
+              "Wioletta",
+              "zhenya_zvonareva",
+              "유근목",
+              "조우성",
+          ]
+          FORCE_NEW = []
+
+          headers = {
+              "apikey": SERVICE_KEY,
+              "Authorization": f"Bearer {SERVICE_KEY}",
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+          }
+
+          def supabase_get(path):
+              req = urllib.request.Request(f"{SUPABASE_URL}/rest/v1/{path}", headers=headers)
+              with urllib.request.urlopen(req) as r:
+                  return json.loads(r.read())
+
+          def supabase_post(path, data):
+              body = json.dumps(data).encode()
+              req = urllib.request.Request(f"{SUPABASE_URL}/rest/v1/{path}", data=body, headers=headers, method="POST")
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      return json.loads(r.read()), None
+              except urllib.error.HTTPError as e:
+                  return None, e.read().decode()
+
+          # 1. 이벤트 찾기
+          events = supabase_get(f"events?slug=eq.{EVENT_SLUG}&select=id,title,starts_at")
+          if not events:
+              print("❌ 이벤트를 찾지 못했습니다.")
+              sys.exit(1)
+          event = events[0]
+          event_id = event["id"]
+          print(f"✅ 이벤트: {event['title']} ({event_id})")
+
+          # 2. 프로필 로드
+          profiles = supabase_get("profiles?select=id,display_name,email")
+          print(f"전체 프로필: {len(profiles)}명\n")
+
+          # 3. 각 게스트 처리
+          for name in GUESTS:
+              # 이름 키워드로 부분 매칭 (공백 구분 첫 단어, 혹은 전체 포함)
+              keywords = name.lower().split()
+              profile = None if name in FORCE_NEW else next(
+                  (p for p in profiles if any(
+                      kw in (p.get("display_name") or "").lower() for kw in keywords
+                  )), None
+              )
+
+              if profile:
+                  print(f"🔍 {name} → 매칭: {profile.get('display_name')} ({profile.get('email')})")
+              else:
+                  # 미매칭 — 더미 계정 생성
+                  dummy_email = f"{name.lower().replace(' ', '.').replace('_', '.')}@kojaemcon.guest"
+                  dummy_id = None
+                  auth_data = json.dumps({
+                      "email": dummy_email,
+                      "password": str(uuid.uuid4()),
+                      "email_confirm": True,
+                      "user_metadata": {"display_name": name}
+                  }).encode()
+                  auth_req = urllib.request.Request(
+                      f"{SUPABASE_URL}/auth/v1/admin/users",
+                      data=auth_data,
+                      headers=headers,
+                      method="POST"
+                  )
+                  try:
+                      with urllib.request.urlopen(auth_req) as r:
+                          auth_user = json.loads(r.read())
+                          dummy_id = auth_user["id"]
+                          print(f"👤 {name} — 미매칭, 더미 생성 ({dummy_email})")
+                  except urllib.error.HTTPError as e:
+                      err_body = e.read().decode()
+                      if "email_exists" in err_body:
+                          existing_prof = supabase_get(f"profiles?email=eq.{urllib.parse.quote(dummy_email)}&select=id,display_name,email&limit=1")
+                          if existing_prof:
+                              profile = existing_prof[0]
+                              print(f"♻️  {name} — 기존 더미 재사용 ({profile['id']})")
+                          else:
+                              print(f"❌ {name} — 기존 프로필 조회 실패")
+                              continue
+                      else:
+                          print(f"❌ {name} — auth 유저 생성 실패: {err_body}")
+                          continue
+                  if not profile and dummy_id:
+                      prof_data = json.dumps([{
+                          "id": dummy_id,
+                          "display_name": name,
+                          "email": dummy_email
+                      }]).encode()
+                      prof_req = urllib.request.Request(
+                          f"{SUPABASE_URL}/rest/v1/profiles",
+                          data=prof_data,
+                          headers={**headers, "Prefer": "resolution=merge-duplicates,return=representation"},
+                          method="POST"
+                      )
+                      try:
+                          with urllib.request.urlopen(prof_req) as r:
+                              profile = json.loads(r.read())[0]
+                      except urllib.error.HTTPError as e:
+                          existing_prof2 = supabase_get(f"profiles?id=eq.{dummy_id}&select=id,display_name,email&limit=1")
+                          if existing_prof2:
+                              profile = existing_prof2[0]
+                          else:
+                              print(f"❌ {name} — 프로필 확인 실패: {e.read().decode()}")
+                              continue
+
+              if not profile:
+                  print(f"❌ {name} — profile 없음, skip")
+                  continue
+
+              # 중복 체크
+              existing_order = supabase_get(f"orders?select=id&event_id=eq.{event_id}&user_id=eq.{profile['id']}&limit=1")
+              if existing_order:
+                  print(f"⏭️  {name} — 이미 등록됨")
+                  continue
+
+              order_data = {
+                  "event_id": event_id,
+                  "user_id": profile["id"],
+                  "status": "free_confirmed",
+                  "amount_krw": 0,
+                  "quantity": 1
+              }
+              result, err = supabase_post("orders", order_data)
+              if err:
+                  print(f"❌ {name} — 오류: {err}")
+              else:
+                  order_id = result[0]["id"] if result else "?"
+                  print(f"✅ {name} → {order_id}")
+
+          SCRIPT
+          python3 run.py
