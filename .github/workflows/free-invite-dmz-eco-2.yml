@@ -37,11 +37,16 @@ jobs:
               "Yoo Geunmok",
               "Jo Woosung",
           ]
-          # Anne Majette(dianneleekr 잘못매칭), Lau H(Claudia 잘못매칭) → 더미로 재생성
-          FORCE_NEW = ["Anne Majette", "Lau H"]
+          # 잘못매칭 → 더미로 재생성
+          FORCE_NEW = ["Anne Majette", "Lau H", "Yoo Geunmok", "Jo Woosung"]
 
           # 잘못 매칭된 order 삭제 대상
-          WRONG_EMAILS_FOR_EVENT = ["diannelee.korea@gmail.com", "claudia.h423@gmail.com"]
+          WRONG_EMAILS_FOR_EVENT = [
+              "diannelee.korea@gmail.com",   # Anne Majette 잘못매칭
+              "claudia.h423@gmail.com",       # Lau H 잘못매칭
+              "nuonuoly13@gmail.com",         # Yoo Geunmok 잘못매칭
+              "jozoscoob@gmail.com",          # Jo Woosung 잘못매칭
+          ]
 
           headers = {
               "apikey": SERVICE_KEY,
