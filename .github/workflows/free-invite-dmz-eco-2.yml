@@ -23,6 +23,7 @@ jobs:
           EVENT_SLUG = "dmz-eco-peace-tour-cheorwon-day-trip-mwlk3pdf"
 
           # 이름으로 매칭 (부분 매칭)
+          # 유근목 → Yoo Geunmok, 조우성 → Jo Woosung (한글 더미 이메일 불가로 영문 처리)
           GUESTS = [
               "Alex",
               "Amisha",
@@ -33,10 +34,14 @@ jobs:
               "Miguelo",
               "Wioletta",
               "zhenya_zvonareva",
-              "유근목",
-              "조우성",
+              "Yoo Geunmok",
+              "Jo Woosung",
           ]
-          FORCE_NEW = []
+          # Anne Majette(dianneleekr 잘못매칭), Lau H(Claudia 잘못매칭) → 더미로 재생성
+          FORCE_NEW = ["Anne Majette", "Lau H"]
+
+          # 잘못 매칭된 order 삭제 대상
+          WRONG_EMAILS_FOR_EVENT = ["diannelee.korea@gmail.com", "claudia.h423@gmail.com"]
 
           headers = {
               "apikey": SERVICE_KEY,
@@ -67,6 +72,19 @@ jobs:
           event = events[0]
           event_id = event["id"]
           print(f"✅ 이벤트: {event['title']} ({event_id})")
+
+          # 1-b. 잘못 매칭된 order 삭제
+          all_profiles = supabase_get("profiles?select=id,display_name,email")
+          for wrong_email in WRONG_EMAILS_FOR_EVENT:
+              wrong_prof = next((p for p in all_profiles if p.get("email") == wrong_email), None)
+              if wrong_prof:
+                  del_req = urllib.request.Request(
+                      f"{SUPABASE_URL}/rest/v1/orders?event_id=eq.{event_id}&user_id=eq.{wrong_prof['id']}",
+                      headers=headers,
+                      method="DELETE"
+                  )
+                  urllib.request.urlopen(del_req)
+                  print(f"🗑  {wrong_prof.get('display_name', wrong_email)} ({wrong_email}) order 삭제")
 
           # 2. 프로필 로드
           profiles = supabase_get("profiles?select=id,display_name,email")
